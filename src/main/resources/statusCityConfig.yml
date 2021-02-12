@@ -1,0 +1,78 @@
+#Конфиг по настройки статусов городов
+#maxcitizens - максимальное кол-во жителей
+#goldOre - кол-во золотой руды для апгрейда(0 - стартовый статус)
+#JUDGE - кол-во судей (0 - отключены для статуса)
+#PASSPORTOFFICER - кол-во паспортистов (0 - отключены для статуса)
+#POLICEMAN - кол-во полицейских (0 - отключены для статуса)
+#OFFICER - кол-во офицеров (0 - отключены для статуса)
+#CARETAKER - кол-во смотрителей (0 - отключены для статуса)
+#DETECTIVE - кол-во детективов (0 - отключены для статуса)
+#INVENTOR - кол-во изобретателей (0 - отключены для статуса)
+#BLACKSMITH - кол-во судей (0 - отключены для статуса)
+#WIZARD - кол-во судей (0 - отключены для статуса)
+#COOK - кол-во судей (0 - отключены для статуса)
+#BREWER - кол-во судей (0 - отключены для статуса)
+
+#Поселение
+SETTLEMENT:
+  maxCitizens: 6
+  goldOre: 0
+  JUDGE: 1
+  PASSPORTOFFICER: 1
+  POLICEMAN: 1
+  OFFICER: 1
+  CARETAKER: 1
+  DETECTIVE: 1
+  INVENTOR: 1
+  BLACKSMITH: 1
+  WIZARD: 1
+  COOK: 1
+  BREWER: 1
+
+#Провинция
+PROVINCE:
+  maxCitizens: 18
+  goldOre: 640
+  JUDGE: 1
+  PASSPORTOFFICER: 1
+  POLICEMAN: 1
+  OFFICER: 1
+  CARETAKER: 1
+  DETECTIVE: 1
+  INVENTOR: 1
+  BLACKSMITH: 1
+  WIZARD: 1
+  COOK: 1
+  BREWER: 1
+
+#Город
+CITY:
+  maxCitizens: 36
+  goldOre: 900
+  JUDGE: 1
+  PASSPORTOFFICER: 1
+  POLICEMAN: 1
+  OFFICER: 1
+  CARETAKER: 1
+  DETECTIVE: 1
+  INVENTOR: 1
+  BLACKSMITH: 1
+  WIZARD: 1
+  COOK: 1
+  BREWER: 1
+
+#Мегаполис
+METROPOLIS:
+  maxCitizens: 108
+  goldOre: 1500
+  JUDGE: 1
+  PASSPORTOFFICER: 1
+  POLICEMAN: 1
+  OFFICER: 1
+  CARETAKER: 1
+  DETECTIVE: 1
+  INVENTOR: 1
+  BLACKSMITH: 1
+  WIZARD: 1
+  COOK: 1
+  BREWER: 1

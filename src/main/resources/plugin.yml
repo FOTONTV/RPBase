@@ -1,0 +1,153 @@
+name: RPBase
+version: ${project.version}
+main: ru.fotontv.rpbase.RPBase
+api-version: 1.15
+authors: [ FOTONTV ]
+description: RPBase
+depend: [ LuckPerms, Vault ]
+commands:
+  wanted:
+    description: Команда на розыск
+    usage: /<command> [<Ник>|list|remove]
+  imp:
+    description: Посадить игрока из списка /wanted list
+    usage: /<command> <Ник> <Время>
+  jail:
+    description: Команда тюрьмы. Даёт доступ к использованию команды /cell spawn
+    usage: /<command> create,list, remove <Название>
+  cell:
+    description: Команда для камер куда будет помощен игрок после использование команды /imp
+    usage: /<command> spawn,list,remove <Название тюрьмы> <Цифра>
+  pass:
+    description: Открыть паспорт
+    usage: /<command>
+  passpr:
+    description: Изменить место проживания
+    usage: /<command> <Ник> <Город>
+  passcr:
+    description: Изменить место получение паспорта
+    usage: /<command> <Ник> <Город>
+  passj:
+    description: Добавить судимость в паспорт игрока
+    usage: /<command> <Ник> <Нарушение> <Время>
+  passq:
+    description: Показать паспорт
+    usage: /<command> [<Ник>|true]
+  town:
+    description: Команды города
+    usage: /<command> [create <Город>|info|add <Ник>|kick <Ник>|transfer <Ник>|upgrade <Тип>]
+  prof:
+    description: Выдать професию
+    usage: /<command> add <Ник> <Профессия>
+  tc:
+    description: Включить / отключить чат города
+    usage: /<command>
+  talent:
+    description: Открыть gui талантов
+    usage: /<command>
+permissions:
+  police.wanted.add:
+    description: Доступ к команде /wanted [Ник]
+    default: op
+  police.wanted.list:
+    description: Доступ к команде /wanted list
+    default: op
+  police.wanted.remove:
+    description: Доступ к команде /wanted remove [Ник]
+    default: op
+  police.wanted.*:
+    description: Доступ к команде /wanted
+    default: op
+    children:
+      police.wanted.add: true
+      police.wanted.list: true
+      police.wanted.remove: true
+  police.imprison:
+    description: Доступ к команде /imp [Ник] [Время]
+    default: op
+  police.jail.create:
+    description: Доступ к команде /jail create [Название]
+    default: op
+  police.jail.remove:
+    description: Доступ к команде /jail remove [Название]
+    default: op
+  police.jail.list:
+    description: Доступ к команде /jail list
+    default: op
+  police.cell.spawn:
+    description: Доступ к команде /cell spawn [Название тюрьмы] [Цифра]
+    default: op
+  police.*:
+    description: Доступ к командам полиции
+    default: op
+    children:
+      police.wanted.*: true
+      police.imprison: true
+      police.jail.create: true
+      police.jail.remove: true
+      police.jail.list: true
+      police.cell.spawn: true
+  passport.open:
+    description: Доступ к команде /pass
+    default: op
+  passport.place:
+    description: Доступ к команде /passpr [Ник] [Город]
+    default: op
+  passport.receiving:
+    description: Доступ к команде /passcr [Ник] [Город]
+    default: op
+  passport.law:
+    description: Доступ к команде /passj [Ник] [Нарушение] [Время]
+    default: op
+  passport.request:
+    description: Доступ к команде /passq [Ник]
+    default: op
+  passport.request.true:
+    description: Доступ к команде /passq true
+    default: op
+  passport.request.*:
+    description: Доступ к команде /passq
+    default: op
+    children:
+      passport.request: true
+      passport.request.true: true
+  prof.add:
+    description: Доступ к команде /prof add [Ник] [Профессия]
+    default: op
+  prof.remove:
+    description: Доступ к команде /prof remove [Ник]
+    default: op
+  town.create:
+    description: Доступ к команде /town create [Город]
+    default: op
+  town.info:
+    description: Доступ к команде /town info
+    default: op
+  town.add:
+    description: Доступ к команде /town add [Ник]
+    default: op
+  town.upgrade:
+    description: Доступ к команде /town upgrade <Тип>
+    default: op
+  town.kick:
+    description: Доступ к команде /town kick [Ник]
+    default: op
+  town.transfer:
+    description: Доступ к команде /town transfer [Ник]
+    default: op
+  town.*:
+    description: Доступ к команде /town
+    default: op
+    children:
+      town.create: true
+      town.info: true
+      town.add: true
+      town.kick: true
+      town.transfer: true
+      town.upgrade: true
+  prof.*:
+    description: Доступ к команде /prof
+    default: op
+    children:
+      prof.add: true
+      prof.remove: true

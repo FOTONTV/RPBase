@@ -1,0 +1,196 @@
+#Глобальные настройки
+#Плагин создан с душой для проекта GloriousProject
+#Любое копирование и коммерческое использование плагина
+#кроме выше указанного проекта  запрещено!
+#Автор: FOTONTV (https://vk.com/vovan2203228)
+
+#Группы в LuckPerms
+
+#Игрок
+PLAYER: "default"
+#Судья
+JUDGE: "judge"
+#Паспортист
+PASSPORTOFFICER: "passportofficer"
+#Мэр
+MAYOR: "mayor"
+#Полицейский
+POLICEMAN: "policeman"
+#Офицер
+OFFICER: "officer"
+#Смотритель
+CARETAKER: "caretaker"
+#Детектив
+DETECTIVE: "detective"
+#Изобретатель
+INVENTOR: "inventor"
+#Кузнец
+BLACKSMITH: "blacksmith"
+#Чародей
+WIZARD: "wizard"
+#Повар
+COOK: "cook"
+#Пивовар
+BREWER: "brewer"
+#Вор
+THIEF: "thief"
+
+#Максимальное кол-во заключенных в камере
+maxplayerincell: 2
+
+#Название GUI паспорта ({player} - ник игрока, которому принадлежит паспорт)
+namePassportGUI: "Паспорт {player}"
+
+#Название паспорта ({player} - ник игрока, которому принадлежит паспорт)
+namePassport: "Паспорт {player}"
+
+#Содержание паспорта
+#{player} - ник игрока, которому принадлежит паспорт
+#{pickUpCity} - Город получения документа
+#{dateOfReceipt} - Дата получения паспорта
+#{placeOfResidence} - Место проживания
+#{criminalRecords} - Судимости
+#{profession} - Профессия
+lorePassport:
+  - "1. Ник: {player}"
+  - "2. Город получения документа: {pickUpCity}"
+  - "3. Дата получения паспорта: {dateOfReceipt}"
+  - "4. Место проживания: {placeOfResidence}"
+  - "5. Судимости: {criminalRecords}"
+  - "6. Профессия: {profession}"
+
+#Название GUI информации о городе ({city} - название города)
+cityInfoGUIName: "Информация о городе {city}"
+
+#Название книги информации о городе ({city} - название города)
+cityInfoBookName: "Информация о городе {city}"
+
+#Содержание информации о городе
+#{city} - Название города
+#{mayor} - Мэр города
+#{dateOfFoundation} - Дата основание города
+loreCityInfo:
+  - "1. Название города: {city}"
+  - "2. Мэр города: {mayor}"
+  - "3. Участники города (Нажать что бы просмотреть)"
+  - "4. Дата основание города: {dateOfFoundation}"
+
+#Название GUI списка жителей города
+citizensCityGUIName: "Участники города"
+
+#Название голов игроков {player} - Ник игрока
+citizensCitySkullName: "{player}"
+
+#Содержание информации о жителе
+#{player} - Ник жителя
+#{profession} - Профессия жителя
+#{dateOfEntryCity} - Дата вступления в город
+loreSkullCityzen:
+  - "1. Ник: {player}"
+  - "2. Профессия: {profession}"
+  - "3. Дата вступления в город: {dateOfEntryCity}"
+
+#Розыск
+police.wantedlist.remove: "&2Вы убрали из розыска игрока %s"
+player.wantedlist.remove: "&eВас вычеркнули из списка разыскиваемых!"
+
+police.wantedlist.list: "&2[ Список разыскиваемых ]"
+police.wantedlist.nick: "&2- %s"
+
+police.wantedlist.add: "&2Вы объявили игрока %s в розыск"
+player.wantedlist.add: "&eВы были объявлены в розыск!"
+
+#Тюрьма
+police.jail.create: "&2Вы создали тюрьму с названием %s"
+police.jail.remove: "&2Вы удалили тюрьму с названием %s"
+police.jaillist.list: "&2[ Список тюрьм ]"
+police.jail.list.name: "&2- %s"
+
+#Камера
+police.cell.spawn: "&2Вы создали камеру на координатах x: {x} y: {y} z: {z}"
+police.cell.remove: "&2Вы удалили камеру с названием %s"
+police.celllist.list: "&2[ Список камер ]"
+police.cell.list.name: "&2- %s"
+
+#Посадить игрока
+police.cell.addPlayer: "&2Вы посадили игрока {player} в тюрьму на {time}"
+player.cell.add: "&eВас посадили на {time}"
+
+#Изменить место проживания
+passportofficer.placeEdit: "&2Вы изменили место проживания {player}"
+player.passport.placeEdit: "&2Ваше место жительства было изменено!"
+
+#Изменить место получения паспорта
+passportofficer.pickUpCity: "&2Вы изменили место получения паспорта {player}"
+player.passport.pickUpCity: "&2Ваше место получения паспорта было изменено!"
+
+#Изменить судимость
+judge.criminalsRercords: "&2Вы обновили судимости {player}"
+player.passport.criminalsRercords: "&2Ваша история судимости была обновлена!"
+
+#Показать паспорт (%yes или %no кликабельны)
+player.passport.request: "&2Вы отправили запрос на просмотр паспорта {player}"
+player.passport.requestOpen: "&2{player} просит вас показать ваш паспорт [%yes или %no]"
+
+#Создать город
+player.createCity: "&2Вы основали город {city}"
+players.createCity: "&2{player} основал новый город {city}!"
+
+#Пригласить в город
+player.inviteCity: "&7{mayor} пригласил Вас в город {city}."
+mayor.inviteCity: "&2Вы пригласили игрока {player} в свой город"
+
+#Принять запрос в город
+player.inviteCityAccept: "&7Вы вступили в город {city}."
+mayor.inviteCityAccept: "&2{player} принял Ваше приглашение."
+
+#Отклонил запрос в город
+player.inviteCityDeny: "&7Вы отклонили приглашение вступить в город {city}."
+mayor.inviteCityDeny: "&2{player} отклонил Ваше приглашение."
+
+#Кикнуть из города
+player.kickCity: "&2Вас выгнали из города {city}"
+mayor.kickCity: "&2Вы выгнали {player} из своего города"
+
+#Передать лидерство новому мэру
+player.transferMayor: "&2Мэр города {city} передал Вам должность мэра"
+mayor.transferMayor: "&2Вы передали пост Мэра {player}"
+
+#Добавление профессии
+mayor.addProf: "&2Вы назначили {player} на должность {prof}"
+player.addProf: "&2Мэр города {city} назначил Вас на должность {prof}"
+
+#Удаление профессии
+mayor.remProf: "&2Вы сняли {player} с должности {prof}"
+player.remProf: "&2Мэр города {city} снял Вас с должности {prof}"
+
+#Покинуть город
+player.leaveInCity: "&2Вы покинули город {city}"
+
+#Разрушить город
+players.disbandCity: "&2{player} разрушил город {city}"
+mayor.disbandCity: "&2Вы разрушил свой город."
+
+#Ошибки
+notplayer.wantedlist: "&4Игрока %s нет в списке розыска!"
+player.nowwantedlist: "&4Игрок %s уже в в списке розыска!"
+notplayer.removewantedlist: "&4Вы не можете снять розыск с самого себя!"
+notplayer.addwantedlist: "&4Вы не можете добавить сам себя в список розыска!"
+player.notfound: "&4Игрок %s не найден!"
+player.notpermission: "&4У вас нет прав!"
+jail.nowcreate: "&4Тюрьма %s уже существует!"
+jail.notcreate: "&4Тюрьмы %s не существует!"
+cell.nowcreate: "&4Камера %s уже существует или не цифра!"
+cell.notcreate: "&4Камеры %s не существует или не цифра!"
+nottime: "&4Неверный формат времени! Пример формата: 1d, 15h, 15m, 15s"
+jail.notcell: "&4Свободных камер не найдено!"
+notplayer.addcell: "&4Вы не можете посадить сам себя!"
+passportOfficeInvalidDistance: "&4Игрок должен находиться в радиусе 7 блоков от вас!"
+isPickUpCityIsTrue: "&4Место получение паспорта можно изменить лишь один раз!"
+cityNameNotValid: "&4Название города должно быть максимум 20 символов!"
+cityNowAndNotOre: "&4У вас недостаточно золотой руды или вы состоите в городе!"
+cityNowAccept: "&4Город с таким названием уже существует!"
+playerNowCity: "&4Игрок уже живет в одном из городов!"
+playerNotCity: "&4Игрок не живет в вашем городе!"
+proffessionNotMayor: "&4Мэр не может выдать профессию мэра!"
+notOnlinePlayerRequestCity: "&4Невозможно пригласить игрока в город так как он не в сети!"
