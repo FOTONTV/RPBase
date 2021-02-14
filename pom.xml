@@ -83,5 +83,12 @@
             <version>1.18.12</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>ru.fotontv</groupId>
+            <artifactId>xconomy</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/libs/XConomy-Bukkit-2.9.24.jar</systemPath>
+        </dependency>
     </dependencies>
 </project>

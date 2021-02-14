@@ -1,5 +1,9 @@
 package ru.fotontv.rpbase.data;
 
+import me.yic.xconomy.data.DataFormat;
+import me.yic.xconomy.data.caches.Cache;
+import net.luckperms.api.model.user.User;
+import net.luckperms.api.node.Node;
 import org.bukkit.*;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -21,16 +25,18 @@ import ru.fotontv.rpbase.utils.LinkedSet;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.math.BigDecimal;
+import java.util.*;
+import java.util.concurrent.CompletableFuture;
 
 public class PlayersManager implements Listener {
 
     private static File playersFile;
     private static FileConfiguration playersConfig;
     private static final Set<PlayerData> playerDataList = new LinkedSet<>();
-    private static List<ItemStack> itemsRul = new ArrayList<>();
+    private static final List<ItemStack> itemsRul = new ArrayList<>();
+    private static int timer = 0;
+    private static final HashMap<Player, Integer> taskID = new HashMap<>();
 
     public PlayersManager() {
     }
@@ -258,7 +264,7 @@ public class PlayersManager implements Listener {
         meta1.addEnchant(Enchantment.LURE, 0, true);
         meta1.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         item1.setItemMeta(meta1);
-        talent.setItem(9, item1);
+        talent.setItem(10, item1);
         itemsRul.add(item1);
 
         //Рождённый в кузне
@@ -269,7 +275,7 @@ public class PlayersManager implements Listener {
         lore2.add("§fДаёт возможность крафтить железную броню");
         meta2.setLore(lore2);
         item2.setItemMeta(meta2);
-        talent.setItem(10, item2);
+        talent.setItem(11, item2);
         itemsRul.add(item2);
 
         //Мастер мечей
@@ -280,7 +286,7 @@ public class PlayersManager implements Listener {
         lore3.add("§fДаёт возможность крафтить алмазный и железный мечи");
         meta3.setLore(lore3);
         item3.setItemMeta(meta3);
-        talent.setItem(11, item3);
+        talent.setItem(12, item3);
         itemsRul.add(item3);
 
         //Ловкие руки
@@ -291,7 +297,7 @@ public class PlayersManager implements Listener {
         lore4.add("§fДаёт дополнительные 5% к удачному использованию отмычки");
         meta4.setLore(lore4);
         item4.setItemMeta(meta4);
-        talent.setItem(12, item4);
+        talent.setItem(13, item4);
         itemsRul.add(item4);
 
         //Новая жизнь
@@ -302,7 +308,7 @@ public class PlayersManager implements Listener {
         lore5.add("§fСнимает с Вас все профессии кроме Мэра");
         meta5.setLore(lore5);
         item5.setItemMeta(meta5);
-        talent.setItem(13, item5);
+        talent.setItem(14, item5);
         itemsRul.add(item5);
 
         //Воин
@@ -317,7 +323,7 @@ public class PlayersManager implements Listener {
         meta6.addEnchant(Enchantment.LURE, 0, true);
         meta6.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         item6.setItemMeta(meta6);
-        talent.setItem(14, item6);
+        talent.setItem(15, item6);
         itemsRul.add(item6);
 
         //Большой нос
@@ -328,7 +334,7 @@ public class PlayersManager implements Listener {
         lore7.add("§fВы отлично ладите с жителями!");
         meta7.setLore(lore7);
         item7.setItemMeta(meta7);
-        talent.setItem(15, item7);
+        talent.setItem(16, item7);
         itemsRul.add(item7);
 
         player.openInventory(talent);
@@ -346,7 +352,138 @@ public class PlayersManager implements Listener {
     }
 
     private static void onRul(PlayerData data) {
+        Player player = data.getPlayer();
+        String name = "§8Рулетка талантов";
+        Inventory inventory = Bukkit.createInventory(player, 36, centerTitle(name));
+        Random r1 = new Random();
+        final Random r2 = new Random();
+        int i;
+        for (i = 10; i < 17; i++) {
+            int n1 = r1.nextInt(itemsRul.size());
+            inventory.setItem(i, itemsRul.get(n1));
+        }
+        ItemStack itemStack = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
+        ItemStack itemStack1 = new ItemStack(Material.BLACK_STAINED_GLASS_PANE);
 
+        inventory.setItem(0, itemStack);
+        inventory.setItem(1, itemStack);
+        inventory.setItem(2, itemStack);
+        inventory.setItem(3, itemStack);
+        inventory.setItem(4, itemStack1);
+        inventory.setItem(5, itemStack);
+        inventory.setItem(6, itemStack);
+        inventory.setItem(7, itemStack);
+        inventory.setItem(8, itemStack);
+        inventory.setItem(9, itemStack);
+        inventory.setItem(17, itemStack);
+        inventory.setItem(18, itemStack);
+        inventory.setItem(19, itemStack);
+        inventory.setItem(20, itemStack);
+        inventory.setItem(21, itemStack);
+        inventory.setItem(22, itemStack1);
+        inventory.setItem(23, itemStack);
+        inventory.setItem(24, itemStack);
+        inventory.setItem(25, itemStack);
+        inventory.setItem(26, itemStack);
+        inventory.setItem(27, itemStack);
+        inventory.setItem(28, itemStack);
+        inventory.setItem(29, itemStack);
+        inventory.setItem(30, itemStack);
+        inventory.setItem(31, itemStack);
+        inventory.setItem(32, itemStack);
+        inventory.setItem(33, itemStack);
+        inventory.setItem(34, itemStack);
+        inventory.setItem(35, itemStack);
+
+        int tid;
+        tid = Bukkit.getScheduler().scheduleSyncRepeatingTask(RPBase.getPlugin(), () -> {
+            PlayersManager.timer = PlayersManager.timer + 1;
+            int n2 = r2.nextInt(itemsRul.size());
+            inventory.setItem(10, inventory.getItem(11));
+            inventory.setItem(11, inventory.getItem(12));
+            inventory.setItem(12, inventory.getItem(13));
+            inventory.setItem(13, inventory.getItem(14));
+            inventory.setItem(14, inventory.getItem(15));
+            inventory.setItem(15, inventory.getItem(16));
+            inventory.setItem(16, itemsRul.get(n2));
+            player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0F, 1.0F);
+            if (PlayersManager.timer == 40) {
+                PlayersManager.stopRolling(player);
+                PlayersManager.timer = 0;
+                player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0F, 1.0F);
+                ItemStack stack = inventory.getItem(13);
+                if (stack != null) {
+                    player.sendMessage("§2Вам выпал талант: " + stack.getItemMeta().getDisplayName());
+                    addTalent(stack, player);
+                }
+                Bukkit.getScheduler().scheduleSyncDelayedTask(RPBase.getPlugin(), player::closeInventory,  30L);
+            }
+        }, 0L, 2);
+        taskID.put(player, tid);
+        player.openInventory(inventory);
+    }
+
+    private static void addTalent(ItemStack stack, Player player) {
+        CompletableFuture<User> futureUser = RPBase.api.getUserManager().loadUser(player.getUniqueId());
+        PlayerData data = PlayersManager.getPlayerData(player);
+        switch (stack.getItemMeta().getDisplayName()) {
+            case "§7Родство с магией":
+                futureUser.thenAcceptAsync(user -> {
+                    user.data().add(Node.builder("xrp.open_enchanting_table").build());
+                    RPBase.api.getUserManager().saveUser(user);
+                });
+                break;
+            case "§7Рождённый в кузне":
+                futureUser.thenAcceptAsync(user -> {
+                    user.data().add(Node.builder("craftingapi.recipe.craftingapi.iron_helmet").build());
+                    user.data().add(Node.builder("craftingapi.recipe.craftingapi.iron_chestplate").build());
+                    user.data().add(Node.builder("craftingapi.recipe.craftingapi.iron_leggins").build());
+                    user.data().add(Node.builder("craftingapi.recipe.craftingapi.iron_boots").build());
+                    RPBase.api.getUserManager().saveUser(user);
+                });
+                break;
+            case "§7Мастер мечей":
+                futureUser.thenAcceptAsync(user -> {
+                    user.data().add(Node.builder("craftingapi.recipe.craftingapi.diamond_sword").build());
+                    user.data().add(Node.builder("craftingapi.recipe.craftingapi.iron_sword").build());
+                    RPBase.api.getUserManager().saveUser(user);
+                });
+                break;
+            case "§7Ловкие руки":
+                futureUser.thenAcceptAsync(user -> {
+                    user.data().add(Node.builder("keylock.talentVor").build());
+                    RPBase.api.getUserManager().saveUser(user);
+                });
+                break;
+            case "§7Новая жизнь":
+                if (data != null) {
+                    if (!data.getProfession().equals(ProfessionsEnum.MAYOR)) {
+                        data.setProfession(ProfessionsEnum.PLAYER);
+                        data.getPassport().setProfession("-");
+                    }
+                }
+                break;
+            case "§7Воин":
+                futureUser.thenAcceptAsync(user -> {
+                    user.data().add(Node.builder("rpbase.talentVoin").build());
+                    RPBase.api.getUserManager().saveUser(user);
+                });
+                break;
+            case "§7Большой нос":
+                futureUser.thenAcceptAsync(user -> {
+                    user.data().add(Node.builder("rpbase.talentBigNos").build());
+                    RPBase.api.getUserManager().saveUser(user);
+                });
+                break;
+        }
+    }
+
+    private static void stopRolling(Player p) {
+        if (taskID.containsKey(p)) {
+            int tid = taskID.get(p);
+            RPBase.getPlugin().getServer().getScheduler().cancelTask(tid);
+            taskID.remove(p);
+        }
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -370,7 +507,20 @@ public class PlayersManager implements Listener {
                 if (event.getView().getTitle().equals(centerTitle("§8Рулетка талантов")) && (inv.getSize() == 36)) {
                     if (itemClick != null) {
                         if (itemClick.getItemMeta().getDisplayName().equals("§cРулетка талантов")) {
-                            onRul(data);
+                            UUID targetUUID = Cache.translateUUID(player.getName(), null);
+                            BigDecimal bal = Cache.getBalanceFromCacheOrDB(player.getUniqueId());
+                            String realname = Cache.getrealname(player.getName());
+                            if (bal.intValue() >= 100) {
+                                String amountStr = String.valueOf(100);
+                                BigDecimal amount = DataFormat.formatString(amountStr);
+                                Cache.change("ADMIN_COMMAND", targetUUID, realname, amount, false, "");
+                                onRul(data);
+                                event.setCancelled(true);
+                                return;
+                            }
+                            player.sendMessage("§cУ вас не хватает " + (100 - bal.intValue()) + " для прокрутки рулетки!");
+                            event.setCancelled(true);
+                            return;
                         }
                     }
                     event.setCancelled(true);

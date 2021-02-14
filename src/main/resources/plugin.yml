@@ -4,7 +4,7 @@ main: ru.fotontv.rpbase.RPBase
 api-version: 1.15
 authors: [ FOTONTV ]
 description: RPBase
-depend: [ LuckPerms, Vault ]
+depend: [ LuckPerms, XConomy ]
 commands:
   wanted:
     description: Команда на розыск

@@ -7,9 +7,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import ru.fotontv.rpbase.commands.*;
 import ru.fotontv.rpbase.data.CitiesManager;
 import ru.fotontv.rpbase.data.PlayersManager;
-import ru.fotontv.rpbase.listeners.ChatListener;
-import ru.fotontv.rpbase.listeners.JoinListener;
-import ru.fotontv.rpbase.listeners.LeaveListener;
+import ru.fotontv.rpbase.listeners.*;
 import ru.fotontv.rpbase.modules.config.ConfigManager;
 import ru.fotontv.rpbase.modules.config.StatusCityManager;
 import ru.fotontv.rpbase.modules.jail.JailManager;
@@ -91,6 +89,8 @@ public final class RPBase extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new JoinListener(), this);
         getServer().getPluginManager().registerEvents(new LeaveListener(), this);
         getServer().getPluginManager().registerEvents(new ChatListener(), this);
+        getServer().getPluginManager().registerEvents(new ArmorChangeListener(), this);
+        getServer().getPluginManager().registerEvents(new CitizensListener(), this);
         getServer().getPluginManager().registerEvents(new PlayersManager(), this);
         getServer().getPluginManager().registerEvents(new CitiesManager(this), this);
     }
