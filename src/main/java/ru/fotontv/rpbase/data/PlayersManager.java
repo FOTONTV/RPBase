@@ -4,6 +4,7 @@ import me.yic.xconomy.data.DataFormat;
 import me.yic.xconomy.data.caches.Cache;
 import net.luckperms.api.model.user.User;
 import net.luckperms.api.node.Node;
+import net.milkbowl.vault.permission.Permission;
 import org.bukkit.*;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -37,6 +38,7 @@ public class PlayersManager implements Listener {
     private static final List<ItemStack> itemsRul = new ArrayList<>();
     private static int timer = 0;
     private static final HashMap<Player, Integer> taskID = new HashMap<>();
+    private static final Permission permission = RPBase.getPlugin().getPermission();
 
     public PlayersManager() {
     }
@@ -202,6 +204,7 @@ public class PlayersManager implements Listener {
             ProfessionsEnum prof = ProfessionsEnum.valueOf(professionsEnum);
             PlayerData data = new PlayerData(player);
             data.setProfession(prof);
+            addPex(prof, player);
             Passport passport = new Passport();
             passport.setPickUpCity(pickUpCity);
             passport.setIsPickUpCity(isPickUpCity);
@@ -220,6 +223,30 @@ public class PlayersManager implements Listener {
             playersConfig.createSection(player.getName());
             setPlayerDataList(player);
         }
+    }
+
+    private static void addPex(ProfessionsEnum prof, Player player) {
+        List<String> pexAll = formatPex(prof);
+        if (permission != null) {
+            for (String pex : pexAll) {
+                permission.playerAdd(player, pex);
+            }
+        }
+    }
+
+    private static List<String> formatPex(ProfessionsEnum prof) {
+        List<String> pexAll = new ArrayList<>();
+        for (String pex : prof.getPermissions()) {
+            if (pex.contains("parent.")) {
+                String[] splitPex = pex.split("\\.");
+                String profDepend = splitPex[1];
+                ProfessionsEnum professionsEnum = ProfessionsEnum.getProf(profDepend);
+                pexAll.addAll(professionsEnum.getPermissions());
+                continue;
+            }
+            pexAll.add(pex);
+        }
+        return pexAll;
     }
 
     public static void openPass(Player player) {

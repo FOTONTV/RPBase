@@ -2,28 +2,30 @@ package ru.fotontv.rpbase.data;
 
 import ru.fotontv.rpbase.modules.config.ConfigManager;
 
+import java.util.List;
+
 public enum ProfessionsEnum {
     PLAYER("-", ConfigManager.PLAYER),
-    JUDGE("Судья", ConfigManager.JUDGE),
-    PASSPORTOFFICER("Паспортист", ConfigManager.PASSPORTOFFICER),
-    MAYOR("Мэр", ConfigManager.MAYOR),
-    POLICEMAN("Полицейский", ConfigManager.POLICEMAN),
-    OFFICER("Офицер", ConfigManager.OFFICER),
-    CARETAKER("Смотритель", ConfigManager.CARETAKER),
-    DETECTIVE("Детектив", ConfigManager.DETECTIVE),
-    INVENTOR("Изобретатель", ConfigManager.INVENTOR),
-    BLACKSMITH("Кузнец", ConfigManager.BLACKSMITH),
-    WIZARD("Чародей", ConfigManager.WIZARD),
-    COOK("Повар", ConfigManager.COOK),
-    BREWER("Пивовар", ConfigManager.BREWER),
-    THIEF("Вор", ConfigManager.THIEF);
+    JUDGE("§cСудья", ConfigManager.JUDGE),
+    PASSPORTOFFICER("§cПаспортист", ConfigManager.PASSPORTOFFICER),
+    MAYOR("§cМэр", ConfigManager.MAYOR),
+    POLICEMAN("§cПолицейский", ConfigManager.POLICEMAN),
+    OFFICER("§cОфицер", ConfigManager.OFFICER),
+    CARETAKER("§cСмотритель", ConfigManager.CARETAKER),
+    DETECTIVE("§cДетектив", ConfigManager.DETECTIVE),
+    INVENTOR("§cИзобретатель", ConfigManager.INVENTOR),
+    BLACKSMITH("§cКузнец", ConfigManager.BLACKSMITH),
+    WIZARD("§cЧародей", ConfigManager.WIZARD),
+    COOK("§cПовар", ConfigManager.COOK),
+    BREWER("§cПивовар", ConfigManager.BREWER),
+    THIEF("§cВор", ConfigManager.THIEF);
 
     private final String nameProf;
-    private final String luckpermsGroup;
+    private final List<String> permissions;
 
-    ProfessionsEnum(String nameProff, String luckpermsGroup) {
+    ProfessionsEnum(String nameProff, List<String> permissions) {
         this.nameProf = nameProff;
-        this.luckpermsGroup = luckpermsGroup;
+        this.permissions = permissions;
     }
 
     public static boolean isAll(PlayerData data) {
@@ -46,8 +48,8 @@ public enum ProfessionsEnum {
         return nameProf;
     }
 
-    public String getLuckpermsGroup() {
-        return luckpermsGroup;
+    public List<String> getPermissions() {
+        return permissions;
     }
 
     public static ProfessionsEnum getProf(String nameProf) {

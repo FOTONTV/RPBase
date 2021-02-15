@@ -1,10 +1,5 @@
 package ru.fotontv.rpbase.commands;
 
-import net.luckperms.api.model.data.DataMutateResult;
-import net.luckperms.api.model.group.Group;
-import net.luckperms.api.model.user.User;
-import net.luckperms.api.node.NodeType;
-import net.luckperms.api.node.types.InheritanceNode;
 import net.md_5.bungee.api.chat.*;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -14,7 +9,6 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import ru.fotontv.rpbase.RPBase;
 import ru.fotontv.rpbase.data.*;
 import ru.fotontv.rpbase.modules.config.ConfigManager;
 
@@ -22,10 +16,6 @@ import javax.annotation.Nonnull;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Set;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.stream.Collectors;
 
 public class TownCommands implements CommandExecutor {
 
@@ -52,35 +42,6 @@ public class TownCommands implements CommandExecutor {
                                 }
                                 if (goldOreAmount >= 160 && data.getCityName().equals("-")) {
                                     if ((args[1].length() <= 20)) {
-                                        CompletableFuture<User> futureUser = RPBase.api.getUserManager().loadUser(player.getUniqueId());
-                                        AtomicBoolean isGroup = new AtomicBoolean(false);
-                                        futureUser.thenAcceptAsync(user -> {
-                                            Group group = RPBase.api.getGroupManager().getGroup(ProfessionsEnum.MAYOR.getLuckpermsGroup());
-                                            if (group == null) {
-                                                player.sendMessage("§cОШИБКА: Группа LuckPerms не найдена! Проверьте конфиг!");
-                                                RPBase.getPlugin().getLogger().info("Group does not exist.");
-                                                isGroup.set(true);
-                                                return;
-                                            }
-                                            Set<String> groups = user.getNodes(NodeType.INHERITANCE).stream().map(InheritanceNode::getGroupName)
-                                                    .collect(Collectors.toSet());
-                                            if(groups.contains(group.getName())) {
-                                                player.sendMessage("§cОШИБКА: У игрока уже установлена профессия мэра!");
-                                                RPBase.getPlugin().getLogger().info("Player already has the same rank.");
-                                                isGroup.set(true);
-                                                return;
-                                            }
-                                            InheritanceNode node = InheritanceNode.builder(group).value(true).build();
-                                            DataMutateResult result = user.data().add(node);
-                                            if(!result.wasSuccessful()) {
-                                                player.sendMessage("§cLuckPerms failed with " + result.name().toUpperCase() + ".");
-                                                isGroup.set(true);
-                                                return;
-                                            }
-                                            RPBase.api.getUserManager().saveUser(user);
-                                        });
-                                        if (isGroup.get())
-                                            return true;
                                         int resultOre = 0;
                                         ItemStack[] contents1 = player.getInventory().getContents();
                                         for (ItemStack stack : contents1) {
@@ -195,38 +156,6 @@ public class TownCommands implements CommandExecutor {
                                 if (player1 != null && playerData != null) {
                                     if (playerData.getProfession() != ProfessionsEnum.MAYOR) {
                                         if (playerData.getCityName().equals(data.getCityName())) {
-                                            CompletableFuture<User> futureUser = RPBase.api.getUserManager().loadUser(player.getUniqueId());
-                                            futureUser.thenAcceptAsync(user -> {
-                                                Group group = RPBase.api.getGroupManager().getGroup(ProfessionsEnum.MAYOR.getLuckpermsGroup());
-                                                if (group == null) {
-                                                    player.sendMessage("§cОШИБКА: Группа LuckPerms не найдена! Проверьте конфиг!");
-                                                    RPBase.getPlugin().getLogger().info("Group does not exist.");
-                                                    return;
-                                                }
-                                                InheritanceNode node = InheritanceNode.builder(group).value(true).build();
-                                                DataMutateResult result = user.data().remove(node);
-                                                if(!result.wasSuccessful()) {
-                                                    player.sendMessage("§cLuckPerms failed with " + result.name().toUpperCase() + ".");
-                                                    return;
-                                                }
-                                                RPBase.api.getUserManager().saveUser(user);
-                                            });
-                                            CompletableFuture<User> futureUser1 = RPBase.api.getUserManager().loadUser(player1.getUniqueId());
-                                            futureUser1.thenAcceptAsync(user -> {
-                                                Group group = RPBase.api.getGroupManager().getGroup(ProfessionsEnum.MAYOR.getLuckpermsGroup());
-                                                if (group == null) {
-                                                    player.sendMessage("§cОШИБКА: Группа LuckPerms не найдена! Проверьте конфиг!");
-                                                    RPBase.getPlugin().getLogger().info("Group does not exist.");
-                                                    return;
-                                                }
-                                                InheritanceNode node = InheritanceNode.builder(group).value(true).build();
-                                                DataMutateResult result = user.data().add(node);
-                                                if(!result.wasSuccessful()) {
-                                                    player.sendMessage("§cLuckPerms failed with " + result.name().toUpperCase() + ".");
-                                                    return;
-                                                }
-                                                RPBase.api.getUserManager().saveUser(user);
-                                            });
                                             data.getCity().setMayor(player1.getName());
                                             data.setProfession(ProfessionsEnum.PLAYER);
                                             data.getPassport().setProfession(ProfessionsEnum.PLAYER.getNameProf());
@@ -339,22 +268,6 @@ public class TownCommands implements CommandExecutor {
                             if (player.hasPermission("town.disband") ||
                                     data.getProfession().equals(ProfessionsEnum.MAYOR)) {
                                 if (data.getCity() != null) {
-                                    CompletableFuture<User> futureUser = RPBase.api.getUserManager().loadUser(player.getUniqueId());
-                                    futureUser.thenAcceptAsync(user -> {
-                                        Group group = RPBase.api.getGroupManager().getGroup(ProfessionsEnum.MAYOR.getLuckpermsGroup());
-                                        if (group == null) {
-                                            player.sendMessage("§cОШИБКА: Группа LuckPerms не найдена! Проверьте конфиг!");
-                                            RPBase.getPlugin().getLogger().info("Group does not exist.");
-                                            return;
-                                        }
-                                        InheritanceNode node = InheritanceNode.builder(group).value(true).build();
-                                        DataMutateResult result = user.data().remove(node);
-                                        if(!result.wasSuccessful()) {
-                                            player.sendMessage("§cLuckPerms failed with " + result.name().toUpperCase() + ".");
-                                            return;
-                                        }
-                                        RPBase.api.getUserManager().saveUser(user);
-                                    });
                                     String cityName = data.getCityName();
                                     CitiesManager.disbandCity(data.getCity());
                                     PlayersManager.disbandCity(data);

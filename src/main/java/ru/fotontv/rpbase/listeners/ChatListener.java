@@ -10,6 +10,7 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import ru.fotontv.rpbase.RPBase;
 import ru.fotontv.rpbase.data.PlayerData;
 import ru.fotontv.rpbase.data.PlayersManager;
+import ru.fotontv.rpbase.data.ProfessionsEnum;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -27,21 +28,17 @@ public class ChatListener implements Listener {
                     if (playerData.isChatCity() && playerData.getCity() != null) {
                         CompletableFuture<User> futureUser = RPBase.api.getUserManager().loadUser(player.getUniqueId());
                         futureUser.thenAcceptAsync(user -> {
-                            String prefix = user.getCachedData().getMetaData().getPrefix();
+                            String prefix = "§7[" + playerData.getProfession().getNameProf() + "§7]";
+                            if (playerData.getProfession().equals(ProfessionsEnum.PLAYER)) {
+                                prefix = "§7[§2Житель§7] §f";
+                            }
                             String suffix = user.getCachedData().getMetaData().getSuffix();
                             String newmessage;
-                            if (suffix != null && prefix != null) {
-                                suffix = ChatColor.translateAlternateColorCodes('&', suffix);
-                                prefix = ChatColor.translateAlternateColorCodes('&', prefix);
-                                newmessage = "§7Чат города §8§l| §r" + prefix + " " + player.getName() + " "+ suffix + " » §f" + message;
-                            } else if (suffix == null && prefix != null) {
-                                prefix = ChatColor.translateAlternateColorCodes('&', prefix);
+                            if (suffix == null) {
                                 newmessage = "§7Чат города §8§l| §r" + prefix + " " + player.getName() + " » §f" + message;
-                            } else if (suffix != null) {
-                                suffix = ChatColor.translateAlternateColorCodes('&', suffix);
-                                newmessage = "§7Чат города §8§l| §r" + player.getName() + " " + suffix + " » §f" + message;
                             } else {
-                                newmessage = "§7Чат города §8§l| §r" + player.getName() + " » §f" + message;
+                                suffix = ChatColor.translateAlternateColorCodes('&', suffix);
+                                newmessage = "§7Чат города §8§l| §r" + prefix + " " + player.getName() + " "+ suffix + " » §f" + message;
                             }
                             for (Player player1 : Bukkit.getOnlinePlayers()) {
                                 PlayerData playerData1 = PlayersManager.getPlayerData(player1);

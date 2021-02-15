@@ -4,36 +4,87 @@
 #кроме выше указанного проекта  запрещено!
 #Автор: FOTONTV (https://vk.com/vovan2203228)
 
-#Группы в LuckPerms
+#Права
 
 #Игрок
-PLAYER: "default"
+PLAYER:
+  - "advancedfood.eat.*"
+  - "modifyworld.*"
+  - "animatedscoreboard.test"
+  - "bettergui.openmenu"
+  - "bettergui.openmenu.bypass"
+  - "brewery.openbarrel.mc"
+  - "pm.clear"
+  - "pm.ignore"
+  - "pm.message"
+  - "pm.read"
+  - "pm.reply"
+  - "spit.use"
 #Судья
-JUDGE: "judge"
+JUDGE:
+  - "parent.PLAYER"
 #Паспортист
-PASSPORTOFFICER: "passportofficer"
+PASSPORTOFFICER:
+  - "parent.PLAYER"
 #Мэр
-MAYOR: "mayor"
+MAYOR:
+  - "parent.PLAYER"
 #Полицейский
-POLICEMAN: "policeman"
+POLICEMAN:
+  - "parent.PLAYER"
 #Офицер
-OFFICER: "officer"
+OFFICER:
+  - "parent.PLAYER"
 #Смотритель
-CARETAKER: "caretaker"
+CARETAKER:
+  - "parent.PLAYER"
 #Детектив
-DETECTIVE: "detective"
+DETECTIVE:
+  - "parent.PLAYER"
+  - "coreprotect.inspect"
 #Изобретатель
-INVENTOR: "inventor"
+INVENTOR:
+  - "parent.PLAYER"
+  - "parent.BLACKSMITH"
+  - "parent.WIZARD"
+  - "craftingapi.recipe.craftingapi.beacon_u"
 #Кузнец
-BLACKSMITH: "blacksmith"
+BLACKSMITH:
+  - "parent.PLAYER"
+  - "craftingapi.recipe.craftingapi.diamond_boots"
+  - "craftingapi.recipe.craftingapi.diamond_chestplate"
+  - "craftingapi.recipe.craftingapi.diamond_helmet"
+  - "craftingapi.recipe.craftingapi.diamond_leggins"
+  - "craftingapi.recipe.craftingapi.diamond_sword"
+  - "craftingapi.recipe.craftingapi.iron_boots"
+  - "craftingapi.recipe.craftingapi.iron_chestplate"
+  - "craftingapi.recipe.craftingapi.iron_helmet"
+  - "craftingapi.recipe.craftingapi.iron_leggins"
+  - "craftingapi.recipe.craftingapi.iron_sword"
+  - "craftingapi.recipe.craftingapi.laaton"
+  - "craftingapi.recipe.craftingapi.magic_iron"
+  - "craftingapi.recipe.craftingapi.shield"
+  - "craftingapi.recipe.craftingapi.stick_l"
 #Чародей
-WIZARD: "wizard"
+WIZARD:
+  - "parent.PLAYER"
+  - "craftingapi.recipe.craftingapi.enchanting_table"
+  - "xrp.open_enchanting_table"
 #Повар
-COOK: "cook"
+COOK:
+  - "parent.PLAYER"
+  - "advancedfood.craft.*"
+  - "advancedfood.craft"
 #Пивовар
-BREWER: "brewer"
+BREWER:
+  - "parent.PLAYER"
+  - "brewery.cauldron.insert"
+  - "brewery.cauldron.time"
+  - "brewery.createbarrel"
+  - "brewery.user"
 #Вор
-THIEF: "thief"
+THIEF:
+  - "parent.PLAYER"
 
 #Максимальное кол-во заключенных в камере
 maxplayerincell: 2

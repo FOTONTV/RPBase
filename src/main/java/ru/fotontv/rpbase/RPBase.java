@@ -1,6 +1,7 @@
 package ru.fotontv.rpbase;
 
 import net.luckperms.api.LuckPerms;
+import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -17,38 +18,42 @@ import java.util.Objects;
 
 public final class RPBase extends JavaPlugin {
 
+    public static LuckPerms api;
     private static RPBase plugin;
+    public Permission permission;
+    private ConfigManager configManager;
 
     public static RPBase getPlugin() {
         return plugin;
     }
 
-    public static LuckPerms api;
-
     @Override
     public void onEnable() {
-       plugin = this;
-       getLogger().info("Loading RPBase...");
+        plugin = this;
+        getLogger().info("Loading RPBase...");
 
         RegisteredServiceProvider<LuckPerms> provider = Bukkit.getServicesManager().getRegistration(LuckPerms.class);
         if (provider != null) {
             api = provider.getProvider();
         }
 
-       saveDefaultConfig();
+        setupPermissions();
 
-       new ConfigManager(plugin);
-       new StatusCityManager(plugin);
+        saveDefaultConfig();
 
-       new WantedManager(plugin);
-       new JailManager(plugin);
-       CitiesManager citiesManager = new CitiesManager(this);
-       citiesManager.load();
-       PlayersManager.load();
+        this.configManager = new ConfigManager(plugin);
+        new StatusCityManager(plugin);
 
-       registerEvents();
-       registerCommands();
+        new WantedManager(plugin);
+        new JailManager(plugin);
+        CitiesManager citiesManager = new CitiesManager(this);
+        citiesManager.load();
+        PlayersManager.load();
+
+        registerEvents();
+        registerCommands();
     }
+
 
     @Override
     public void onDisable() {
@@ -56,6 +61,21 @@ public final class RPBase extends JavaPlugin {
         WantedManager.saveFileWanted();
         JailManager.saveFileJails();
         CitiesManager.saveCities();
+    }
+
+    public void setupPermissions() {
+        RegisteredServiceProvider<Permission> rsp = getServer().getServicesManager().getRegistration(Permission.class);
+        if (rsp != null) {
+            permission = rsp.getProvider();
+        }
+    }
+
+    public Permission getPermission() {
+        return permission;
+    }
+
+    public ConfigManager getConfigManager() {
+        return configManager;
     }
 
     private void registerCommands() {
@@ -83,6 +103,7 @@ public final class RPBase extends JavaPlugin {
         Objects.requireNonNull(getCommand("prof")).setTabCompleter(new ProfTabCompleter());
         Objects.requireNonNull(getCommand("tc")).setExecutor(new TcCommands());
         Objects.requireNonNull(getCommand("talent")).setExecutor(new TalentCommands());
+        Objects.requireNonNull(getCommand("reload")).setExecutor(new ReloadCommands());
     }
 
     private void registerEvents() {

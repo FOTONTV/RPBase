@@ -10,20 +10,20 @@ public class ConfigManager {
 
     private final RPBase plugin;
 
-    public static String PLAYER = "";
-    public static String JUDGE = "";
-    public static String PASSPORTOFFICER = "";
-    public static String MAYOR = "";
-    public static String POLICEMAN = "";
-    public static String OFFICER = "";
-    public static String CARETAKER = "";
-    public static String DETECTIVE = "";
-    public static String INVENTOR = "";
-    public static String BLACKSMITH = "";
-    public static String WIZARD = "";
-    public static String COOK = "";
-    public static String BREWER = "";
-    public static String THIEF = "";
+    public static List<String> PLAYER = new ArrayList<>();
+    public static List<String> JUDGE = new ArrayList<>();
+    public static List<String> PASSPORTOFFICER = new ArrayList<>();
+    public static List<String> MAYOR = new ArrayList<>();
+    public static List<String> POLICEMAN = new ArrayList<>();
+    public static List<String> OFFICER = new ArrayList<>();
+    public static List<String> CARETAKER = new ArrayList<>();
+    public static List<String> DETECTIVE = new ArrayList<>();
+    public static List<String> INVENTOR = new ArrayList<>();
+    public static List<String> BLACKSMITH = new ArrayList<>();
+    public static List<String> WIZARD = new ArrayList<>();
+    public static List<String> COOK = new ArrayList<>();
+    public static List<String> BREWER = new ArrayList<>();
+    public static List<String> THIEF = new ArrayList<>();
 
     public static int MAX_PLAYER_IN_CELL = 2;
 
@@ -131,21 +131,21 @@ public class ConfigManager {
         load();
     }
 
-    private void load() {
-        PLAYER = plugin.getConfig().getString("PLAYER");
-        JUDGE = plugin.getConfig().getString("JUDGE");
-        PASSPORTOFFICER = plugin.getConfig().getString("PASSPORTOFFICER");
-        MAYOR = plugin.getConfig().getString("MAYOR");
-        POLICEMAN = plugin.getConfig().getString("POLICEMAN");
-        OFFICER = plugin.getConfig().getString("OFFICER");
-        CARETAKER = plugin.getConfig().getString("CARETAKER");
-        DETECTIVE = plugin.getConfig().getString("DETECTIVE");
-        INVENTOR = plugin.getConfig().getString("INVENTOR");
-        BLACKSMITH = plugin.getConfig().getString("BLACKSMITH");
-        WIZARD = plugin.getConfig().getString("WIZARD");
-        COOK = plugin.getConfig().getString("COOK");
-        BREWER = plugin.getConfig().getString("BREWER");
-        THIEF = plugin.getConfig().getString("THIEF");
+    public void load() {
+        PLAYER = plugin.getConfig().getStringList("PLAYER");
+        JUDGE = plugin.getConfig().getStringList("JUDGE");
+        PASSPORTOFFICER = plugin.getConfig().getStringList("PASSPORTOFFICER");
+        MAYOR = plugin.getConfig().getStringList("MAYOR");
+        POLICEMAN = plugin.getConfig().getStringList("POLICEMAN");
+        OFFICER = plugin.getConfig().getStringList("OFFICER");
+        CARETAKER = plugin.getConfig().getStringList("CARETAKER");
+        DETECTIVE = plugin.getConfig().getStringList("DETECTIVE");
+        INVENTOR = plugin.getConfig().getStringList("INVENTOR");
+        BLACKSMITH = plugin.getConfig().getStringList("BLACKSMITH");
+        WIZARD = plugin.getConfig().getStringList("WIZARD");
+        COOK = plugin.getConfig().getStringList("COOK");
+        BREWER = plugin.getConfig().getStringList("BREWER");
+        THIEF = plugin.getConfig().getStringList("THIEF");
 
         MAX_PLAYER_IN_CELL = plugin.getConfig().getInt("maxplayerincell");
 
