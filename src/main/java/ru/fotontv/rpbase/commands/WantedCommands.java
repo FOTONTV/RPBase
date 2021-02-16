@@ -5,13 +5,13 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import ru.fotontv.rpbase.data.PlayerData;
 import ru.fotontv.rpbase.data.PlayersManager;
 import ru.fotontv.rpbase.data.ProfessionsEnum;
 import ru.fotontv.rpbase.modules.config.ConfigManager;
 import ru.fotontv.rpbase.modules.wanted.WantedManager;
 
 import javax.annotation.Nonnull;
-import java.util.Objects;
 
 public class WantedCommands implements CommandExecutor {
 
@@ -20,10 +20,13 @@ public class WantedCommands implements CommandExecutor {
         if (sender instanceof Player) {
             Player player = (Player) sender;
             if (command.getName().equals("wanted")) {
+                PlayerData data = PlayersManager.getPlayerData(player);
+                if (data == null)
+                    return true;
                 if (args.length == 2) {
                     if (args[0].equals("remove")) {
                         if (player.hasPermission("police.wanted.remove") ||
-                                Objects.requireNonNull(PlayersManager.getPlayerData(player)).getProfession().equals(ProfessionsEnum.OFFICER)) {
+                                data.getProfession().equals(ProfessionsEnum.OFFICER) || data.getProfession().equals(ProfessionsEnum.CARETAKER)) {
                             Player nick = Bukkit.getPlayer(args[1]);
                             if (nick != null) {
                                 if (!(player.getName().equalsIgnoreCase(nick.getName()))) {
@@ -50,8 +53,9 @@ public class WantedCommands implements CommandExecutor {
                 if (args.length == 1) {
                     if (args[0].equals("list")) {
                         if (player.hasPermission("police.wanted.list") ||
-                                Objects.requireNonNull(PlayersManager.getPlayerData(player)).getProfession().equals(ProfessionsEnum.POLICEMAN) ||
-                                Objects.requireNonNull(PlayersManager.getPlayerData(player)).getProfession().equals(ProfessionsEnum.OFFICER)) {
+                                data.getProfession().equals(ProfessionsEnum.POLICEMAN) ||
+                                data.getProfession().equals(ProfessionsEnum.OFFICER) ||
+                                data.getProfession().equals(ProfessionsEnum.CARETAKER)) {
                             player.sendMessage(ConfigManager.POLICE_WANTEDLIST);
                             for (String nick : WantedManager.getWantedList()) {
                                 player.sendMessage(ConfigManager.POLICE_WANTEDLIST_NICK.replace("%s", nick));
@@ -61,8 +65,8 @@ public class WantedCommands implements CommandExecutor {
                         player.sendMessage(ConfigManager.PLAYER_NOPERMISSION);
                         return true;
                     }
-                    if (player.hasPermission("police.wanted.add") || Objects.requireNonNull(PlayersManager.getPlayerData(player)).getProfession().equals(ProfessionsEnum.POLICEMAN) ||
-                            Objects.requireNonNull(PlayersManager.getPlayerData(player)).getProfession().equals(ProfessionsEnum.OFFICER)) {
+                    if (player.hasPermission("police.wanted.add") || data.getProfession().equals(ProfessionsEnum.POLICEMAN) ||
+                            data.getProfession().equals(ProfessionsEnum.OFFICER) || data.getProfession().equals(ProfessionsEnum.CARETAKER)) {
                         Player nick = Bukkit.getPlayer(args[0]);
                         if (nick != null) {
                             if (!(player.getName().equalsIgnoreCase(nick.getName()))) {

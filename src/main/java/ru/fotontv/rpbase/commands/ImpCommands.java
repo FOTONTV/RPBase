@@ -5,6 +5,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import ru.fotontv.rpbase.data.PlayerData;
 import ru.fotontv.rpbase.data.PlayersManager;
 import ru.fotontv.rpbase.data.ProfessionsEnum;
 import ru.fotontv.rpbase.modules.config.ConfigManager;
@@ -12,7 +13,6 @@ import ru.fotontv.rpbase.modules.jail.JailManager;
 import ru.fotontv.rpbase.modules.wanted.WantedManager;
 
 import javax.annotation.Nonnull;
-import java.util.Objects;
 
 public class ImpCommands implements CommandExecutor {
 
@@ -21,8 +21,12 @@ public class ImpCommands implements CommandExecutor {
         if (sender instanceof Player) {
             Player player = (Player) sender;
             if (command.getName().equals("imp")) {
+                PlayerData data = PlayersManager.getPlayerData(player);
+                if (data == null)
+                    return true;
                 if (player.hasPermission("police.imprison") ||
-                        Objects.requireNonNull(PlayersManager.getPlayerData(player)).getProfession().equals(ProfessionsEnum.OFFICER)) {
+                        data.getProfession().equals(ProfessionsEnum.OFFICER) ||
+                data.getProfession().equals(ProfessionsEnum.CARETAKER)) {
                     if (args.length == 2) {
                         Player nick = Bukkit.getPlayer(args[0]);
                         if (nick != null) {
