@@ -103,7 +103,7 @@ public final class RPBase extends JavaPlugin {
         Objects.requireNonNull(getCommand("prof")).setTabCompleter(new ProfTabCompleter());
         Objects.requireNonNull(getCommand("tc")).setExecutor(new TcCommands());
         Objects.requireNonNull(getCommand("talent")).setExecutor(new TalentCommands());
-        Objects.requireNonNull(getCommand("reload")).setExecutor(new ReloadCommands());
+        Objects.requireNonNull(getCommand("rpbase")).setExecutor(new ReloadCommands());
     }
 
     private void registerEvents() {

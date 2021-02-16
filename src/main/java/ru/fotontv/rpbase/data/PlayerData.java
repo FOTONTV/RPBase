@@ -26,18 +26,21 @@ public class PlayerData {
     private String dateInput = "-";
     private boolean isChatCity = false;
     private Integer countUnlock = 0;
+    private List<String> pexs;
 
     public PlayerData(Player player) {
         this.player = player;
         this.nick = player.getName();
         this.profession = ProfessionsEnum.PLAYER;
         this.passport = new Passport();
+        this.pexs = ProfessionsEnum.PLAYER.getPermissions();
     }
 
     public PlayerData(OfflinePlayer player) {
         this.nick = player.getName();
         this.profession = ProfessionsEnum.PLAYER;
         this.passport = new Passport();
+        this.pexs = ProfessionsEnum.PLAYER.getPermissions();
     }
 
     public void setPlayer(Player player) {
@@ -236,5 +239,13 @@ public class PlayerData {
 
     public void setCountUnlock(int count) {
         countUnlock = count;
+    }
+
+    public List<String> getPexs() {
+        return pexs;
+    }
+
+    public void setPexs(List<String> pexs) {
+        this.pexs = pexs;
     }
 }

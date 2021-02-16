@@ -45,7 +45,7 @@ commands:
   talent:
     description: Открыть gui талантов
     usage: /<command>
-  reload:
+  rpbase:
     description: Перезагрузить конфиг
     usage: /<command>
 permissions:

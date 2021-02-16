@@ -19,16 +19,21 @@ public class ChatListener implements Listener {
     @EventHandler
     public void onChat(AsyncPlayerChatEvent event) {
         String message = event.getMessage();
-        System.out.println("LOGGER " + message);
         if (!message.contains("(())")) {
             if (!message.contains("!(())")) {
                 Player player = event.getPlayer();
                 PlayerData playerData = PlayersManager.getPlayerData(player);
                 if (playerData != null) {
+                    if (message.contains("Чат города")) {
+                        if (!playerData.isChatCity()) {
+                            event.setCancelled(true);
+                            return;
+                        }
+                    }
                     if (playerData.isChatCity() && playerData.getCity() != null) {
                         CompletableFuture<User> futureUser = RPBase.api.getUserManager().loadUser(player.getUniqueId());
                         futureUser.thenAcceptAsync(user -> {
-                            String prefix = "§7[" + playerData.getProfession().getNameProf() + "§7]";
+                            String prefix = "§7[§c" + playerData.getProfession().getNameProf() + "§7]";
                             if (playerData.getProfession().equals(ProfessionsEnum.PLAYER)) {
                                 prefix = "§7[§2Житель§7] §f";
                             }
@@ -44,7 +49,8 @@ public class ChatListener implements Listener {
                                 PlayerData playerData1 = PlayersManager.getPlayerData(player1);
                                 if (playerData1 != null) {
                                     if (playerData1.getCityName().equals(playerData.getCityName())) {
-                                        playerData1.getPlayer().sendMessage(newmessage);
+                                        if (playerData1.isChatCity())
+                                            playerData1.getPlayer().sendMessage(newmessage);
                                     }
                                 }
                             }

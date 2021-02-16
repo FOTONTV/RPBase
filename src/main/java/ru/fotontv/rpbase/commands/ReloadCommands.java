@@ -12,8 +12,10 @@ public class ReloadCommands implements CommandExecutor {
     @Override
     public boolean onCommand(@Nonnull CommandSender sender, @Nonnull Command command, @Nonnull String label, @Nonnull String[] args) {
         if (sender.isOp()) {
-            RPBase.getPlugin().reloadConfig();
-            RPBase.getPlugin().getConfigManager().load();
+            if (args[0].equals("reload")) {
+                RPBase.getPlugin().reloadConfig();
+                RPBase.getPlugin().getConfigManager().load();
+            }
         }
         return true;
     }

@@ -110,6 +110,7 @@ public class PlayersManager implements Listener {
             playersConfig.set(player.getName() + ".profession", data.getPassport().getProfession());
             playersConfig.set(player.getName() + ".isChatCity", data.isChatCity());
             playersConfig.set(player.getName() + ".countUnlockSuccess", data.getCountUnlock());
+            playersConfig.set(player.getName() + ".pexs", data.getPexs());
         }
         try {
             playersConfig.save(playersFile);
@@ -144,6 +145,7 @@ public class PlayersManager implements Listener {
             playersConfig.set(player.getName() + ".profession", data.getPassport().getProfession());
             playersConfig.set(player.getName() + ".isChatCity", data.isChatCity());
             playersConfig.set(player.getName() + ".countUnlockSuccess", data.getCountUnlock());
+            playersConfig.set(player.getName() + ".pexs", data.getPexs());
         }
         try {
             playersConfig.save(playersFile);
@@ -166,10 +168,12 @@ public class PlayersManager implements Listener {
             String profession = playersConfig.getString(nick + ".profession");
             boolean isChatCity = playersConfig.getBoolean(nick + ".isChatCity");
             int countUnlockSuccess = playersConfig.getInt(nick + ".countUnlockSuccess");
+            List<String> pexs = playersConfig.getStringList(nick + ".pexs");
             ProfessionsEnum prof = ProfessionsEnum.valueOf(professionsEnum);
             OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(nick);
             PlayerData data = new PlayerData(offlinePlayer);
             data.setProfession(prof);
+            data.setPexs(pexs);
             Passport passport = new Passport();
             passport.setPickUpCity(pickUpCity);
             passport.setIsPickUpCity(isPickUpCity);
@@ -201,10 +205,12 @@ public class PlayersManager implements Listener {
             String profession = playersConfig.getString(player.getName() + ".profession");
             boolean isChatCity = playersConfig.getBoolean(player.getName() + ".isChatCity");
             int countUnlockSuccess = playersConfig.getInt(player.getName() + ".countUnlockSuccess");
+            List<String> pexs = playersConfig.getStringList(player.getName() + ".pexs");
             ProfessionsEnum prof = ProfessionsEnum.valueOf(professionsEnum);
             PlayerData data = new PlayerData(player);
             data.setProfession(prof);
-            addPex(prof, player);
+            data.setPexs(pexs);
+            addPexs(player, pexs);
             Passport passport = new Passport();
             passport.setPickUpCity(pickUpCity);
             passport.setIsPickUpCity(isPickUpCity);
@@ -225,13 +231,33 @@ public class PlayersManager implements Listener {
         }
     }
 
-    private static void addPex(ProfessionsEnum prof, Player player) {
+    public static void addPexs(Player player, List<String> pexs) {
+        if (permission != null) {
+            for (String pex : pexs) {
+                permission.playerAdd(player, pex);
+            }
+        }
+    }
+
+    public static void addPex(ProfessionsEnum prof, Player player, PlayerData data) {
         List<String> pexAll = formatPex(prof);
         if (permission != null) {
             for (String pex : pexAll) {
                 permission.playerAdd(player, pex);
+                data.setPexs(pexAll);
             }
         }
+        System.out.println(pexAll);
+    }
+
+    public static void removePex(Player player, PlayerData data) {
+        List<String> pexAll = data.getPexs();
+        if (permission != null) {
+            for (String pex : pexAll) {
+                permission.playerRemove(player, pex);
+            }
+        }
+        System.out.println(pexAll);
     }
 
     private static List<String> formatPex(ProfessionsEnum prof) {

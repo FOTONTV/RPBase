@@ -38,7 +38,7 @@ public class RPBaseExpansion extends PlaceholderExpansion {
                 if (data.getProfession().equals(ProfessionsEnum.PLAYER)) {
                     return "§7[§2Житель§7] §f";
                 }
-                return "§7[" + data.getProfession().getNameProf() + "§7] §f";
+                return "§7[§c" + data.getProfession().getNameProf() + "§7] §f";
             }
         }
         if (identifier.equals("suffix")) {
