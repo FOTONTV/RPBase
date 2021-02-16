@@ -1,4 +1,4 @@
-package ru.fotontv.rpbase.modules.config;
+package ru.fotontv.rpbase.config;
 
 import org.bukkit.ChatColor;
 import ru.fotontv.rpbase.RPBase;
@@ -6,9 +6,7 @@ import ru.fotontv.rpbase.RPBase;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ConfigManager {
-
-    private final RPBase plugin;
+public class GlobalConfig {
 
     public static List<String> PLAYER = new ArrayList<>();
     public static List<String> JUDGE = new ArrayList<>();
@@ -24,84 +22,59 @@ public class ConfigManager {
     public static List<String> COOK = new ArrayList<>();
     public static List<String> BREWER = new ArrayList<>();
     public static List<String> THIEF = new ArrayList<>();
-
     public static int MAX_PLAYER_IN_CELL = 2;
-
     public static String NAMEPASSPORTGUI = "";
     public static String NAMEPASSPORT = "";
     public static List<String> LOREPASSPORT = new ArrayList<>();
-
     public static String CITYINFOGUINAME = "";
     public static String CITYINFOBOOKNAME = "";
     public static List<String> LORECITYINFO = new ArrayList<>();
-
     public static String CITIZENSCITYGUINAME = "";
     public static String CITIZENSCITYSKULLNAME = "";
     public static List<String> LORESKULLCITIZEN = new ArrayList<>();
-
     public static String POLICE_WANTED_REMOVE = "";
     public static String PLAYER_WANTED_REMOVE = "";
-
     public static String POLICE_WANTEDLIST = "";
     public static String POLICE_WANTEDLIST_NICK = "";
-
     public static String POLICE_WANTEDLIST_ADD = "";
     public static String PLAYER_WANTEDLIST_ADD = "";
-
     public static String POLICE_JAIL_CREATE = "";
     public static String POLICE_JAIL_REMOVE = "";
     public static String POLICE_JAIL_LIST = "";
     public static String POLICE_JAIL_LIST_NAME = "";
-
     public static String POLICE_CELL_CREATE = "";
     public static String POLICE_CELL_REMOVE = "";
     public static String POLICE_CELL_LIST = "";
     public static String POLICE_CELL_LIST_NAME = "";
-
     public static String POLICE_CELL_ADDPLAYER = "";
     public static String PLAYER_CELL_ADD = "";
-
     public static String PASSPORTOFFICER_PLACEEDIT = "";
     public static String PLAYER_PASSPORT_PLACEEDIT = "";
-
     public static String PASSPORTOFFICER_PICKUPCITY = "";
     public static String PLAYER_PASSPORT_PICKUPCITY = "";
-
     public static String JUDGE_CRIMINALRECORDS = "";
     public static String PLAYER_PASSPORT_CRIMINALRECORDS = "";
-
     public static String PLAYER_PASSPORT_REQUEST = "";
     public static String PLAYER_PASSPORT_REQUESTOPEN = "";
-
     public static String PLAYER_CREATECITY = "";
     public static String PLAYERS_CREATECITY = "";
-
     public static String PLAYER_INVITECITY = "";
     public static String MAYOR_INVITECITY = "";
-
     public static String PLAYER_KICKCITY = "";
     public static String MAYOR_KICKCITY = "";
-
     public static String PLAYER_TRANSFERMAYOR = "";
     public static String MAYOR_TRANSFERMAYOR = "";
-
     public static String PLAYER_ADDPROF = "";
     public static String MAYOR_ADDPROF = "";
-
     public static String PLAYER_REMPROF = "";
     public static String MAYOR_REMPROF = "";
-
     public static String PLAYER_LEAVEINCITY = "";
-
     public static String PLAYERS_DISBANDCITY = "";
     public static String MAYOR_DISBANDCITI = "";
-
     public static String PLAYER_INVITECITYACCEPT = "";
     public static String MAYOR_INVITECITYACCEPT = "";
-
     public static String PLAYER_INVITECITYDENY = "";
     public static String MAYOR_INVITECITYDENY = "";
-
     //Ошибки
     public static String NOTPLAYER_WANTEDLIST = "";
     public static String PLAYER_NOWWANTEDLIST = "";
@@ -125,8 +98,9 @@ public class ConfigManager {
     public static String PROFFESSIONNOTMAYOR = "";
     public static String NOTONLINEPLAYERREQUESTCITY = "";
     public static String CITYNOWACCEPT = "";
+    private final RPBase plugin;
 
-    public ConfigManager(RPBase plugin) {
+    public GlobalConfig(RPBase plugin) {
         this.plugin = plugin;
         load();
     }

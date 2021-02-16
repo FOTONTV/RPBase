@@ -4,9 +4,9 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
-import ru.fotontv.rpbase.data.PlayersManager;
-import ru.fotontv.rpbase.data.ProfessionsEnum;
+import ru.fotontv.rpbase.enums.ProfessionsEnum;
 import ru.fotontv.rpbase.modules.jail.JailManager;
+import ru.fotontv.rpbase.modules.player.PlayersManager;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;

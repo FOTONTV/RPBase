@@ -1,4 +1,4 @@
-package ru.fotontv.rpbase.modules.config;
+package ru.fotontv.rpbase.config;
 
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -8,10 +8,7 @@ import ru.fotontv.rpbase.RPBase;
 import java.io.File;
 import java.io.IOException;
 
-public class StatusCityManager {
-    private final RPBase plugin;
-    private FileConfiguration cityStatusConfig;
-
+public class StatusCityConfig {
     public static Integer SETTLEMENT_maxCitizens = 6;
     public static Integer SETTLEMENT_goldOre = 0;
     public static Integer SETTLEMENT_JUDGE = 1;
@@ -25,7 +22,6 @@ public class StatusCityManager {
     public static Integer SETTLEMENT_WIZARD = 1;
     public static Integer SETTLEMENT_COOK = 1;
     public static Integer SETTLEMENT_BREWER = 1;
-
     public static Integer PROVINCE_maxCitizens = 18;
     public static Integer PROVINCE_goldOre = 640;
     public static Integer PROVINCE_JUDGE = 1;
@@ -39,7 +35,6 @@ public class StatusCityManager {
     public static Integer PROVINCE_WIZARD = 1;
     public static Integer PROVINCE_COOK = 1;
     public static Integer PROVINCE_BREWER = 1;
-
     public static Integer CITY_maxCitizens = 36;
     public static Integer CITY_goldOre = 900;
     public static Integer CITY_JUDGE = 1;
@@ -53,7 +48,6 @@ public class StatusCityManager {
     public static Integer CITY_WIZARD = 1;
     public static Integer CITY_COOK = 1;
     public static Integer CITY_BREWER = 1;
-
     public static Integer METROPOLIS_maxCitizens = 108;
     public static Integer METROPOLIS_goldOre = 1500;
     public static Integer METROPOLIS_JUDGE = 1;
@@ -67,8 +61,10 @@ public class StatusCityManager {
     public static Integer METROPOLIS_WIZARD = 1;
     public static Integer METROPOLIS_COOK = 1;
     public static Integer METROPOLIS_BREWER = 1;
+    private final RPBase plugin;
+    private FileConfiguration cityStatusConfig;
 
-    public StatusCityManager(RPBase plugin) {
+    public StatusCityConfig(RPBase plugin) {
         this.plugin = plugin;
         loadFile();
     }

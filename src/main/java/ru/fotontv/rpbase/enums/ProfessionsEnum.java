@@ -1,24 +1,25 @@
-package ru.fotontv.rpbase.data;
+package ru.fotontv.rpbase.enums;
 
-import ru.fotontv.rpbase.modules.config.ConfigManager;
+import ru.fotontv.rpbase.config.GlobalConfig;
+import ru.fotontv.rpbase.modules.player.PlayerData;
 
 import java.util.List;
 
 public enum ProfessionsEnum {
-    PLAYER("-", ConfigManager.PLAYER),
-    JUDGE("Судья", ConfigManager.JUDGE),
-    PASSPORTOFFICER("Паспортист", ConfigManager.PASSPORTOFFICER),
-    MAYOR("Мэр", ConfigManager.MAYOR),
-    POLICEMAN("Полицейский", ConfigManager.POLICEMAN),
-    OFFICER("Офицер", ConfigManager.OFFICER),
-    CARETAKER("Смотритель", ConfigManager.CARETAKER),
-    DETECTIVE("Детектив", ConfigManager.DETECTIVE),
-    INVENTOR("Изобретатель", ConfigManager.INVENTOR),
-    BLACKSMITH("Кузнец", ConfigManager.BLACKSMITH),
-    WIZARD("Чародей", ConfigManager.WIZARD),
-    COOK("Повар", ConfigManager.COOK),
-    BREWER("Пивовар", ConfigManager.BREWER),
-    THIEF("Вор", ConfigManager.THIEF);
+    PLAYER("-", GlobalConfig.PLAYER),
+    JUDGE("Судья", GlobalConfig.JUDGE),
+    PASSPORTOFFICER("Паспортист", GlobalConfig.PASSPORTOFFICER),
+    MAYOR("Мэр", GlobalConfig.MAYOR),
+    POLICEMAN("Полицейский", GlobalConfig.POLICEMAN),
+    OFFICER("Офицер", GlobalConfig.OFFICER),
+    CARETAKER("Смотритель", GlobalConfig.CARETAKER),
+    DETECTIVE("Детектив", GlobalConfig.DETECTIVE),
+    INVENTOR("Изобретатель", GlobalConfig.INVENTOR),
+    BLACKSMITH("Кузнец", GlobalConfig.BLACKSMITH),
+    WIZARD("Чародей", GlobalConfig.WIZARD),
+    COOK("Повар", GlobalConfig.COOK),
+    BREWER("Пивовар", GlobalConfig.BREWER),
+    THIEF("Вор", GlobalConfig.THIEF);
 
     private final String nameProf;
     private final List<String> permissions;
@@ -44,19 +45,19 @@ public enum ProfessionsEnum {
                 data.getProfession().equals(THIEF);
     }
 
-    public String getNameProf() {
-        return nameProf;
-    }
-
-    public List<String> getPermissions() {
-        return permissions;
-    }
-
     public static ProfessionsEnum getProf(String nameProf) {
         for (ProfessionsEnum professionsEnum : values()) {
             if (professionsEnum.nameProf.equals(nameProf))
                 return professionsEnum;
         }
         return ProfessionsEnum.PLAYER;
+    }
+
+    public String getNameProf() {
+        return nameProf;
+    }
+
+    public List<String> getPermissions() {
+        return permissions;
     }
 }

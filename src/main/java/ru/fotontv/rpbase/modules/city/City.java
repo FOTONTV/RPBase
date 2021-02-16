@@ -1,4 +1,4 @@
-package ru.fotontv.rpbase.data;
+package ru.fotontv.rpbase.modules.city;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -6,7 +6,11 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
-import ru.fotontv.rpbase.modules.config.ConfigManager;
+import ru.fotontv.rpbase.config.GlobalConfig;
+import ru.fotontv.rpbase.enums.CityStatusEnum;
+import ru.fotontv.rpbase.enums.ProfessionsEnum;
+import ru.fotontv.rpbase.modules.player.PlayerData;
+import ru.fotontv.rpbase.modules.player.PlayersManager;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -15,8 +19,8 @@ import java.util.Date;
 import java.util.List;
 
 public class City {
-    private List<String> citizen = new ArrayList<>();
     private final String nameCity;
+    private List<String> citizen = new ArrayList<>();
     private String mayor;
     private String dateOfFoundation;
     private CityStatusEnum cityStatus;
@@ -42,7 +46,7 @@ public class City {
             if (player != null && playerData != null) {
                 meta.setOwningPlayer(player);
                 meta.setDisplayName(player.getName());
-                for (String lor : ConfigManager.LORESKULLCITIZEN) {
+                for (String lor : GlobalConfig.LORESKULLCITIZEN) {
                     if (lor.contains("{player}")) {
                         lor = lor.replace("{player}", player.getName());
                     }
@@ -59,7 +63,7 @@ public class City {
                 PlayerData data = PlayersManager.loadPlayerData(nick);
                 meta.setOwningPlayer(offlinePlayer);
                 meta.setDisplayName(nick);
-                for (String lor : ConfigManager.LORESKULLCITIZEN) {
+                for (String lor : GlobalConfig.LORESKULLCITIZEN) {
                     if (lor.contains("{player}")) {
                         lor = lor.replace("{player}", nick);
                     }
@@ -254,7 +258,7 @@ public class City {
         if (cityStatus.equals(CityStatusEnum.SETTLEMENT)) {
             if (citizen.size() != CityStatusEnum.SETTLEMENT.getMaxCitizens()) {
                 int ostCitizen = CityStatusEnum.SETTLEMENT.getMaxCitizens() - citizen.size();
-                data.getPlayer().sendMessage("§cВам не хватает §6" + ostCitizen +  (ostCitizen == 1 ? "жителя" : "жителей") + "§c.");
+                data.getPlayer().sendMessage("§cВам не хватает §6" + ostCitizen + (ostCitizen == 1 ? "жителя" : "жителей") + "§c.");
                 return;
             }
             if (goldOreAmount < CityStatusEnum.PROVINCE.getGoldOre()) {
@@ -284,7 +288,7 @@ public class City {
         if (cityStatus.equals(CityStatusEnum.PROVINCE)) {
             if (citizen.size() != CityStatusEnum.PROVINCE.getMaxCitizens()) {
                 int ostCitizen = CityStatusEnum.PROVINCE.getMaxCitizens() - citizen.size();
-                data.getPlayer().sendMessage("§cВам не хватает §6" + ostCitizen +  (ostCitizen == 1 ? "жителя" : "жителей") + "§c.");
+                data.getPlayer().sendMessage("§cВам не хватает §6" + ostCitizen + (ostCitizen == 1 ? "жителя" : "жителей") + "§c.");
                 return;
             }
             if (goldOreAmount < CityStatusEnum.CITY.getGoldOre()) {
@@ -314,7 +318,7 @@ public class City {
         if (cityStatus.equals(CityStatusEnum.CITY)) {
             if (citizen.size() != CityStatusEnum.CITY.getMaxCitizens()) {
                 int ostCitizen = CityStatusEnum.CITY.getMaxCitizens() - citizen.size();
-                data.getPlayer().sendMessage("§cВам не хватает §6" + ostCitizen +  (ostCitizen == 1 ? "жителя" : "жителей") + "§c.");
+                data.getPlayer().sendMessage("§cВам не хватает §6" + ostCitizen + (ostCitizen == 1 ? "жителя" : "жителей") + "§c.");
                 return;
             }
             if (goldOreAmount < CityStatusEnum.METROPOLIS.getGoldOre()) {

@@ -4,7 +4,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import ru.fotontv.rpbase.data.PlayersManager;
+import ru.fotontv.rpbase.modules.player.PlayersManager;
 
 import javax.annotation.Nonnull;
 

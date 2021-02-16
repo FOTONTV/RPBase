@@ -4,10 +4,10 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
-import ru.fotontv.rpbase.data.CityStatusEnum;
-import ru.fotontv.rpbase.data.PlayerData;
-import ru.fotontv.rpbase.data.PlayersManager;
-import ru.fotontv.rpbase.data.ProfessionsEnum;
+import ru.fotontv.rpbase.enums.CityStatusEnum;
+import ru.fotontv.rpbase.enums.ProfessionsEnum;
+import ru.fotontv.rpbase.modules.player.PlayerData;
+import ru.fotontv.rpbase.modules.player.PlayersManager;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -25,19 +25,19 @@ public class TownTabCompleter implements TabCompleter {
                 if (command.getName().equals("town")) {
                     if (args.length == 1) {
                         if (player.hasPermission("town.create") ||
-                            !data.getProfession().equals(ProfessionsEnum.MAYOR))  {
+                                !data.getProfession().equals(ProfessionsEnum.MAYOR)) {
                             tab.add("create");
                         }
                         if (player.hasPermission("town.upgrade") ||
-                                data.getProfession().equals(ProfessionsEnum.MAYOR))  {
+                                data.getProfession().equals(ProfessionsEnum.MAYOR)) {
                             tab.add("upgrade");
                         }
                         if (player.hasPermission("town.leave") ||
-                                !data.getProfession().equals(ProfessionsEnum.MAYOR))  {
+                                !data.getProfession().equals(ProfessionsEnum.MAYOR)) {
                             tab.add("leave");
                         }
                         if (player.hasPermission("town.info") ||
-                                data.getProfession().equals(ProfessionsEnum.MAYOR))  {
+                                data.getProfession().equals(ProfessionsEnum.MAYOR)) {
                             tab.add("info");
                         }
                         if (player.hasPermission("town.add") ||

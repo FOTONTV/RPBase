@@ -5,10 +5,10 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import ru.fotontv.rpbase.data.PlayerData;
-import ru.fotontv.rpbase.data.PlayersManager;
-import ru.fotontv.rpbase.data.ProfessionsEnum;
-import ru.fotontv.rpbase.modules.config.ConfigManager;
+import ru.fotontv.rpbase.config.GlobalConfig;
+import ru.fotontv.rpbase.enums.ProfessionsEnum;
+import ru.fotontv.rpbase.modules.player.PlayerData;
+import ru.fotontv.rpbase.modules.player.PlayersManager;
 import ru.fotontv.rpbase.modules.wanted.WantedManager;
 
 import javax.annotation.Nonnull;
@@ -32,20 +32,20 @@ public class WantedCommands implements CommandExecutor {
                                 if (!(player.getName().equalsIgnoreCase(nick.getName()))) {
                                     if (WantedManager.isPlayerWanted(nick)) {
                                         WantedManager.removeWanted(nick);
-                                        player.sendMessage(ConfigManager.POLICE_WANTED_REMOVE.replace("%s", args[1]));
-                                        nick.sendMessage(ConfigManager.PLAYER_WANTED_REMOVE);
+                                        player.sendMessage(GlobalConfig.POLICE_WANTED_REMOVE.replace("%s", args[1]));
+                                        nick.sendMessage(GlobalConfig.PLAYER_WANTED_REMOVE);
                                         return true;
                                     }
-                                    player.sendMessage(ConfigManager.NOTPLAYER_WANTEDLIST.replace("%s", args[1]));
+                                    player.sendMessage(GlobalConfig.NOTPLAYER_WANTEDLIST.replace("%s", args[1]));
                                     return true;
                                 }
-                                player.sendMessage(ConfigManager.NOTPLAYER_REMOVEWANTEDLIST);
+                                player.sendMessage(GlobalConfig.NOTPLAYER_REMOVEWANTEDLIST);
                                 return true;
                             }
-                            player.sendMessage(ConfigManager.PLAYER_NOTFOUND.replace("%s", args[1]));
+                            player.sendMessage(GlobalConfig.PLAYER_NOTFOUND.replace("%s", args[1]));
                             return true;
                         }
-                        player.sendMessage(ConfigManager.PLAYER_NOPERMISSION);
+                        player.sendMessage(GlobalConfig.PLAYER_NOPERMISSION);
                         return true;
                     }
                     return false;
@@ -56,13 +56,13 @@ public class WantedCommands implements CommandExecutor {
                                 data.getProfession().equals(ProfessionsEnum.POLICEMAN) ||
                                 data.getProfession().equals(ProfessionsEnum.OFFICER) ||
                                 data.getProfession().equals(ProfessionsEnum.CARETAKER)) {
-                            player.sendMessage(ConfigManager.POLICE_WANTEDLIST);
+                            player.sendMessage(GlobalConfig.POLICE_WANTEDLIST);
                             for (String nick : WantedManager.getWantedList()) {
-                                player.sendMessage(ConfigManager.POLICE_WANTEDLIST_NICK.replace("%s", nick));
+                                player.sendMessage(GlobalConfig.POLICE_WANTEDLIST_NICK.replace("%s", nick));
                             }
                             return true;
                         }
-                        player.sendMessage(ConfigManager.PLAYER_NOPERMISSION);
+                        player.sendMessage(GlobalConfig.PLAYER_NOPERMISSION);
                         return true;
                     }
                     if (player.hasPermission("police.wanted.add") || data.getProfession().equals(ProfessionsEnum.POLICEMAN) ||
@@ -72,20 +72,20 @@ public class WantedCommands implements CommandExecutor {
                             if (!(player.getName().equalsIgnoreCase(nick.getName()))) {
                                 if (!(WantedManager.isPlayerWanted(nick))) {
                                     WantedManager.setWantedList(nick);
-                                    player.sendMessage(ConfigManager.POLICE_WANTEDLIST_ADD.replace("%s", args[0]));
-                                    nick.sendMessage(ConfigManager.PLAYER_WANTEDLIST_ADD);
+                                    player.sendMessage(GlobalConfig.POLICE_WANTEDLIST_ADD.replace("%s", args[0]));
+                                    nick.sendMessage(GlobalConfig.PLAYER_WANTEDLIST_ADD);
                                     return true;
                                 }
-                                player.sendMessage(ConfigManager.PLAYER_NOWWANTEDLIST.replace("%s", args[0]));
+                                player.sendMessage(GlobalConfig.PLAYER_NOWWANTEDLIST.replace("%s", args[0]));
                                 return true;
                             }
-                            player.sendMessage(ConfigManager.NOTPLAYER_ADDWANTEDLIST);
+                            player.sendMessage(GlobalConfig.NOTPLAYER_ADDWANTEDLIST);
                             return true;
                         }
-                        player.sendMessage(ConfigManager.PLAYER_NOTFOUND.replace("%s", args[0]));
+                        player.sendMessage(GlobalConfig.PLAYER_NOTFOUND.replace("%s", args[0]));
                         return true;
                     }
-                    player.sendMessage(ConfigManager.PLAYER_NOPERMISSION);
+                    player.sendMessage(GlobalConfig.PLAYER_NOPERMISSION);
                     return true;
                 }
                 return false;

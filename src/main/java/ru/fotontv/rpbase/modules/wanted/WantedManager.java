@@ -13,36 +13,14 @@ import java.util.List;
 
 public class WantedManager {
 
-    private final RPBase plugin;
     private static File wantedFile;
     private static FileConfiguration wantedConfig;
     private static List<String> wantedList = new ArrayList<>();
+    private final RPBase plugin;
 
     public WantedManager(RPBase rpBase) {
         plugin = rpBase;
         load();
-    }
-
-    private void load() {
-        wantedFile = new File(plugin.getDataFolder(), "wantedList.yml");
-        if (!(wantedFile.exists())) {
-            if (!(wantedFile.getParentFile().mkdirs())) System.out.println();
-            plugin.saveResource("wantedList.yml", false);
-            wantedConfig = new YamlConfiguration();
-            try {
-                wantedConfig.load(wantedFile);
-            } catch (InvalidConfigurationException | IOException e) {
-                e.printStackTrace();
-            }
-            return;
-        }
-        wantedConfig = new YamlConfiguration();
-        try {
-            wantedConfig.load(wantedFile);
-        } catch (InvalidConfigurationException | IOException e) {
-            e.printStackTrace();
-        }
-        wantedList = wantedConfig.getStringList("wanted");
     }
 
     public static void saveFileWanted() {
@@ -68,5 +46,27 @@ public class WantedManager {
 
     public static void removeWanted(Player player) {
         wantedList.remove(player.getName());
+    }
+
+    private void load() {
+        wantedFile = new File(plugin.getDataFolder(), "wantedList.yml");
+        if (!(wantedFile.exists())) {
+            if (!(wantedFile.getParentFile().mkdirs())) System.out.println();
+            plugin.saveResource("wantedList.yml", false);
+            wantedConfig = new YamlConfiguration();
+            try {
+                wantedConfig.load(wantedFile);
+            } catch (InvalidConfigurationException | IOException e) {
+                e.printStackTrace();
+            }
+            return;
+        }
+        wantedConfig = new YamlConfiguration();
+        try {
+            wantedConfig.load(wantedFile);
+        } catch (InvalidConfigurationException | IOException e) {
+            e.printStackTrace();
+        }
+        wantedList = wantedConfig.getStringList("wanted");
     }
 }

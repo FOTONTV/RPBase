@@ -8,9 +8,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import ru.fotontv.rpbase.RPBase;
-import ru.fotontv.rpbase.data.PlayerData;
-import ru.fotontv.rpbase.data.PlayersManager;
-import ru.fotontv.rpbase.data.ProfessionsEnum;
+import ru.fotontv.rpbase.enums.ProfessionsEnum;
+import ru.fotontv.rpbase.modules.player.PlayerData;
+import ru.fotontv.rpbase.modules.player.PlayersManager;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -43,7 +43,7 @@ public class ChatListener implements Listener {
                                 newmessage = "§7Чат города §8§l| §r" + prefix + " " + player.getName() + " » §f" + message;
                             } else {
                                 suffix = ChatColor.translateAlternateColorCodes('&', suffix);
-                                newmessage = "§7Чат города §8§l| §r" + prefix + " " + player.getName() + " "+ suffix + " » §f" + message;
+                                newmessage = "§7Чат города §8§l| §r" + prefix + " " + player.getName() + " " + suffix + " » §f" + message;
                             }
                             for (Player player1 : Bukkit.getOnlinePlayers()) {
                                 PlayerData playerData1 = PlayersManager.getPlayerData(player1);

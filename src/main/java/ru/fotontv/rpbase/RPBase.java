@@ -5,13 +5,14 @@ import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
+import ru.fotontv.rpbase.api.placeholders.RPBaseExpansion;
 import ru.fotontv.rpbase.commands.*;
-import ru.fotontv.rpbase.data.CitiesManager;
-import ru.fotontv.rpbase.data.PlayersManager;
+import ru.fotontv.rpbase.config.GlobalConfig;
+import ru.fotontv.rpbase.config.StatusCityConfig;
 import ru.fotontv.rpbase.listeners.*;
-import ru.fotontv.rpbase.modules.config.ConfigManager;
-import ru.fotontv.rpbase.modules.config.StatusCityManager;
+import ru.fotontv.rpbase.modules.city.CitiesManager;
 import ru.fotontv.rpbase.modules.jail.JailManager;
+import ru.fotontv.rpbase.modules.player.PlayersManager;
 import ru.fotontv.rpbase.modules.wanted.WantedManager;
 
 import java.util.Objects;
@@ -21,7 +22,7 @@ public final class RPBase extends JavaPlugin {
     public static LuckPerms api;
     private static RPBase plugin;
     public Permission permission;
-    private ConfigManager configManager;
+    private GlobalConfig globalConfig;
 
     public static RPBase getPlugin() {
         return plugin;
@@ -32,6 +33,10 @@ public final class RPBase extends JavaPlugin {
         plugin = this;
         getLogger().info("Loading RPBase...");
 
+        if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
+            new RPBaseExpansion(this).register();
+        }
+
         RegisteredServiceProvider<LuckPerms> provider = Bukkit.getServicesManager().getRegistration(LuckPerms.class);
         if (provider != null) {
             api = provider.getProvider();
@@ -41,8 +46,8 @@ public final class RPBase extends JavaPlugin {
 
         saveDefaultConfig();
 
-        this.configManager = new ConfigManager(plugin);
-        new StatusCityManager(plugin);
+        this.globalConfig = new GlobalConfig(plugin);
+        new StatusCityConfig(plugin);
 
         new WantedManager(plugin);
         new JailManager(plugin);
@@ -74,8 +79,8 @@ public final class RPBase extends JavaPlugin {
         return permission;
     }
 
-    public ConfigManager getConfigManager() {
-        return configManager;
+    public GlobalConfig getConfigManager() {
+        return globalConfig;
     }
 
     private void registerCommands() {

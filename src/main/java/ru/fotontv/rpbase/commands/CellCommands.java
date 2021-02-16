@@ -5,10 +5,10 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import ru.fotontv.rpbase.data.PlayersManager;
-import ru.fotontv.rpbase.data.ProfessionsEnum;
-import ru.fotontv.rpbase.modules.config.ConfigManager;
+import ru.fotontv.rpbase.config.GlobalConfig;
+import ru.fotontv.rpbase.enums.ProfessionsEnum;
 import ru.fotontv.rpbase.modules.jail.JailManager;
+import ru.fotontv.rpbase.modules.player.PlayersManager;
 
 import javax.annotation.Nonnull;
 import java.text.DecimalFormat;
@@ -32,19 +32,19 @@ public class CellCommands implements CommandExecutor {
                                     String x = new DecimalFormat("#0.00").format(location.getX());
                                     String y = new DecimalFormat("#0.00").format(location.getY());
                                     String z = new DecimalFormat("#0.00").format(location.getZ());
-                                    player.sendMessage(ConfigManager.POLICE_CELL_CREATE
+                                    player.sendMessage(GlobalConfig.POLICE_CELL_CREATE
                                             .replace("{x}", x)
                                             .replace("{y}", y)
                                             .replace("{z}", z));
                                     return true;
                                 }
-                                player.sendMessage(ConfigManager.CELL_NOWCREATE.replace("%s", args[2]));
+                                player.sendMessage(GlobalConfig.CELL_NOWCREATE.replace("%s", args[2]));
                                 return true;
                             }
-                            player.sendMessage(ConfigManager.JAIL_NOTCREATE.replace("%s", args[1]));
+                            player.sendMessage(GlobalConfig.JAIL_NOTCREATE.replace("%s", args[1]));
                             return true;
                         }
-                        player.sendMessage(ConfigManager.PLAYER_NOPERMISSION);
+                        player.sendMessage(GlobalConfig.PLAYER_NOPERMISSION);
                         return true;
                     }
                     if (args[0].equals("remove")) {
@@ -52,16 +52,16 @@ public class CellCommands implements CommandExecutor {
                                 Objects.requireNonNull(PlayersManager.getPlayerData(player)).getProfession().equals(ProfessionsEnum.CARETAKER)) {
                             if (JailManager.isJail(args[1])) {
                                 if (JailManager.removeCamera(args[1], args[2])) {
-                                    player.sendMessage(ConfigManager.POLICE_CELL_REMOVE.replace("%s", args[2]));
+                                    player.sendMessage(GlobalConfig.POLICE_CELL_REMOVE.replace("%s", args[2]));
                                     return true;
                                 }
-                                player.sendMessage(ConfigManager.CELL_NOTCREATE.replace("%s", args[2]));
+                                player.sendMessage(GlobalConfig.CELL_NOTCREATE.replace("%s", args[2]));
                                 return true;
                             }
-                            player.sendMessage(ConfigManager.JAIL_NOTCREATE.replace("%s", args[1]));
+                            player.sendMessage(GlobalConfig.JAIL_NOTCREATE.replace("%s", args[1]));
                             return true;
                         }
-                        player.sendMessage(ConfigManager.PLAYER_NOPERMISSION);
+                        player.sendMessage(GlobalConfig.PLAYER_NOPERMISSION);
                         return true;
                     }
                     return false;
@@ -72,16 +72,16 @@ public class CellCommands implements CommandExecutor {
                                 Objects.requireNonNull(PlayersManager.getPlayerData(player)).getProfession().equals(ProfessionsEnum.CARETAKER)) {
                             if (JailManager.isJail(args[1])) {
                                 List<String> camers = JailManager.getCamers(args[1]);
-                                player.sendMessage(ConfigManager.POLICE_CELL_LIST);
+                                player.sendMessage(GlobalConfig.POLICE_CELL_LIST);
                                 for (String name : camers) {
-                                    player.sendMessage(ConfigManager.POLICE_CELL_LIST_NAME.replace("%s", name));
+                                    player.sendMessage(GlobalConfig.POLICE_CELL_LIST_NAME.replace("%s", name));
                                 }
                                 return true;
                             }
-                            player.sendMessage(ConfigManager.JAIL_NOTCREATE.replace("%s", args[1]));
+                            player.sendMessage(GlobalConfig.JAIL_NOTCREATE.replace("%s", args[1]));
                             return true;
                         }
-                        player.sendMessage(ConfigManager.PLAYER_NOPERMISSION);
+                        player.sendMessage(GlobalConfig.PLAYER_NOPERMISSION);
                         return true;
                     }
                     return false;

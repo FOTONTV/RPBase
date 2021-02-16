@@ -8,8 +8,8 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import ru.fotontv.rpbase.RPBase;
-import ru.fotontv.rpbase.data.PlayerData;
-import ru.fotontv.rpbase.modules.config.ConfigManager;
+import ru.fotontv.rpbase.config.GlobalConfig;
+import ru.fotontv.rpbase.modules.player.PlayerData;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,69 +19,14 @@ import java.util.List;
 
 public class JailManager {
 
-    private final RPBase plugin;
+    private static final List<Jail> jails = new ArrayList<>();
     private static File jailFile;
     private static FileConfiguration jailConfig;
-    private static final List<Jail> jails = new ArrayList<>();
+    private final RPBase plugin;
 
     public JailManager(RPBase rpBase) {
         plugin = rpBase;
         load();
-    }
-
-    @SuppressWarnings("deprecation")
-    private void load() {
-        jailFile = new File(plugin.getDataFolder(), "jails.yml");
-        if (!(jailFile.exists())) {
-            if (!(jailFile.getParentFile().mkdirs())) System.out.println();
-            plugin.saveResource("jails.yml", false);
-            jailConfig = new YamlConfiguration();
-            try {
-                jailConfig.load(jailFile);
-            } catch (InvalidConfigurationException | IOException e) {
-                e.printStackTrace();
-            }
-            return;
-        }
-        jailConfig = new YamlConfiguration();
-        try {
-            jailConfig.load(jailFile);
-        } catch (InvalidConfigurationException | IOException e) {
-            e.printStackTrace();
-        }
-        if (!(jailConfig.getStringList("jails").isEmpty())) {
-            List<String> jailNames = jailConfig.getStringList("jails");
-            for (String jailName : jailNames) {
-                Jail jail = new Jail(jailName);
-                if (!(jailConfig.getStringList(jailName + ".camers").isEmpty())) {
-                    List<String> cameraNames = jailConfig.getStringList(jailName + ".camers");
-                    List<CameraJail> cameraJails = new ArrayList<>();
-                    for (String cameraName : cameraNames) {
-                        double x = jailConfig.getDouble(jailName + "." + cameraName + ".location.x");
-                        double y = jailConfig.getDouble(jailName + "." + cameraName + ".location.y");
-                        double z = jailConfig.getDouble(jailName + "." + cameraName + ".location.z");
-                        Location loc = new Location(Bukkit.getWorld("world"), x, y ,z);
-                        CameraJail cameraJail = new CameraJail(Integer.parseInt(cameraName), loc);
-                        if (!(jailConfig.getStringList(jailName + "." + cameraName + ".players").isEmpty())) {
-                            List<String> nicks = jailConfig.getStringList(jailName + "." + cameraName + ".players");
-                            List<PlayerData> pls = new ArrayList<>();
-                            for (String nick : nicks) {
-                                String time = jailConfig.getString(jailName + "." + cameraName + "." + nick + ".time");
-                                long timeStart = jailConfig.getLong(jailName + "." + cameraName + "." + nick + ".timeStart");
-                                OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(nick);
-                                PlayerData playerData = new PlayerData(offlinePlayer);
-                                playerData.setTimeImp(time);
-                                playerData.setStartTimeImp(timeStart);
-                            }
-                            cameraJail.setPlayersInCamera(pls);
-                        }
-                        cameraJails.add(cameraJail);
-                    }
-                    jail.setCamers(cameraJails);
-                }
-                jails.add(jail);
-            }
-        }
     }
 
     public static void saveFileJails() {
@@ -167,7 +112,7 @@ public class JailManager {
             if (jail1.getName().equals(jailName)) {
                 try {
                     return jail1.addCamera(Integer.parseInt(num), location);
-                } catch(NumberFormatException | NullPointerException e) {
+                } catch (NumberFormatException | NullPointerException e) {
                     return false;
                 }
             }
@@ -180,7 +125,7 @@ public class JailManager {
             if (jail1.getName().equals(jailName)) {
                 try {
                     return jail1.removeCamera(Integer.parseInt(num));
-                } catch(NumberFormatException | NullPointerException e) {
+                } catch (NumberFormatException | NullPointerException e) {
                     return false;
                 }
             }
@@ -205,7 +150,7 @@ public class JailManager {
         for (Jail jail1 : jails) {
             List<CameraJail> cameraJails = jail1.getCamers();
             for (CameraJail cameraJail : cameraJails) {
-                if (!(cameraJail.getPlayers().size() == ConfigManager.MAX_PLAYER_IN_CELL)) {
+                if (!(cameraJail.getPlayers().size() == GlobalConfig.MAX_PLAYER_IN_CELL)) {
                     return cameraJail.addPlayerInCamera(player, time);
                 }
             }
@@ -239,7 +184,7 @@ public class JailManager {
             try {
                 int timeint = Integer.parseInt(time);
                 return timeint == 1;
-            } catch(NumberFormatException | NullPointerException e) {
+            } catch (NumberFormatException | NullPointerException e) {
                 return false;
             }
         }
@@ -248,7 +193,7 @@ public class JailManager {
             try {
                 int timeint = Integer.parseInt(time);
                 return timeint <= 23 && timeint > 0;
-            } catch(NumberFormatException | NullPointerException e) {
+            } catch (NumberFormatException | NullPointerException e) {
                 return false;
             }
         }
@@ -257,7 +202,7 @@ public class JailManager {
             try {
                 int timeint = Integer.parseInt(time);
                 return timeint <= 60 && timeint > 0;
-            } catch(NumberFormatException | NullPointerException e) {
+            } catch (NumberFormatException | NullPointerException e) {
                 return false;
             }
         }
@@ -266,10 +211,65 @@ public class JailManager {
             try {
                 int timeint = Integer.parseInt(time);
                 return timeint <= 60 && timeint >= 10;
-            } catch(NumberFormatException | NullPointerException e) {
+            } catch (NumberFormatException | NullPointerException e) {
                 return false;
             }
         }
         return false;
+    }
+
+    @SuppressWarnings("deprecation")
+    private void load() {
+        jailFile = new File(plugin.getDataFolder(), "jails.yml");
+        if (!(jailFile.exists())) {
+            if (!(jailFile.getParentFile().mkdirs())) System.out.println();
+            plugin.saveResource("jails.yml", false);
+            jailConfig = new YamlConfiguration();
+            try {
+                jailConfig.load(jailFile);
+            } catch (InvalidConfigurationException | IOException e) {
+                e.printStackTrace();
+            }
+            return;
+        }
+        jailConfig = new YamlConfiguration();
+        try {
+            jailConfig.load(jailFile);
+        } catch (InvalidConfigurationException | IOException e) {
+            e.printStackTrace();
+        }
+        if (!(jailConfig.getStringList("jails").isEmpty())) {
+            List<String> jailNames = jailConfig.getStringList("jails");
+            for (String jailName : jailNames) {
+                Jail jail = new Jail(jailName);
+                if (!(jailConfig.getStringList(jailName + ".camers").isEmpty())) {
+                    List<String> cameraNames = jailConfig.getStringList(jailName + ".camers");
+                    List<CameraJail> cameraJails = new ArrayList<>();
+                    for (String cameraName : cameraNames) {
+                        double x = jailConfig.getDouble(jailName + "." + cameraName + ".location.x");
+                        double y = jailConfig.getDouble(jailName + "." + cameraName + ".location.y");
+                        double z = jailConfig.getDouble(jailName + "." + cameraName + ".location.z");
+                        Location loc = new Location(Bukkit.getWorld("world"), x, y, z);
+                        CameraJail cameraJail = new CameraJail(Integer.parseInt(cameraName), loc);
+                        if (!(jailConfig.getStringList(jailName + "." + cameraName + ".players").isEmpty())) {
+                            List<String> nicks = jailConfig.getStringList(jailName + "." + cameraName + ".players");
+                            List<PlayerData> pls = new ArrayList<>();
+                            for (String nick : nicks) {
+                                String time = jailConfig.getString(jailName + "." + cameraName + "." + nick + ".time");
+                                long timeStart = jailConfig.getLong(jailName + "." + cameraName + "." + nick + ".timeStart");
+                                OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(nick);
+                                PlayerData playerData = new PlayerData(offlinePlayer);
+                                playerData.setTimeImp(time);
+                                playerData.setStartTimeImp(timeStart);
+                            }
+                            cameraJail.setPlayersInCamera(pls);
+                        }
+                        cameraJails.add(cameraJail);
+                    }
+                    jail.setCamers(cameraJails);
+                }
+                jails.add(jail);
+            }
+        }
     }
 }

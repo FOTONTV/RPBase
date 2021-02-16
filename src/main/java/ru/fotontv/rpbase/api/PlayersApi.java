@@ -1,9 +1,9 @@
 package ru.fotontv.rpbase.api;
 
 import org.bukkit.entity.Player;
-import ru.fotontv.rpbase.data.PlayerData;
-import ru.fotontv.rpbase.data.PlayersManager;
-import ru.fotontv.rpbase.data.ProfessionsEnum;
+import ru.fotontv.rpbase.enums.ProfessionsEnum;
+import ru.fotontv.rpbase.modules.player.PlayerData;
+import ru.fotontv.rpbase.modules.player.PlayersManager;
 
 @SuppressWarnings("unused")
 public class PlayersApi {

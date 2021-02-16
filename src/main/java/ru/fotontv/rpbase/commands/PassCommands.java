@@ -4,10 +4,10 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import ru.fotontv.rpbase.data.PlayerData;
-import ru.fotontv.rpbase.data.PlayersManager;
-import ru.fotontv.rpbase.data.ProfessionsEnum;
-import ru.fotontv.rpbase.modules.config.ConfigManager;
+import ru.fotontv.rpbase.config.GlobalConfig;
+import ru.fotontv.rpbase.enums.ProfessionsEnum;
+import ru.fotontv.rpbase.modules.player.PlayerData;
+import ru.fotontv.rpbase.modules.player.PlayersManager;
 
 import javax.annotation.Nonnull;
 
@@ -22,12 +22,12 @@ public class PassCommands implements CommandExecutor {
                     PlayerData data = PlayersManager.getPlayerData(player);
                     if (data != null) {
                         if (player.hasPermission("passport.open") ||
-                            ProfessionsEnum.isAll(data)) {
+                                ProfessionsEnum.isAll(data)) {
                             PlayersManager.openPass(player);
                             return true;
                         }
                     }
-                    player.sendMessage(ConfigManager.PLAYER_NOTFOUND.replace("%s", player.getName()));
+                    player.sendMessage(GlobalConfig.PLAYER_NOTFOUND.replace("%s", player.getName()));
                     return true;
                 }
                 return false;

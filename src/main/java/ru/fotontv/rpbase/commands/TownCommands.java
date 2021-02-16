@@ -1,6 +1,9 @@
 package ru.fotontv.rpbase.commands;
 
-import net.md_5.bungee.api.chat.*;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -9,8 +12,13 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import ru.fotontv.rpbase.data.*;
-import ru.fotontv.rpbase.modules.config.ConfigManager;
+import ru.fotontv.rpbase.config.GlobalConfig;
+import ru.fotontv.rpbase.enums.CityStatusEnum;
+import ru.fotontv.rpbase.enums.ProfessionsEnum;
+import ru.fotontv.rpbase.modules.city.CitiesManager;
+import ru.fotontv.rpbase.modules.city.City;
+import ru.fotontv.rpbase.modules.player.PlayerData;
+import ru.fotontv.rpbase.modules.player.PlayersManager;
 
 import javax.annotation.Nonnull;
 import java.text.DateFormat;
@@ -29,11 +37,11 @@ public class TownCommands implements CommandExecutor {
                     if (args.length == 2) {
                         if (args[0].equals("create")) {
                             if (CitiesManager.isCity(args[1])) {
-                                player.sendMessage(ConfigManager.CITYNOWACCEPT);
+                                player.sendMessage(GlobalConfig.CITYNOWACCEPT);
                                 return true;
                             }
                             if (player.hasPermission("town.create") ||
-                                !data.getProfession().equals(ProfessionsEnum.MAYOR)) {
+                                    !data.getProfession().equals(ProfessionsEnum.MAYOR)) {
                                 int goldOreAmount = 0;
                                 ItemStack[] contents = player.getInventory().getContents();
                                 for (ItemStack item : contents) {
@@ -68,18 +76,18 @@ public class TownCommands implements CommandExecutor {
                                         PlayersManager.savePlayerData(data);
                                         PlayersManager.savesConfigs();
                                         CitiesManager.saveCities();
-                                        player.sendMessage(ConfigManager.PLAYER_CREATECITY.replace("{city}", args[1]));
+                                        player.sendMessage(GlobalConfig.PLAYER_CREATECITY.replace("{city}", args[1]));
                                         for (Player player1 : Bukkit.getOnlinePlayers())
-                                            player1.sendMessage(ConfigManager.PLAYERS_CREATECITY.replace("{player}", player.getName()).replace("{city}", args[1]));
+                                            player1.sendMessage(GlobalConfig.PLAYERS_CREATECITY.replace("{player}", player.getName()).replace("{city}", args[1]));
                                         return true;
                                     }
-                                    player.sendMessage(ConfigManager.CITYNAMENOTVALID);
+                                    player.sendMessage(GlobalConfig.CITYNAMENOTVALID);
                                     return true;
                                 }
-                                player.sendMessage(ConfigManager.CITYNOWANDORE);
+                                player.sendMessage(GlobalConfig.CITYNOWANDORE);
                                 return true;
                             }
-                            player.sendMessage(ConfigManager.PLAYER_NOPERMISSION);
+                            player.sendMessage(GlobalConfig.PLAYER_NOPERMISSION);
                             return true;
                         }
                         if (args[0].equals("add")) {
@@ -96,28 +104,28 @@ public class TownCommands implements CommandExecutor {
                                         if (playerData.getCity() == null) {
                                             playerData.setNickCityRequest(player.getName());
                                             PlayersManager.savePlayerData(playerData);
-                                            player.sendMessage(ConfigManager.MAYOR_INVITECITY.replace("{player}", player1.getName()));
+                                            player.sendMessage(GlobalConfig.MAYOR_INVITECITY.replace("{player}", player1.getName()));
                                             TextComponent yes = new TextComponent(ChatColor.GREEN + "принять");
                                             TextComponent no = new TextComponent(ChatColor.RED + "отказаться");
                                             yes.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/town accept"));
                                             yes.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Принять").create()));
                                             no.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/town deny"));
                                             no.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Отказаться").create()));
-                                            String formaterText = ConfigManager.PLAYER_INVITECITY.replace("{mayor}", player.getName()).replace("{city}", data.getCityName());
+                                            String formaterText = GlobalConfig.PLAYER_INVITECITY.replace("{mayor}", player.getName()).replace("{city}", data.getCityName());
                                             player1.sendMessage(new ComponentBuilder(formaterText).create());
                                             player1.sendMessage(new ComponentBuilder(yes).append(ChatColor.WHITE + " или ").append(no).create());
                                             return true;
                                         }
-                                        player.sendMessage(ConfigManager.PLAYERNOWCITY);
+                                        player.sendMessage(GlobalConfig.PLAYERNOWCITY);
                                         return true;
                                     }
-                                    player.sendMessage(ConfigManager.NOTONLINEPLAYERREQUESTCITY);
+                                    player.sendMessage(GlobalConfig.NOTONLINEPLAYERREQUESTCITY);
                                     return true;
                                 }
-                                player.sendMessage(ConfigManager.PLAYER_NOTFOUND.replace("%s", args[1]));
+                                player.sendMessage(GlobalConfig.PLAYER_NOTFOUND.replace("%s", args[1]));
                                 return true;
                             }
-                            player.sendMessage(ConfigManager.PLAYER_NOPERMISSION);
+                            player.sendMessage(GlobalConfig.PLAYER_NOPERMISSION);
                             return true;
                         }
                         if (args[0].equals("kick")) {
@@ -135,17 +143,17 @@ public class TownCommands implements CommandExecutor {
                                         PlayersManager.savePlayerData(data);
                                         PlayersManager.savesConfigs();
                                         CitiesManager.saveCities();
-                                        player.sendMessage(ConfigManager.MAYOR_KICKCITY.replace("{player}", player1.getName()));
-                                        player1.sendMessage(ConfigManager.PLAYER_KICKCITY.replace("{city}", data.getCityName()));
+                                        player.sendMessage(GlobalConfig.MAYOR_KICKCITY.replace("{player}", player1.getName()));
+                                        player1.sendMessage(GlobalConfig.PLAYER_KICKCITY.replace("{city}", data.getCityName()));
                                         return true;
                                     }
-                                    player.sendMessage(ConfigManager.PLAYERNOTCITY);
+                                    player.sendMessage(GlobalConfig.PLAYERNOTCITY);
                                     return true;
                                 }
-                                player.sendMessage(ConfigManager.PLAYER_NOTFOUND.replace("%s", args[1]));
+                                player.sendMessage(GlobalConfig.PLAYER_NOTFOUND.replace("%s", args[1]));
                                 return true;
                             }
-                            player.sendMessage(ConfigManager.PLAYER_NOPERMISSION);
+                            player.sendMessage(GlobalConfig.PLAYER_NOPERMISSION);
                             return true;
                         }
                         if (args[0].equals("transfer")) {
@@ -165,19 +173,19 @@ public class TownCommands implements CommandExecutor {
                                             PlayersManager.savePlayerData(playerData);
                                             PlayersManager.savesConfigs();
                                             CitiesManager.saveCities();
-                                            player.sendMessage(ConfigManager.MAYOR_TRANSFERMAYOR.replace("{player}", player1.getName()));
-                                            player1.sendMessage(ConfigManager.PLAYER_TRANSFERMAYOR.replace("{city}", playerData.getCityName()));
+                                            player.sendMessage(GlobalConfig.MAYOR_TRANSFERMAYOR.replace("{player}", player1.getName()));
+                                            player1.sendMessage(GlobalConfig.PLAYER_TRANSFERMAYOR.replace("{city}", playerData.getCityName()));
                                             return true;
                                         }
-                                        player.sendMessage(ConfigManager.PLAYERNOTCITY);
+                                        player.sendMessage(GlobalConfig.PLAYERNOTCITY);
                                         return true;
                                     }
                                     return true;
                                 }
-                                player.sendMessage(ConfigManager.PLAYER_NOTFOUND.replace("%s", args[1]));
+                                player.sendMessage(GlobalConfig.PLAYER_NOTFOUND.replace("%s", args[1]));
                                 return true;
                             }
-                            player.sendMessage(ConfigManager.PLAYER_NOPERMISSION);
+                            player.sendMessage(GlobalConfig.PLAYER_NOPERMISSION);
                             return true;
                         }
                         if (args[0].equals("upgrade")) {
@@ -194,7 +202,7 @@ public class TownCommands implements CommandExecutor {
                                 }
                                 return true;
                             }
-                            player.sendMessage(ConfigManager.PLAYER_NOPERMISSION);
+                            player.sendMessage(GlobalConfig.PLAYER_NOPERMISSION);
                             return true;
                         }
                         return false;
@@ -215,8 +223,8 @@ public class TownCommands implements CommandExecutor {
                                     PlayersManager.savePlayerData(data);
                                     PlayersManager.savePlayerData(playerData);
                                     PlayersManager.savesConfigs();
-                                    player.sendMessage(ConfigManager.PLAYER_INVITECITYACCEPT.replace("{city}", playerData.getCityName()));
-                                    player1.sendMessage(ConfigManager.MAYOR_INVITECITYACCEPT.replace("{player}", player.getName()));
+                                    player.sendMessage(GlobalConfig.PLAYER_INVITECITYACCEPT.replace("{city}", playerData.getCityName()));
+                                    player1.sendMessage(GlobalConfig.MAYOR_INVITECITYACCEPT.replace("{player}", player.getName()));
                                     return true;
                                 }
                                 return true;
@@ -228,8 +236,8 @@ public class TownCommands implements CommandExecutor {
                                 Player player1 = Bukkit.getPlayer(data.getNickCityRequest());
                                 PlayerData playerData = PlayersManager.getPlayerData(player1);
                                 if (player1 != null && playerData != null) {
-                                    player1.sendMessage(ConfigManager.MAYOR_INVITECITYDENY.replace("{player}", player.getName()));
-                                    player.sendMessage(ConfigManager.PLAYER_INVITECITYDENY.replace("{city}", playerData.getCityName()));
+                                    player1.sendMessage(GlobalConfig.MAYOR_INVITECITYDENY.replace("{player}", player.getName()));
+                                    player.sendMessage(GlobalConfig.PLAYER_INVITECITYDENY.replace("{city}", playerData.getCityName()));
                                 }
                                 data.setNickCityRequest("");
                                 PlayersManager.savePlayerData(data);
@@ -243,7 +251,7 @@ public class TownCommands implements CommandExecutor {
                                 CitiesManager.openCityGUI(data.getCity(), player);
                                 return true;
                             }
-                            player.sendMessage(ConfigManager.PLAYER_NOPERMISSION);
+                            player.sendMessage(GlobalConfig.PLAYER_NOPERMISSION);
                             return true;
                         }
                         if (args[0].equals("leave")) {
@@ -256,12 +264,12 @@ public class TownCommands implements CommandExecutor {
                                     PlayersManager.savePlayerData(data);
                                     PlayersManager.savesConfigs();
                                     CitiesManager.saveCities();
-                                    player.sendMessage(ConfigManager.PLAYER_LEAVEINCITY.replace("{city}", cityName));
+                                    player.sendMessage(GlobalConfig.PLAYER_LEAVEINCITY.replace("{city}", cityName));
                                     return true;
                                 }
                                 return true;
                             }
-                            player.sendMessage(ConfigManager.PLAYER_NOPERMISSION);
+                            player.sendMessage(GlobalConfig.PLAYER_NOPERMISSION);
                             return true;
                         }
                         if (args[0].equals("disband")) {
@@ -273,14 +281,14 @@ public class TownCommands implements CommandExecutor {
                                     PlayersManager.disbandCity(data);
                                     PlayersManager.savesConfigs();
                                     CitiesManager.saveCities();
-                                    player.sendMessage(ConfigManager.MAYOR_DISBANDCITI);
+                                    player.sendMessage(GlobalConfig.MAYOR_DISBANDCITI);
                                     for (Player player1 : Bukkit.getOnlinePlayers())
-                                        player1.sendMessage(ConfigManager.PLAYERS_DISBANDCITY.replace("{player}", player.getName()).replace("{city}", cityName));
+                                        player1.sendMessage(GlobalConfig.PLAYERS_DISBANDCITY.replace("{player}", player.getName()).replace("{city}", cityName));
                                     return true;
                                 }
                                 return true;
                             }
-                            player.sendMessage(ConfigManager.PLAYER_NOPERMISSION);
+                            player.sendMessage(GlobalConfig.PLAYER_NOPERMISSION);
                             return true;
                         }
                         if (args[0].equals("list")) {
@@ -293,7 +301,7 @@ public class TownCommands implements CommandExecutor {
                 }
                 return false;
             }
-            player.sendMessage(ConfigManager.PLAYER_NOTFOUND.replace("%s", player.getName()));
+            player.sendMessage(GlobalConfig.PLAYER_NOTFOUND.replace("%s", player.getName()));
         }
         return false;
     }

@@ -5,10 +5,10 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import ru.fotontv.rpbase.data.PlayerData;
-import ru.fotontv.rpbase.data.PlayersManager;
-import ru.fotontv.rpbase.data.ProfessionsEnum;
-import ru.fotontv.rpbase.modules.config.ConfigManager;
+import ru.fotontv.rpbase.config.GlobalConfig;
+import ru.fotontv.rpbase.enums.ProfessionsEnum;
+import ru.fotontv.rpbase.modules.player.PlayerData;
+import ru.fotontv.rpbase.modules.player.PlayersManager;
 
 import javax.annotation.Nonnull;
 
@@ -31,21 +31,21 @@ public class PassjCommands implements CommandExecutor {
                                 data1.getPassport().addCriminalRecords(criminal);
                                 PlayersManager.savePlayerData(data1);
                                 PlayersManager.savesConfigs();
-                                player.sendMessage(ConfigManager.JUDGE_CRIMINALRECORDS.replace("{player}", args[0]));
-                                player1.sendMessage(ConfigManager.PLAYER_PASSPORT_CRIMINALRECORDS);
+                                player.sendMessage(GlobalConfig.JUDGE_CRIMINALRECORDS.replace("{player}", args[0]));
+                                player1.sendMessage(GlobalConfig.PLAYER_PASSPORT_CRIMINALRECORDS);
                                 return true;
                             }
-                            player.sendMessage(ConfigManager.PLAYER_NOTFOUND.replace("%s", args[0]));
+                            player.sendMessage(GlobalConfig.PLAYER_NOTFOUND.replace("%s", args[0]));
                             return true;
                         }
-                        player.sendMessage(ConfigManager.PLAYER_NOPERMISSION);
+                        player.sendMessage(GlobalConfig.PLAYER_NOPERMISSION);
                         return true;
                     }
                     return false;
                 }
                 return false;
             }
-            player.sendMessage(ConfigManager.PLAYER_NOTFOUND.replace("%s", player.getName()));
+            player.sendMessage(GlobalConfig.PLAYER_NOTFOUND.replace("%s", player.getName()));
             return true;
         }
         return false;

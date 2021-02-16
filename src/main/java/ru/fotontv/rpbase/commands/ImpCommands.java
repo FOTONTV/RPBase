@@ -5,11 +5,11 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import ru.fotontv.rpbase.data.PlayerData;
-import ru.fotontv.rpbase.data.PlayersManager;
-import ru.fotontv.rpbase.data.ProfessionsEnum;
-import ru.fotontv.rpbase.modules.config.ConfigManager;
+import ru.fotontv.rpbase.config.GlobalConfig;
+import ru.fotontv.rpbase.enums.ProfessionsEnum;
 import ru.fotontv.rpbase.modules.jail.JailManager;
+import ru.fotontv.rpbase.modules.player.PlayerData;
+import ru.fotontv.rpbase.modules.player.PlayersManager;
 import ru.fotontv.rpbase.modules.wanted.WantedManager;
 
 import javax.annotation.Nonnull;
@@ -26,7 +26,7 @@ public class ImpCommands implements CommandExecutor {
                     return true;
                 if (player.hasPermission("police.imprison") ||
                         data.getProfession().equals(ProfessionsEnum.OFFICER) ||
-                data.getProfession().equals(ProfessionsEnum.CARETAKER)) {
+                        data.getProfession().equals(ProfessionsEnum.CARETAKER)) {
                     if (args.length == 2) {
                         Player nick = Bukkit.getPlayer(args[0]);
                         if (nick != null) {
@@ -34,27 +34,27 @@ public class ImpCommands implements CommandExecutor {
                                 if (WantedManager.isPlayerWanted(nick)) {
                                     if (JailManager.isTime(args[1])) {
                                         if (JailManager.autoAddPlayer(nick, args[1])) {
-                                            player.sendMessage(ConfigManager.POLICE_CELL_ADDPLAYER.replace("{player}", args[0]).replace("{time}", args[1]));
+                                            player.sendMessage(GlobalConfig.POLICE_CELL_ADDPLAYER.replace("{player}", args[0]).replace("{time}", args[1]));
                                             return true;
                                         }
-                                        player.sendMessage(ConfigManager.JAIL_NOTCELL);
+                                        player.sendMessage(GlobalConfig.JAIL_NOTCELL);
                                         return true;
                                     }
-                                    player.sendMessage(ConfigManager.NOTTIME);
+                                    player.sendMessage(GlobalConfig.NOTTIME);
                                     return true;
                                 }
-                                player.sendMessage(ConfigManager.NOTPLAYER_WANTEDLIST.replace("%s", args[0]));
+                                player.sendMessage(GlobalConfig.NOTPLAYER_WANTEDLIST.replace("%s", args[0]));
                                 return true;
                             }
-                            player.sendMessage(ConfigManager.NOTPLAYER_IN_CELL);
+                            player.sendMessage(GlobalConfig.NOTPLAYER_IN_CELL);
                             return true;
                         }
-                        player.sendMessage(ConfigManager.PLAYER_NOTFOUND.replace("%s", args[0]));
+                        player.sendMessage(GlobalConfig.PLAYER_NOTFOUND.replace("%s", args[0]));
                         return true;
                     }
                     return false;
                 }
-                player.sendMessage(ConfigManager.PLAYER_NOPERMISSION);
+                player.sendMessage(GlobalConfig.PLAYER_NOPERMISSION);
                 return true;
             }
             return false;

@@ -5,29 +5,24 @@ import java.util.*;
 
 public class LinkedSet<E> extends AbstractSet<E> {
 
-    private static class LinkedElement<E> {
-        E value;
-
-        boolean exists;
-
-        LinkedElement<E> prev;
-        LinkedElement<E> next;
-    }
-
     private final Map<E, LinkedElement<E>> map = new HashMap<>();
-
     private LinkedElement<E> placeholder = new LinkedElement<>();
     private LinkedElement<E> head = placeholder;
 
     @Override
-    public boolean isEmpty() { return head == placeholder; }
+    public boolean isEmpty() {
+        return head == placeholder;
+    }
 
     @Override
-    public int size() { return map.size(); }
+    public int size() {
+        return map.size();
+    }
 
     @Override
     public boolean contains(Object o) { //noinspection SuspiciousMethodCalls
-        return map.containsKey(o); }
+        return map.containsKey(o);
+    }
 
     @Override
     public boolean add(E e) {
@@ -80,6 +75,15 @@ public class LinkedSet<E> extends AbstractSet<E> {
     @Nonnull
     public Iterator<E> iterator() {
         return new ElementIterator();
+    }
+
+    private static class LinkedElement<E> {
+        E value;
+
+        boolean exists;
+
+        LinkedElement<E> prev;
+        LinkedElement<E> next;
     }
 
     private class ElementIterator implements Iterator<E> {

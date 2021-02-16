@@ -1,4 +1,4 @@
-package ru.fotontv.rpbase.data;
+package ru.fotontv.rpbase.modules.city;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -17,7 +17,10 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import ru.fotontv.rpbase.RPBase;
-import ru.fotontv.rpbase.modules.config.ConfigManager;
+import ru.fotontv.rpbase.config.GlobalConfig;
+import ru.fotontv.rpbase.enums.CityStatusEnum;
+import ru.fotontv.rpbase.modules.player.PlayerData;
+import ru.fotontv.rpbase.modules.player.PlayersManager;
 import ru.fotontv.rpbase.utils.LinkedSet;
 
 import java.io.File;
@@ -28,38 +31,14 @@ import java.util.Set;
 
 public class CitiesManager implements Listener {
 
-    private final RPBase plugin;
+    private static final List<Inventory> pagesListCities = new ArrayList<>();
     private static File cityFile;
     private static FileConfiguration cityConfig;
-    private static final List<Inventory> pagesListCities = new ArrayList<>();
-
     private static Set<City> cityList = new LinkedSet<>();
+    private final RPBase plugin;
 
     public CitiesManager(RPBase base) {
         this.plugin = base;
-    }
-
-    public void load() {
-        cityFile = new File(plugin.getDataFolder(), "cities.yml");
-        if (!(cityFile.exists())) {
-            if (!(cityFile.getParentFile().mkdirs())) System.out.println();
-            plugin.saveResource("cities.yml", false);
-            cityConfig = new YamlConfiguration();
-            try {
-                cityConfig.load(cityFile);
-                loadCities();
-            } catch (InvalidConfigurationException | IOException e) {
-                e.printStackTrace();
-            }
-            return;
-        }
-        cityConfig = new YamlConfiguration();
-        try {
-            cityConfig.load(cityFile);
-            loadCities();
-        } catch (InvalidConfigurationException | IOException e) {
-            e.printStackTrace();
-        }
     }
 
     private static void loadCities() {
@@ -142,7 +121,7 @@ public class CitiesManager implements Listener {
     }
 
     public static void openCityGUI(City city, Player player) {
-        String infoCityGUI = ConfigManager.CITYINFOGUINAME.replace("{city}", city.getNameCity());
+        String infoCityGUI = GlobalConfig.CITYINFOGUINAME.replace("{city}", city.getNameCity());
         Inventory info = Bukkit.getServer().createInventory(player, 9, infoCityGUI);
         PlayerData data = PlayersManager.getPlayerData(player);
         if (data != null)
@@ -171,14 +150,14 @@ public class CitiesManager implements Listener {
         Inventory info = Bukkit.getServer().createInventory(player, 45, centerTitle(listCityGUI));
         if (isPages) {
             ItemStack leftHad = new ItemStack(Material.PLAYER_HEAD);
-            SkullMeta meta = (SkullMeta)leftHad.getItemMeta();
+            SkullMeta meta = (SkullMeta) leftHad.getItemMeta();
             meta.setDisplayName("§7Назад");
             meta.setOwner("MHF_ArrowLeft");
             leftHad.setItemMeta(meta);
             info.setItem(36, leftHad);
 
             ItemStack rightHad = new ItemStack(Material.PLAYER_HEAD);
-            SkullMeta meta1 = (SkullMeta)rightHad.getItemMeta();
+            SkullMeta meta1 = (SkullMeta) rightHad.getItemMeta();
             meta1.setDisplayName("§7Вперед");
             meta1.setOwner("MHF_ArrowRight");
             rightHad.setItemMeta(meta1);
@@ -218,10 +197,33 @@ public class CitiesManager implements Listener {
     public static void openCityCitizensGUI(City city, Player player) {
         PlayerData data = PlayersManager.getPlayerData(player);
         if (data != null) {
-            String citizensCityGUI = ConfigManager.CITIZENSCITYGUINAME;
+            String citizensCityGUI = GlobalConfig.CITIZENSCITYGUINAME;
             Inventory info = Bukkit.getServer().createInventory(player, Math.max(data.getCity().getCitizen().size(), 9), citizensCityGUI);
             info.setContents(city.getSkullCitizens());
             player.openInventory(info);
+        }
+    }
+
+    public void load() {
+        cityFile = new File(plugin.getDataFolder(), "cities.yml");
+        if (!(cityFile.exists())) {
+            if (!(cityFile.getParentFile().mkdirs())) System.out.println();
+            plugin.saveResource("cities.yml", false);
+            cityConfig = new YamlConfiguration();
+            try {
+                cityConfig.load(cityFile);
+                loadCities();
+            } catch (InvalidConfigurationException | IOException e) {
+                e.printStackTrace();
+            }
+            return;
+        }
+        cityConfig = new YamlConfiguration();
+        try {
+            cityConfig.load(cityFile);
+            loadCities();
+        } catch (InvalidConfigurationException | IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -229,7 +231,7 @@ public class CitiesManager implements Listener {
     public void pickupItemInventory(InventoryClickEvent event) {
         Player player = (Player) event.getWhoClicked();
         PlayerData data = PlayersManager.getPlayerData(player);
-        if (data != null && data.getCity() != null){
+        if (data != null && data.getCity() != null) {
             if (player.getGameMode() == GameMode.CREATIVE) {
                 event.setCancelled(false);
                 return;
@@ -246,7 +248,7 @@ public class CitiesManager implements Listener {
                     event.setCancelled(true);
                     return;
                 }
-                if (event.getView().getTitle().equals(centerTitle("§8Список городов"))){
+                if (event.getView().getTitle().equals(centerTitle("§8Список городов"))) {
                     if (itemStack != null) {
                         ItemMeta meta = itemStack.getItemMeta();
                         int page = 0;

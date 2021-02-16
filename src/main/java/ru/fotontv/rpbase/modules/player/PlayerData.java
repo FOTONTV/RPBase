@@ -1,4 +1,4 @@
-package ru.fotontv.rpbase.data;
+package ru.fotontv.rpbase.modules.player;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -6,18 +6,20 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import ru.fotontv.rpbase.modules.config.ConfigManager;
+import ru.fotontv.rpbase.config.GlobalConfig;
+import ru.fotontv.rpbase.enums.ProfessionsEnum;
+import ru.fotontv.rpbase.modules.city.City;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class PlayerData {
+    public Passport passport;
     private Player player;
     private String nick;
     private long startTimeImp;
     private String timeImp = "";
     private ProfessionsEnum profession;
-    public Passport passport;
     private ItemStack cityInfoItem;
     private String nickPassportRequest = "";
     private String nickCityRequest = "";
@@ -43,11 +45,6 @@ public class PlayerData {
         this.pexs = ProfessionsEnum.PLAYER.getPermissions();
     }
 
-    public void setPlayer(Player player) {
-        this.player = player;
-        this.nick = player.getName();
-    }
-
     public String getCityName() {
         return cityName;
     }
@@ -68,7 +65,7 @@ public class PlayerData {
         ItemStack passportItem = new ItemStack(Material.BOOK);
         ItemMeta metBook = passportItem.getItemMeta();
         List<String> lore = new ArrayList<>();
-        for (String lor : ConfigManager.LOREPASSPORT) {
+        for (String lor : GlobalConfig.LOREPASSPORT) {
             if (lor.contains("{player}")) {
                 String[] splitStr = lor.split(": ");
                 String oneStr = ChatColor.translateAlternateColorCodes('&', splitStr[0]);
@@ -117,7 +114,7 @@ public class PlayerData {
             }
             lore.add(lor);
         }
-        String nameBook = ConfigManager.NAMEPASSPORT.replace("{player}", player.getName());
+        String nameBook = GlobalConfig.NAMEPASSPORT.replace("{player}", player.getName());
         metBook.setDisplayName(nameBook);
         metBook.setLore(lore);
         passportItem.setItemMeta(metBook);
@@ -129,7 +126,7 @@ public class PlayerData {
             cityInfoItem = new ItemStack(Material.BOOK);
             ItemMeta metBook = cityInfoItem.getItemMeta();
             List<String> lore = new ArrayList<>();
-            for (String lor : ConfigManager.LORECITYINFO) {
+            for (String lor : GlobalConfig.LORECITYINFO) {
                 if (lor.contains("{city}")) {
                     lor = lor.replace("{city}", getCityName());
                 }
@@ -141,7 +138,7 @@ public class PlayerData {
                 }
                 lore.add(lor);
             }
-            String nameBook = ConfigManager.CITYINFOBOOKNAME.replace("{city}", getCityName());
+            String nameBook = GlobalConfig.CITYINFOBOOKNAME.replace("{city}", getCityName());
             metBook.setDisplayName(nameBook);
             metBook.setLore(lore);
             cityInfoItem.setItemMeta(metBook);
@@ -161,24 +158,29 @@ public class PlayerData {
         return player;
     }
 
+    public void setPlayer(Player player) {
+        this.player = player;
+        this.nick = player.getName();
+    }
+
     public void setStartTimeImp() {
         startTimeImp = System.currentTimeMillis();
-    }
-
-    public void setStartTimeImp(long time) {
-        startTimeImp = time;
-    }
-
-    public void setTimeImp(String timeImp) {
-        this.timeImp = timeImp;
     }
 
     public long getStartTimeImp() {
         return startTimeImp;
     }
 
+    public void setStartTimeImp(long time) {
+        startTimeImp = time;
+    }
+
     public String getTimeImp() {
         return this.timeImp;
+    }
+
+    public void setTimeImp(String timeImp) {
+        this.timeImp = timeImp;
     }
 
     public ProfessionsEnum getProfession() {
@@ -233,12 +235,12 @@ public class PlayerData {
         return countUnlock;
     }
 
-    public void addCountUnlock() {
-        countUnlock += 1;
-    }
-
     public void setCountUnlock(int count) {
         countUnlock = count;
+    }
+
+    public void addCountUnlock() {
+        countUnlock += 1;
     }
 
     public List<String> getPexs() {

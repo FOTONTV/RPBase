@@ -1,4 +1,4 @@
-package ru.fotontv.rpbase.data;
+package ru.fotontv.rpbase.modules.player;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -16,12 +16,12 @@ public class Passport {
         return pickUpCity;
     }
 
-    public void setPickUpCity(String pickUpCity) {
-        this.pickUpCity = pickUpCity;
-    }
-
     public boolean isPickUpCity() {
         return isPickUpCity;
+    }
+
+    public void setPickUpCity(String pickUpCity) {
+        this.pickUpCity = pickUpCity;
     }
 
     public void setIsPickUpCity(boolean isPickUpCity) {
@@ -48,6 +48,10 @@ public class Passport {
         return criminalRecords;
     }
 
+    public void setCriminalRecords(List<String> criminalRecords) {
+        this.criminalRecords = criminalRecords;
+    }
+
     public void addCriminalRecords(String records) {
         this.criminalRecords.remove("-");
         this.criminalRecords.add(records);
@@ -57,10 +61,6 @@ public class Passport {
         this.criminalRecords.remove(records);
         if (this.criminalRecords.isEmpty())
             this.criminalRecords.add("-");
-    }
-
-    public void setCriminalRecords(List<String> criminalRecords) {
-        this.criminalRecords = criminalRecords;
     }
 
     public String getProfession() {

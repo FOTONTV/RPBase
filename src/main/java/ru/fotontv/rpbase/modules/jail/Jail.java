@@ -6,9 +6,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Jail {
-    private int numCamera = 0;
     private final String name;
     private final List<CameraJail> camers = new ArrayList<>();
+    private int numCamera = 0;
 
     public Jail(String name) {
         this.name = name;
@@ -32,16 +32,16 @@ public class Jail {
         return false;
     }
 
-    public void setCamers(List<CameraJail> camers) {
-        this.camers.addAll(camers);
-    }
-
     public String getName() {
         return name;
     }
 
     public List<CameraJail> getCamers() {
         return camers;
+    }
+
+    public void setCamers(List<CameraJail> camers) {
+        this.camers.addAll(camers);
     }
 
     public boolean removeCamera(int num) {

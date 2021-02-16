@@ -1,4 +1,4 @@
-package ru.fotontv.rpbase.data;
+package ru.fotontv.rpbase.modules.player;
 
 import me.yic.xconomy.data.DataFormat;
 import me.yic.xconomy.data.caches.Cache;
@@ -20,7 +20,9 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import ru.fotontv.rpbase.RPBase;
-import ru.fotontv.rpbase.modules.config.ConfigManager;
+import ru.fotontv.rpbase.config.GlobalConfig;
+import ru.fotontv.rpbase.enums.ProfessionsEnum;
+import ru.fotontv.rpbase.modules.city.CitiesManager;
 import ru.fotontv.rpbase.modules.jail.JailManager;
 import ru.fotontv.rpbase.utils.LinkedSet;
 
@@ -32,13 +34,13 @@ import java.util.concurrent.CompletableFuture;
 
 public class PlayersManager implements Listener {
 
-    private static File playersFile;
-    private static FileConfiguration playersConfig;
     private static final Set<PlayerData> playerDataList = new LinkedSet<>();
     private static final List<ItemStack> itemsRul = new ArrayList<>();
-    private static int timer = 0;
     private static final HashMap<Player, Integer> taskID = new HashMap<>();
     private static final Permission permission = RPBase.getPlugin().getPermission();
+    private static File playersFile;
+    private static FileConfiguration playersConfig;
+    private static int timer = 0;
 
     public PlayersManager() {
     }
@@ -276,7 +278,7 @@ public class PlayersManager implements Listener {
     }
 
     public static void openPass(Player player) {
-        String namePassportGUI = ConfigManager.NAMEPASSPORTGUI.replace("{player}", player.getName());
+        String namePassportGUI = GlobalConfig.NAMEPASSPORTGUI.replace("{player}", player.getName());
         Inventory pass = Bukkit.getServer().createInventory(player, 9, namePassportGUI);
         PlayerData data = getPlayerData(player);
         if (data != null)
@@ -285,7 +287,7 @@ public class PlayersManager implements Listener {
     }
 
     public static void openPassOther(Player player, Player request) {
-        String namePassportGUI = ConfigManager.NAMEPASSPORTGUI.replace("{player}", player.getName());
+        String namePassportGUI = GlobalConfig.NAMEPASSPORTGUI.replace("{player}", player.getName());
         Inventory pass = Bukkit.getServer().createInventory(player, 9, namePassportGUI);
         PlayerData data = getPlayerData(player);
         if (data != null)
@@ -469,7 +471,7 @@ public class PlayersManager implements Listener {
                     player.sendMessage("§2Вам выпал талант: " + stack.getItemMeta().getDisplayName());
                     addTalent(stack, player);
                 }
-                Bukkit.getScheduler().scheduleSyncDelayedTask(RPBase.getPlugin(), player::closeInventory,  30L);
+                Bukkit.getScheduler().scheduleSyncDelayedTask(RPBase.getPlugin(), player::closeInventory, 30L);
             }
         }, 0L, 2);
         taskID.put(player, tid);
