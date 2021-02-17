@@ -102,6 +102,21 @@ chat:
   noRpGlobalChatFormat: "[NoRP] &a[G] &f{prefix}&f{player}&f{suffix}: &f{message}"
   noRpLocalChatFormat: "[NoRP] &9[L] &f{prefix}&f{player}: {message}"
   globalChatFormatDetector: "[G]"
+  me:
+    radius: 10
+    usage: '[§c!§f] §cИспользуй: /%label% <сообщение>'
+    format: '* %name% %message% *'
+  do:
+    radius: 10
+    usage: '[§c!§f] §cИспользуй: /%label% <сообщение>'
+    format: '§e*§f %name% %message% §e*'
+  try:
+    radius: 10
+    usage: '[§c!§f] §cИспользуй: /%label% <сообщение>'
+    format: '* %name% %message% %result% §f*'
+  results:
+    - '§aУспешно'
+    - '§cНеуспешно'
 whitelist:
   msgNotWhitelisted: "&6[RP] &cОтпишите Denis Xolodok по поводу добавления в вайтлист: vk.com/xolodokgg"
 removeRecipes:

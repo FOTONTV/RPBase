@@ -51,6 +51,15 @@ commands:
   rp:
     description: RP command
     usage: /<command>
+  do:
+    description: Do command
+    usage: /<command>
+  try:
+    description: Try command
+    usage: /<command>
+  me:
+    description: Me command
+    usage: /<command>
 permissions:
   police.wanted.add:
     description: Доступ к команде /wanted [Ник]

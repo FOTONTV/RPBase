@@ -11,9 +11,7 @@ import ru.fotontv.rpbase.RPBase;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
+import java.util.*;
 
 public class ChatConfig {
     private final RPBase plugin;
@@ -23,6 +21,16 @@ public class ChatConfig {
     public static String noRpLocalChatFormat = "";
     public static String msgNotWhitelisted = "";
     public static String globalChatFormatDetector = "";
+    public static String doChatUsage = "";
+    public static Integer doChatRadius = 0;
+    public static String doChatFormat = "";
+    public static String meChatUsage = "";
+    public static Integer meChatRadius = 0;
+    public static String meChatFormat = "";
+    public static String tryChatUsage = "";
+    public static Integer tryChatRadius = 0;
+    public static String tryChatFormat = "";
+    public static List<String> tryResults = new ArrayList<>();
 
     public ChatConfig(RPBase plugin) {
         this.plugin = plugin;
@@ -37,6 +45,16 @@ public class ChatConfig {
             noRpGlobalChatFormat = colorize(chatConfig.getString("noRpGlobalChatFormat"));
             noRpLocalChatFormat = colorize(chatConfig.getString("noRpLocalChatFormat"));
             globalChatFormatDetector = colorize(chatConfig.getString("globalChatFormatDetector"));
+            doChatUsage = chatConfig.getString("do.usage");
+            doChatRadius = chatConfig.getInt("do.radius");
+            doChatFormat = chatConfig.getString("do.format");
+            meChatUsage = chatConfig.getString("me.usage");
+            meChatRadius = chatConfig.getInt("me.radius");
+            meChatFormat = chatConfig.getString("me.format");
+            tryChatUsage = chatConfig.getString("try.usage");
+            tryChatRadius = chatConfig.getInt("try.radius");
+            tryChatFormat = chatConfig.getString("try.format");
+            tryResults = chatConfig.getStringList("results");
         }
         ConfigurationSection whitelistConfig = fileConfiguration.getConfigurationSection("whitelist");
         if (whitelistConfig != null) {
