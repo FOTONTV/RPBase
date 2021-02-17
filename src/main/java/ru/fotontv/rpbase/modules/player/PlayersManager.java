@@ -111,6 +111,7 @@ public class PlayersManager implements Listener {
             playersConfig.set(player.getName() + ".countUnlockSuccess", data.getCountUnlock());
             playersConfig.set(player.getName() + ".pexs", data.getPexs());
             playersConfig.set(player.getName() + ".pexsTalent", data.getPexsTalent());
+            playersConfig.set(player.getName() + ".dateAddProf", data.getDateAddProf());
         }
         try {
             playersConfig.save(playersFile);
@@ -147,6 +148,7 @@ public class PlayersManager implements Listener {
             playersConfig.set(player.getName() + ".countUnlockSuccess", data.getCountUnlock());
             playersConfig.set(player.getName() + ".pexs", data.getPexs());
             playersConfig.set(player.getName() + ".pexsTalent", data.getPexsTalent());
+            playersConfig.set(player.getName() + ".dateAddProf", data.getDateAddProf());
         }
         try {
             playersConfig.save(playersFile);
@@ -171,12 +173,14 @@ public class PlayersManager implements Listener {
             int countUnlockSuccess = playersConfig.getInt(nick + ".countUnlockSuccess");
             List<String> pexs = playersConfig.getStringList(nick + ".pexs");
             List<String> pexsTalent = playersConfig.getStringList(nick + ".pexsTalent");
+            String dateAddProf = playersConfig.getString(nick + ".dateAddProf");
             ProfessionsEnum prof = ProfessionsEnum.valueOf(professionsEnum);
             OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(nick);
             PlayerData data = new PlayerData(offlinePlayer);
             data.setProfession(prof);
             data.setPexs(pexs);
             data.setPexsTalent(pexsTalent);
+            data.setDateAddProf(dateAddProf);
             Passport passport = new Passport();
             passport.setPickUpCity(pickUpCity);
             passport.setIsPickUpCity(isPickUpCity);
@@ -210,11 +214,13 @@ public class PlayersManager implements Listener {
             int countUnlockSuccess = playersConfig.getInt(player.getName() + ".countUnlockSuccess");
             List<String> pexs = playersConfig.getStringList(player.getName() + ".pexs");
             List<String> pexsTalent = playersConfig.getStringList(player.getName() + ".pexsTalent");
+            String dateAddProf = playersConfig.getString(player.getName() + ".dateAddProf");
             ProfessionsEnum prof = ProfessionsEnum.valueOf(professionsEnum);
             PlayerData data = new PlayerData(player);
             data.setProfession(prof);
             data.setPexs(pexs);
             data.setPexsTalent(pexsTalent);
+            data.setDateAddProf(dateAddProf);
             addPexs(player, pexs);
             addPexsTalent(player, pexsTalent);
             Passport passport = new Passport();
@@ -496,6 +502,7 @@ public class PlayersManager implements Listener {
         switch (stack.getItemMeta().getDisplayName()) {
             case "§7Родство с магией":
                 pexsTalent.add("xrp.open_enchanting_table");
+                data.addPexsTalent(pexsTalent);
                 addPexsTalent(data.getPlayer(), pexsTalent);
                 pexsTalent.clear();
                 break;
@@ -504,17 +511,20 @@ public class PlayersManager implements Listener {
                 pexsTalent.add("craftingapi.recipe.craftingapi.iron_chestplate");
                 pexsTalent.add("craftingapi.recipe.craftingapi.iron_leggins");
                 pexsTalent.add("craftingapi.recipe.craftingapi.iron_boots");
+                data.addPexsTalent(pexsTalent);
                 addPexsTalent(data.getPlayer(), pexsTalent);
                 pexsTalent.clear();
                 break;
             case "§7Мастер мечей":
                 pexsTalent.add("craftingapi.recipe.craftingapi.diamond_sword");
                 pexsTalent.add("craftingapi.recipe.craftingapi.iron_sword");
+                data.addPexsTalent(pexsTalent);
                 addPexsTalent(data.getPlayer(), pexsTalent);
                 pexsTalent.clear();
                 break;
             case "§7Ловкие руки":
                 pexsTalent.add("keylock.talentVor");
+                data.addPexsTalent(pexsTalent);
                 addPexsTalent(data.getPlayer(), pexsTalent);
                 pexsTalent.clear();
                 break;
@@ -526,11 +536,13 @@ public class PlayersManager implements Listener {
                 break;
             case "§7Воин":
                 pexsTalent.add("rpbase.talentVoin");
+                data.addPexsTalent(pexsTalent);
                 addPexsTalent(data.getPlayer(), pexsTalent);
                 pexsTalent.clear();
                 break;
             case "§7Большой нос":
                 pexsTalent.add("rpbase.talentBigNos");
+                data.addPexsTalent(pexsTalent);
                 addPexsTalent(data.getPlayer(), pexsTalent);
                 pexsTalent.clear();
                 break;

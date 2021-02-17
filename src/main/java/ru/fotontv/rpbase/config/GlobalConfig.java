@@ -23,6 +23,11 @@ public class GlobalConfig {
     public static List<String> BREWER = new ArrayList<>();
     public static List<String> THIEF = new ArrayList<>();
     public static int MAX_PLAYER_IN_CELL = 2;
+    public static int VIP_ADDPROF = 2;
+    public static int PREMIUM_ADDPROF = 2;
+    public static int EXTREME_ADDPROF = 2;
+    public static int AGLEM_ADDPROF = 2;
+    public static int GLORIOUS_ADDPROF = 2;
     public static String NAMEPASSPORTGUI = "";
     public static String NAMEPASSPORT = "";
     public static List<String> LOREPASSPORT = new ArrayList<>();
@@ -122,6 +127,12 @@ public class GlobalConfig {
         THIEF = plugin.getConfig().getStringList("THIEF");
 
         MAX_PLAYER_IN_CELL = plugin.getConfig().getInt("maxplayerincell");
+
+        VIP_ADDPROF = plugin.getConfig().getInt("vip");
+        PREMIUM_ADDPROF = plugin.getConfig().getInt("premium");
+        EXTREME_ADDPROF = plugin.getConfig().getInt("extreme");
+        AGLEM_ADDPROF = plugin.getConfig().getInt("aglem");
+        GLORIOUS_ADDPROF = plugin.getConfig().getInt("glorious");
 
         NAMEPASSPORTGUI = plugin.getConfig().getString("namePassportGUI");
         if (NAMEPASSPORTGUI != null) {

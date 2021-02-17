@@ -45,7 +45,6 @@ public class JailManager {
                         String x = new DecimalFormat("#0.00").format(location.getX());
                         String y = new DecimalFormat("#0.00").format(location.getY());
                         String z = new DecimalFormat("#0.00").format(location.getZ());
-                        System.out.println(x + ", " + y + ", " + z);
                         List<PlayerData> players = cameraJail.getPlayers();
                         List<String> pls = new ArrayList<>();
                         camers.add(name);

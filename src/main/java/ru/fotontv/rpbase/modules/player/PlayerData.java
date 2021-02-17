@@ -1,17 +1,26 @@
 package ru.fotontv.rpbase.modules.player;
 
+import net.luckperms.api.model.user.User;
+import net.luckperms.api.node.NodeType;
+import net.luckperms.api.node.types.InheritanceNode;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import ru.fotontv.rpbase.RPBase;
 import ru.fotontv.rpbase.config.GlobalConfig;
 import ru.fotontv.rpbase.enums.ProfessionsEnum;
 import ru.fotontv.rpbase.modules.city.City;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Collectors;
 
 public class PlayerData {
     public Passport passport;
@@ -30,6 +39,7 @@ public class PlayerData {
     private Integer countUnlock = 0;
     private List<String> pexs;
     private List<String> pexsTalent = new ArrayList<>();
+    private String dateAddProf = "-";
 
     public PlayerData(Player player) {
         this.player = player;
@@ -262,5 +272,133 @@ public class PlayerData {
 
     public void addPexsTalent(List<String> pexsTalent) {
         this.pexsTalent.addAll(pexsTalent);
+    }
+
+    public String getDateAddProf() {
+        return dateAddProf;
+    }
+
+    public boolean isNotAccessProf() {
+        Calendar instance = Calendar.getInstance();
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        Date date = new Date();
+        try {
+            instance.setTime(dateFormat.parse(this.dateAddProf));
+        } catch (ParseException e) {
+            return true;
+        }
+        if (isVip()) {
+            instance.add(Calendar.DAY_OF_MONTH, GlobalConfig.VIP_ADDPROF);
+            Date newDate = instance.getTime();
+            return newDate.getTime() <= date.getTime();
+        }
+        if (isPremium()) {
+            instance.add(Calendar.DAY_OF_MONTH, GlobalConfig.PREMIUM_ADDPROF);
+            Date newDate = instance.getTime();
+            return newDate.getTime() <= date.getTime();
+        }
+        if (isExtreme()) {
+            instance.add(Calendar.DAY_OF_MONTH, GlobalConfig.EXTREME_ADDPROF);
+            Date newDate = instance.getTime();
+            return newDate.getTime() <= date.getTime();
+        }
+        if (isAglem()) {
+            instance.add(Calendar.DAY_OF_MONTH, GlobalConfig.AGLEM_ADDPROF);
+            Date newDate = instance.getTime();
+            return newDate.getTime() <= date.getTime();
+        }
+        if (isGlorious()) {
+            instance.add(Calendar.DAY_OF_MONTH, GlobalConfig.GLORIOUS_ADDPROF);
+            Date newDate = instance.getTime();
+            return newDate.getTime() <= date.getTime();
+        }
+        instance.add(Calendar.DAY_OF_MONTH, 4);
+        Date newDate = instance.getTime();
+        return newDate.getTime() <= date.getTime();
+    }
+
+    public boolean isVip() {
+        AtomicBoolean isVip = new AtomicBoolean(false);
+        CompletableFuture<User> futureUser = RPBase.api.getUserManager().loadUser(player.getUniqueId());
+        futureUser.thenAcceptAsync(user -> {
+            Set<String> groups = user.getNodes().stream()
+                    .filter(NodeType.INHERITANCE::matches)
+                    .map(NodeType.INHERITANCE::cast)
+                    .map(InheritanceNode::getGroupName)
+                    .collect(Collectors.toSet());
+            if (groups.contains("v"))
+                isVip.set(true);
+        });
+        return isVip.get();
+    }
+
+    public boolean isPremium() {
+        AtomicBoolean isPremium = new AtomicBoolean(false);
+        CompletableFuture<User> futureUser = RPBase.api.getUserManager().loadUser(player.getUniqueId());
+        futureUser.thenAcceptAsync(user -> {
+            Set<String> groups = user.getNodes().stream()
+                    .filter(NodeType.INHERITANCE::matches)
+                    .map(NodeType.INHERITANCE::cast)
+                    .map(InheritanceNode::getGroupName)
+                    .collect(Collectors.toSet());
+            if (groups.contains("p"))
+                isPremium.set(true);
+        });
+        return isPremium.get();
+    }
+
+    public boolean isExtreme() {
+        AtomicBoolean isExtreme = new AtomicBoolean(false);
+        CompletableFuture<User> futureUser = RPBase.api.getUserManager().loadUser(player.getUniqueId());
+        futureUser.thenAcceptAsync(user -> {
+            Set<String> groups = user.getNodes().stream()
+                    .filter(NodeType.INHERITANCE::matches)
+                    .map(NodeType.INHERITANCE::cast)
+                    .map(InheritanceNode::getGroupName)
+                    .collect(Collectors.toSet());
+            if (groups.contains("e"))
+                isExtreme.set(true);
+        });
+        return isExtreme.get();
+    }
+
+    public boolean isAglem() {
+        AtomicBoolean isAglem = new AtomicBoolean(false);
+        CompletableFuture<User> futureUser = RPBase.api.getUserManager().loadUser(player.getUniqueId());
+        futureUser.thenAcceptAsync(user -> {
+            Set<String> groups = user.getNodes().stream()
+                    .filter(NodeType.INHERITANCE::matches)
+                    .map(NodeType.INHERITANCE::cast)
+                    .map(InheritanceNode::getGroupName)
+                    .collect(Collectors.toSet());
+            if (groups.contains("a"))
+                isAglem.set(true);
+        });
+        return isAglem.get();
+    }
+
+    public boolean isGlorious() {
+        AtomicBoolean isGlorious = new AtomicBoolean(false);
+        CompletableFuture<User> futureUser = RPBase.api.getUserManager().loadUser(player.getUniqueId());
+        futureUser.thenAcceptAsync(user -> {
+            Set<String> groups = user.getNodes().stream()
+                    .filter(NodeType.INHERITANCE::matches)
+                    .map(NodeType.INHERITANCE::cast)
+                    .map(InheritanceNode::getGroupName)
+                    .collect(Collectors.toSet());
+            if (groups.contains("g"))
+                isGlorious.set(true);
+        });
+        return isGlorious.get();
+    }
+
+    public void setDateAddProf(String dateAddProf) {
+        this.dateAddProf = dateAddProf;
+    }
+
+    public void setCurrentDateAddProf() {
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        Date date = new Date();
+        this.dateAddProf = dateFormat.format(date);
     }
 }

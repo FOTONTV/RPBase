@@ -31,6 +31,11 @@ public class ProfCommands implements CommandExecutor {
                                     if (data.getCityName().equals(data1.getCityName())) {
                                         if (data1.getProfession().equals(ProfessionsEnum.THIEF))
                                             return true;
+                                        if (data1.isNotAccessProf()) {
+                                            player.sendMessage("§cУ этого игрока вы не можете снять профессию сейчас!");
+                                            player1.sendMessage("§cВы не можете быть сняты с профессии сейчас!");
+                                            return true;
+                                        }
                                         ProfessionsEnum professionsEnum1 = data1.getProfession();
                                         data1.setProfession(ProfessionsEnum.PLAYER);
                                         data1.passport.setProfession(ProfessionsEnum.PLAYER.getNameProf());
@@ -59,9 +64,15 @@ public class ProfCommands implements CommandExecutor {
                                             player.sendMessage("§cНеобходим более высокий статус города!");
                                             return true;
                                         }
+                                        if (data1.isNotAccessProf()) {
+                                            player.sendMessage("§cЭтот игрок не может получить новую профессию сейчас!");
+                                            player1.sendMessage("§cВы не можете получить новую профессию сейчас!");
+                                            return true;
+                                        }
                                         if (!(professionsEnum.equals(ProfessionsEnum.MAYOR) || professionsEnum.equals(ProfessionsEnum.PLAYER) || professionsEnum.equals(ProfessionsEnum.THIEF))) {
                                             data1.setProfession(professionsEnum);
                                             data1.passport.setProfession(professionsEnum.getNameProf());
+                                            data1.setCurrentDateAddProf();
                                             PlayersManager.removePex(player1, data1);
                                             PlayersManager.addPex(professionsEnum, player1, data1);
                                             PlayersManager.savePlayerData(data1);
