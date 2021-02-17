@@ -69,7 +69,7 @@ BLACKSMITH:
 WIZARD:
   - "parent.PLAYER"
   - "craftingapi.recipe.craftingapi.enchanting_table"
-  - "xrp.open_enchanting_table"
+  - "rp.open_enchanting_table"
 #Повар
 COOK:
   - "parent.PLAYER"
@@ -95,6 +95,27 @@ premium: 2
 extreme: 2
 aglem: 2
 glorious: 2
+
+#RPChat
+chat:
+  noRpLocalChatDistance: 300
+  noRpGlobalChatFormat: "[NoRP] &a[G] &f{prefix}&f{player}&f{suffix}: &f{message}"
+  noRpLocalChatFormat: "[NoRP] &9[L] &f{prefix}&f{player}: {message}"
+  globalChatFormatDetector: "[G]"
+whitelist:
+  msgNotWhitelisted: "&6[RP] &cОтпишите Denis Xolodok по поводу добавления в вайтлист: vk.com/xolodokgg"
+removeRecipes:
+  - 'iron_sword'
+  - 'iron_helmet'
+  - 'iron_boots'
+  - 'iron_leggings'
+  - 'iron_chestplate'
+  - 'diamond_sword'
+  - 'diamond_helmet'
+  - 'diamond_boots'
+  - 'diamond_leggings'
+  - 'diamond_chestplate'
+  - 'shield'
 
 #Название GUI паспорта ({player} - ник игрока, которому принадлежит паспорт)
 namePassportGUI: "Паспорт {player}"

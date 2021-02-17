@@ -4,7 +4,7 @@ main: ru.fotontv.rpbase.RPBase
 api-version: 1.15
 authors: [ FOTONTV ]
 description: RPBase
-depend: [ LuckPerms, XConomy, PlaceholderAPI, Vault ]
+depend: [ LuckPerms, XConomy, PlaceholderAPI, Vault, Essentials ]
 commands:
   wanted:
     description: Команда на розыск
@@ -47,6 +47,9 @@ commands:
     usage: /<command>
   rpbase:
     description: Перезагрузить конфиг
+    usage: /<command>
+  rp:
+    description: RP command
     usage: /<command>
 permissions:
   police.wanted.add:
@@ -154,3 +157,29 @@ permissions:
     children:
       prof.add: true
       prof.remove: true
+  rp.*:
+    description: Gives access to all permissions
+    children:
+      rp.manage-players: true
+      rp.open_enchanting_table: true
+    default: op
+  rp.manage-players:
+    description: Gives access to removing and adding players to whitelist
+    children:
+      rp.manage-players.add: true
+      rp.manage-players.remove: true
+      rp.manage-players.list: true
+  rp.manage-players.*:
+    description: Gives access to removing and adding players to whitelist
+    children:
+      rp.manage-players.add: true
+      rp.manage-players.remove: true
+      rp.manage-players.list: true
+  rp.manage-players.add:
+    description: Gives access to adding players to whitelist
+  rp.manage-players.remove:
+    description: Gives access to removing players from whitelist
+  rp.manage-players.list:
+    description: Gives access to viewing whitelist
+  rp.open_enchanting_table:
+    description: Gives access for Wizard and Engineer crafts on enchanting table

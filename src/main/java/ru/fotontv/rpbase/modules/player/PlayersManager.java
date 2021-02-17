@@ -501,7 +501,7 @@ public class PlayersManager implements Listener {
             return;
         switch (stack.getItemMeta().getDisplayName()) {
             case "§7Родство с магией":
-                pexsTalent.add("xrp.open_enchanting_table");
+                pexsTalent.add("rp.open_enchanting_table");
                 data.addPexsTalent(pexsTalent);
                 addPexsTalent(data.getPlayer(), pexsTalent);
                 pexsTalent.clear();
