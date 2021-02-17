@@ -60,9 +60,15 @@ public class ProfCommands implements CommandExecutor {
                                 if (player1 != null && data1 != null && !player.getName().equals(player1.getName())) {
                                     if (data.getCityName().equals(data1.getCityName())) {
                                         ProfessionsEnum professionsEnum = ProfessionsEnum.getProf(args[2]);
-                                        if (!data.getCity().isValidProf(professionsEnum)) {
-                                            player.sendMessage("§cНеобходим более высокий статус города!");
-                                            return true;
+                                        if (!(data1.isVip()) &&
+                                                !(data1.isPremium()) &&
+                                                !(data1.isExtreme()) &&
+                                                !(data1.isAglem()) &&
+                                                !(data1.isGlorious())) {
+                                            if (!data.getCity().isValidProf(professionsEnum)) {
+                                                player.sendMessage("§cНеобходим более высокий статус города!");
+                                                return true;
+                                            }
                                         }
                                         if (data1.isNotAccessProf()) {
                                             player.sendMessage("§cЭтот игрок не может получить новую профессию сейчас!");
