@@ -2,8 +2,6 @@ package ru.fotontv.rpbase.modules.player;
 
 import me.yic.xconomy.data.DataFormat;
 import me.yic.xconomy.data.caches.Cache;
-import net.luckperms.api.model.user.User;
-import net.luckperms.api.node.Node;
 import net.milkbowl.vault.permission.Permission;
 import org.bukkit.*;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -30,7 +28,6 @@ import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.*;
-import java.util.concurrent.CompletableFuture;
 
 public class PlayersManager implements Listener {
 
@@ -113,6 +110,7 @@ public class PlayersManager implements Listener {
             playersConfig.set(player.getName() + ".isChatCity", data.isChatCity());
             playersConfig.set(player.getName() + ".countUnlockSuccess", data.getCountUnlock());
             playersConfig.set(player.getName() + ".pexs", data.getPexs());
+            playersConfig.set(player.getName() + ".pexsTalent", data.getPexsTalent());
         }
         try {
             playersConfig.save(playersFile);
@@ -148,6 +146,7 @@ public class PlayersManager implements Listener {
             playersConfig.set(player.getName() + ".isChatCity", data.isChatCity());
             playersConfig.set(player.getName() + ".countUnlockSuccess", data.getCountUnlock());
             playersConfig.set(player.getName() + ".pexs", data.getPexs());
+            playersConfig.set(player.getName() + ".pexsTalent", data.getPexsTalent());
         }
         try {
             playersConfig.save(playersFile);
@@ -171,11 +170,13 @@ public class PlayersManager implements Listener {
             boolean isChatCity = playersConfig.getBoolean(nick + ".isChatCity");
             int countUnlockSuccess = playersConfig.getInt(nick + ".countUnlockSuccess");
             List<String> pexs = playersConfig.getStringList(nick + ".pexs");
+            List<String> pexsTalent = playersConfig.getStringList(nick + ".pexsTalent");
             ProfessionsEnum prof = ProfessionsEnum.valueOf(professionsEnum);
             OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(nick);
             PlayerData data = new PlayerData(offlinePlayer);
             data.setProfession(prof);
             data.setPexs(pexs);
+            data.setPexsTalent(pexsTalent);
             Passport passport = new Passport();
             passport.setPickUpCity(pickUpCity);
             passport.setIsPickUpCity(isPickUpCity);
@@ -208,11 +209,14 @@ public class PlayersManager implements Listener {
             boolean isChatCity = playersConfig.getBoolean(player.getName() + ".isChatCity");
             int countUnlockSuccess = playersConfig.getInt(player.getName() + ".countUnlockSuccess");
             List<String> pexs = playersConfig.getStringList(player.getName() + ".pexs");
+            List<String> pexsTalent = playersConfig.getStringList(player.getName() + ".pexsTalent");
             ProfessionsEnum prof = ProfessionsEnum.valueOf(professionsEnum);
             PlayerData data = new PlayerData(player);
             data.setProfession(prof);
             data.setPexs(pexs);
+            data.setPexsTalent(pexsTalent);
             addPexs(player, pexs);
+            addPexsTalent(player, pexsTalent);
             Passport passport = new Passport();
             passport.setPickUpCity(pickUpCity);
             passport.setIsPickUpCity(isPickUpCity);
@@ -241,6 +245,14 @@ public class PlayersManager implements Listener {
         }
     }
 
+    public static void addPexsTalent(Player player, List<String> pexs) {
+        if (permission != null) {
+            for (String pex : pexs) {
+                permission.playerAdd(player, pex);
+            }
+        }
+    }
+
     public static void addPex(ProfessionsEnum prof, Player player, PlayerData data) {
         List<String> pexAll = formatPex(prof);
         if (permission != null) {
@@ -249,7 +261,6 @@ public class PlayersManager implements Listener {
                 data.setPexs(pexAll);
             }
         }
-        System.out.println(pexAll);
     }
 
     public static void removePex(Player player, PlayerData data) {
@@ -259,7 +270,6 @@ public class PlayersManager implements Listener {
                 permission.playerRemove(player, pex);
             }
         }
-        System.out.println(pexAll);
     }
 
     private static List<String> formatPex(ProfessionsEnum prof) {
@@ -479,56 +489,50 @@ public class PlayersManager implements Listener {
     }
 
     private static void addTalent(ItemStack stack, Player player) {
-        CompletableFuture<User> futureUser = RPBase.api.getUserManager().loadUser(player.getUniqueId());
+        List<String> pexsTalent =  new ArrayList<>();
         PlayerData data = PlayersManager.getPlayerData(player);
+        if (data == null)
+            return;
         switch (stack.getItemMeta().getDisplayName()) {
             case "§7Родство с магией":
-                futureUser.thenAcceptAsync(user -> {
-                    user.data().add(Node.builder("xrp.open_enchanting_table").build());
-                    RPBase.api.getUserManager().saveUser(user);
-                });
+                pexsTalent.add("xrp.open_enchanting_table");
+                addPexsTalent(data.getPlayer(), pexsTalent);
+                pexsTalent.clear();
                 break;
             case "§7Рождённый в кузне":
-                futureUser.thenAcceptAsync(user -> {
-                    user.data().add(Node.builder("craftingapi.recipe.craftingapi.iron_helmet").build());
-                    user.data().add(Node.builder("craftingapi.recipe.craftingapi.iron_chestplate").build());
-                    user.data().add(Node.builder("craftingapi.recipe.craftingapi.iron_leggins").build());
-                    user.data().add(Node.builder("craftingapi.recipe.craftingapi.iron_boots").build());
-                    RPBase.api.getUserManager().saveUser(user);
-                });
+                pexsTalent.add("craftingapi.recipe.craftingapi.iron_helmet");
+                pexsTalent.add("craftingapi.recipe.craftingapi.iron_chestplate");
+                pexsTalent.add("craftingapi.recipe.craftingapi.iron_leggins");
+                pexsTalent.add("craftingapi.recipe.craftingapi.iron_boots");
+                addPexsTalent(data.getPlayer(), pexsTalent);
+                pexsTalent.clear();
                 break;
             case "§7Мастер мечей":
-                futureUser.thenAcceptAsync(user -> {
-                    user.data().add(Node.builder("craftingapi.recipe.craftingapi.diamond_sword").build());
-                    user.data().add(Node.builder("craftingapi.recipe.craftingapi.iron_sword").build());
-                    RPBase.api.getUserManager().saveUser(user);
-                });
+                pexsTalent.add("craftingapi.recipe.craftingapi.diamond_sword");
+                pexsTalent.add("craftingapi.recipe.craftingapi.iron_sword");
+                addPexsTalent(data.getPlayer(), pexsTalent);
+                pexsTalent.clear();
                 break;
             case "§7Ловкие руки":
-                futureUser.thenAcceptAsync(user -> {
-                    user.data().add(Node.builder("keylock.talentVor").build());
-                    RPBase.api.getUserManager().saveUser(user);
-                });
+                pexsTalent.add("keylock.talentVor");
+                addPexsTalent(data.getPlayer(), pexsTalent);
+                pexsTalent.clear();
                 break;
             case "§7Новая жизнь":
-                if (data != null) {
-                    if (!data.getProfession().equals(ProfessionsEnum.MAYOR)) {
-                        data.setProfession(ProfessionsEnum.PLAYER);
-                        data.getPassport().setProfession("-");
-                    }
+                if (!data.getProfession().equals(ProfessionsEnum.MAYOR)) {
+                    data.setProfession(ProfessionsEnum.PLAYER);
+                    data.getPassport().setProfession("-");
                 }
                 break;
             case "§7Воин":
-                futureUser.thenAcceptAsync(user -> {
-                    user.data().add(Node.builder("rpbase.talentVoin").build());
-                    RPBase.api.getUserManager().saveUser(user);
-                });
+                pexsTalent.add("rpbase.talentVoin");
+                addPexsTalent(data.getPlayer(), pexsTalent);
+                pexsTalent.clear();
                 break;
             case "§7Большой нос":
-                futureUser.thenAcceptAsync(user -> {
-                    user.data().add(Node.builder("rpbase.talentBigNos").build());
-                    RPBase.api.getUserManager().saveUser(user);
-                });
+                pexsTalent.add("rpbase.talentBigNos");
+                addPexsTalent(data.getPlayer(), pexsTalent);
+                pexsTalent.clear();
                 break;
         }
     }

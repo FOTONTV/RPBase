@@ -29,6 +29,7 @@ public class PlayerData {
     private boolean isChatCity = false;
     private Integer countUnlock = 0;
     private List<String> pexs;
+    private List<String> pexsTalent = new ArrayList<>();
 
     public PlayerData(Player player) {
         this.player = player;
@@ -249,5 +250,17 @@ public class PlayerData {
 
     public void setPexs(List<String> pexs) {
         this.pexs = pexs;
+    }
+
+    public List<String> getPexsTalent() {
+        return pexsTalent;
+    }
+
+    public void setPexsTalent(List<String> pexsTalent) {
+        this.pexsTalent = pexsTalent;
+    }
+
+    public void addPexsTalent(List<String> pexsTalent) {
+        this.pexsTalent.addAll(pexsTalent);
     }
 }
