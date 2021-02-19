@@ -22,7 +22,9 @@ import ru.fotontv.rpbase.enums.CityStatusEnum;
 import ru.fotontv.rpbase.modules.player.PlayerData;
 import ru.fotontv.rpbase.modules.player.PlayersManager;
 import ru.fotontv.rpbase.utils.LinkedSet;
+import ru.fotontv.rpbase.utils.SkullUtils;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -32,6 +34,7 @@ import java.util.Set;
 public class CitiesManager implements Listener {
 
     private static final List<Inventory> pagesListCities = new ArrayList<>();
+    private static final List<Inventory> pagesListSkullCitizens = new ArrayList<>();
     private static File cityFile;
     private static FileConfiguration cityConfig;
     private static Set<City> cityList = new LinkedSet<>();
@@ -144,22 +147,23 @@ public class CitiesManager implements Listener {
         player.openInventory(guiCityList(player, allCities, false));
     }
 
-    @SuppressWarnings("deprecation")
     public static Inventory guiCityList(Player player, Set<City> cities, boolean isPages) {
         String listCityGUI = "§8Список городов";
         Inventory info = Bukkit.getServer().createInventory(player, 45, centerTitle(listCityGUI));
         if (isPages) {
             ItemStack leftHad = new ItemStack(Material.PLAYER_HEAD);
-            SkullMeta meta = (SkullMeta) leftHad.getItemMeta();
+            SkullMeta meta = SkullUtils.applySkin(
+                    leftHad.getItemMeta(),
+                    "http://textures.minecraft.net/texture/69ea1d86247f4af351ed1866bca6a3040a06c68177c78e42316a1098e60fb7d3");
             meta.setDisplayName("§7Назад");
-            meta.setOwner("MHF_ArrowLeft");
             leftHad.setItemMeta(meta);
             info.setItem(36, leftHad);
 
             ItemStack rightHad = new ItemStack(Material.PLAYER_HEAD);
-            SkullMeta meta1 = (SkullMeta) rightHad.getItemMeta();
+            SkullMeta meta1 = SkullUtils.applySkin(
+                    rightHad.getItemMeta(),
+                    "http://textures.minecraft.net/texture/8271a47104495e357c3e8e80f511a9f102b0700ca9b88e88b795d33ff20105eb");
             meta1.setDisplayName("§7Вперед");
-            meta1.setOwner("MHF_ArrowRight");
             rightHad.setItemMeta(meta1);
             info.setItem(44, rightHad);
         }
@@ -196,12 +200,49 @@ public class CitiesManager implements Listener {
 
     public static void openCityCitizensGUI(City city, Player player) {
         PlayerData data = PlayersManager.getPlayerData(player);
+        List<ItemStack> skullCitizens = city.getSkullCitizens();
         if (data != null) {
-            String citizensCityGUI = GlobalConfig.CITIZENSCITYGUINAME;
-            Inventory info = Bukkit.getServer().createInventory(player, Math.max(data.getCity().getCitizen().size(), 9), citizensCityGUI);
-            info.setContents(city.getSkullCitizens());
-            player.openInventory(info);
+            if (skullCitizens.size() > 54) {
+                List<ItemStack> pageListSkull = new ArrayList<>();
+                for (ItemStack skull : skullCitizens) {
+                    pageListSkull.add(skull);
+                    if (pageListSkull.size() == 54) {
+                        pagesListSkullCitizens.add(guiSkullList(data, pageListSkull, true));
+                        pageListSkull.clear();
+                    }
+                }
+            }
+            player.openInventory(guiSkullList(data, skullCitizens, false));
         }
+    }
+
+    public static Inventory guiSkullList(@Nonnull PlayerData data, List<ItemStack> skulls, boolean isPages) {
+        Player player = data.getPlayer();
+        String citizensCityGUI = GlobalConfig.CITIZENSCITYGUINAME;
+        Inventory info = Bukkit.getServer().createInventory(player, 54, centerTitle(citizensCityGUI));
+        if (isPages) {
+            ItemStack leftHad = new ItemStack(Material.PLAYER_HEAD);
+            SkullMeta meta = SkullUtils.applySkin(
+                    leftHad.getItemMeta(),
+                    "http://textures.minecraft.net/texture/69ea1d86247f4af351ed1866bca6a3040a06c68177c78e42316a1098e60fb7d3");
+            meta.setDisplayName("§7Назад");
+            leftHad.setItemMeta(meta);
+            info.setItem(36, leftHad);
+
+            ItemStack rightHad = new ItemStack(Material.PLAYER_HEAD);
+            SkullMeta meta1 = SkullUtils.applySkin(
+                    rightHad.getItemMeta(),
+                    "http://textures.minecraft.net/texture/8271a47104495e357c3e8e80f511a9f102b0700ca9b88e88b795d33ff20105eb");
+            meta1.setDisplayName("§7Вперед");
+            rightHad.setItemMeta(meta1);
+            info.setItem(44, rightHad);
+        }
+        int i = 0;
+        for (ItemStack skull : skulls) {
+            info.setItem(i, skull);
+            i++;
+        }
+        return info;
     }
 
     public void load() {
@@ -245,6 +286,26 @@ public class CitiesManager implements Listener {
                 }
                 if (inv.contains(data.getCityInfoItem())) {
                     openCityCitizensGUI(data.getCity(), player);
+                    event.setCancelled(true);
+                    return;
+                }
+                if (event.getView().getTitle().equals(centerTitle(GlobalConfig.CITIZENSCITYGUINAME))) {
+                    if (itemStack != null) {
+                        ItemMeta meta = itemStack.getItemMeta();
+                        int page = 0;
+                        if (meta.getDisplayName().equals("§7Вперед")) {
+                            if (!pagesListSkullCitizens.isEmpty()) {
+                                page += 1;
+                                player.openInventory(pagesListSkullCitizens.get(page));
+                            }
+                        }
+                        if (meta.getDisplayName().equals("§7Назад")) {
+                            if (page > 0) {
+                                page -= 1;
+                                player.openInventory(pagesListSkullCitizens.get(page));
+                            }
+                        }
+                    }
                     event.setCancelled(true);
                     return;
                 }

@@ -35,7 +35,7 @@ public class City {
     }
 
     @SuppressWarnings("deprecation")
-    public ItemStack[] getSkullCitizens() {
+    public List<ItemStack> getSkullCitizens() {
         List<ItemStack> skullCitizens = new ArrayList<>();
         for (String nick : citizen) {
             Player player = Bukkit.getPlayer(nick);
@@ -82,8 +82,7 @@ public class City {
             skull.setItemMeta(meta);
             skullCitizens.add(skull);
         }
-        ItemStack[] skullItem = new ItemStack[skullCitizens.size()];
-        return skullCitizens.toArray(skullItem);
+        return skullCitizens;
     }
 
     public List<String> getCitizen() {
