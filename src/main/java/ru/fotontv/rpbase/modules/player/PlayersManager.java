@@ -739,6 +739,7 @@ public class PlayersManager implements Listener {
                                             BigDecimal amount = DataFormat.formatString(amountStr);
                                             Cache.change("ADMIN_COMMAND", targetUUID, realname, amount, false, "");
                                             addTalent(talent, player);
+                                            player.sendMessage("§aВы купили талант " + talent.getItemMeta().getDisplayName());
                                         } else {
                                             player.sendMessage("§cУ вас не хватает " + (sum - bal.intValue()) + " для покупки таланта!");
                                         }
