@@ -85,6 +85,9 @@ BREWER:
 #Вор
 THIEF:
   - "parent.PLAYER"
+#Торговец
+TRADER:
+  - "parent.PLAYER"
 
 #Максимальное кол-во заключенных в камере
 maxplayerincell: 2

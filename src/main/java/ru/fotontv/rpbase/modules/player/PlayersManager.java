@@ -64,7 +64,9 @@ public class PlayersManager implements Listener {
     }
 
     private static void setPlayerDataList(Player player) {
-        playerDataList.add(new PlayerData(player));
+        PlayerData data = new PlayerData(player);
+        data.setCurrentDateFirst();
+        playerDataList.add(data);
     }
 
     private static void removePlayerData(Player player) {
@@ -112,6 +114,8 @@ public class PlayersManager implements Listener {
             playersConfig.set(player.getName() + ".pexs", data.getPexs());
             playersConfig.set(player.getName() + ".pexsTalent", data.getPexsTalent());
             playersConfig.set(player.getName() + ".dateAddProf", data.getDateAddProf());
+            playersConfig.set(player.getName() + ".level", data.getLevel());
+            playersConfig.set(player.getName() + ".dateFirst", data.getDateFirst());
         }
         try {
             playersConfig.save(playersFile);
@@ -149,6 +153,8 @@ public class PlayersManager implements Listener {
             playersConfig.set(player.getName() + ".pexs", data.getPexs());
             playersConfig.set(player.getName() + ".pexsTalent", data.getPexsTalent());
             playersConfig.set(player.getName() + ".dateAddProf", data.getDateAddProf());
+            playersConfig.set(player.getName() + ".level", data.getLevel());
+            playersConfig.set(player.getName() + ".dateFirst", data.getDateFirst());
         }
         try {
             playersConfig.save(playersFile);
@@ -174,6 +180,8 @@ public class PlayersManager implements Listener {
             List<String> pexs = playersConfig.getStringList(nick + ".pexs");
             List<String> pexsTalent = playersConfig.getStringList(nick + ".pexsTalent");
             String dateAddProf = playersConfig.getString(nick + ".dateAddProf");
+            int level = playersConfig.getInt(nick + ".level");
+            String dateFirst = playersConfig.getString(nick + ".dateFirst");
             ProfessionsEnum prof = ProfessionsEnum.valueOf(professionsEnum);
             OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(nick);
             PlayerData data = new PlayerData(offlinePlayer);
@@ -181,6 +189,8 @@ public class PlayersManager implements Listener {
             data.setPexs(pexs);
             data.setPexsTalent(pexsTalent);
             data.setDateAddProf(dateAddProf);
+            data.setLevel(level);
+            data.setDateFirst(dateFirst);
             Passport passport = new Passport();
             passport.setPickUpCity(pickUpCity);
             passport.setIsPickUpCity(isPickUpCity);
@@ -215,12 +225,16 @@ public class PlayersManager implements Listener {
             List<String> pexs = playersConfig.getStringList(player.getName() + ".pexs");
             List<String> pexsTalent = playersConfig.getStringList(player.getName() + ".pexsTalent");
             String dateAddProf = playersConfig.getString(player.getName() + ".dateAddProf");
+            int level = playersConfig.getInt(player.getName() + ".level");
+            String dateFirst = playersConfig.getString(player.getName() + ".dateFirst");
             ProfessionsEnum prof = ProfessionsEnum.valueOf(professionsEnum);
             PlayerData data = new PlayerData(player);
             data.setProfession(prof);
             data.setPexs(pexs);
             data.setPexsTalent(pexsTalent);
             data.setDateAddProf(dateAddProf);
+            data.setLevel(level);
+            data.setDateFirst(dateFirst);
             addPexs(player, pexs);
             addPexsTalent(player, pexsTalent);
             Passport passport = new Passport();
@@ -265,6 +279,8 @@ public class PlayersManager implements Listener {
             for (String pex : pexAll) {
                 permission.playerAdd(player, pex);
                 data.setPexs(pexAll);
+                savePlayerData(player);
+                savesConfigs();
             }
         }
     }
@@ -276,6 +292,49 @@ public class PlayersManager implements Listener {
                 permission.playerRemove(player, pex);
             }
         }
+    }
+
+    public static boolean isValidLevel(ProfessionsEnum prof, PlayerData data) {
+        if (prof.equals(ProfessionsEnum.TRADER)) {
+            if (data.getLevel() >= 0)
+                return true;
+        }
+        if (prof.equals(ProfessionsEnum.COOK)) {
+            if (data.getLevel() >= 1)
+                return true;
+        }
+        if (prof.equals(ProfessionsEnum.BREWER)) {
+            if (data.getLevel() >= 1)
+                return true;
+        }
+        if (prof.equals(ProfessionsEnum.BLACKSMITH)) {
+            if (data.getLevel() >= 1)
+                return true;
+        }
+        if (prof.equals(ProfessionsEnum.WIZARD)) {
+            if (data.getLevel() >= 1)
+                return true;
+        }
+        if (prof.equals(ProfessionsEnum.INVENTOR)) {
+            if (data.getLevel() >= 2)
+                return true;
+        }
+        if (prof.equals(ProfessionsEnum.POLICEMAN)) {
+            if (data.getLevel() >= 2)
+                return true;
+        }
+        if (prof.equals(ProfessionsEnum.OFFICER)) {
+            if (data.getLevel() >= 3)
+                return true;
+        }
+        if (prof.equals(ProfessionsEnum.JUDGE)) {
+            if (data.getLevel() >= 3)
+                return true;
+        }
+        if (prof.equals(ProfessionsEnum.CARETAKER)) {
+            return data.getLevel() >= 3;
+        }
+        return false;
     }
 
     private static List<String> formatPex(ProfessionsEnum prof) {
@@ -290,6 +349,7 @@ public class PlayersManager implements Listener {
             }
             pexAll.add(pex);
         }
+        pexAll.removeIf(pex -> pex.contains("parent"));
         return pexAll;
     }
 

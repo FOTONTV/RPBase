@@ -70,6 +70,11 @@ public class ProfCommands implements CommandExecutor {
                                                 return true;
                                             }
                                         }
+                                        if (!PlayersManager.isValidLevel(professionsEnum, data1)) {
+                                            player.sendMessage("§cУ этого игрока не достаточно уровня для профессии " + professionsEnum.getNameProf() + "!");
+                                            player1.sendMessage("§cУ вас недостаточно уровня для профессии " + professionsEnum.getNameProf() + "!");
+                                            return true;
+                                        }
                                         if (data1.isNotAccessProf()) {
                                             player.sendMessage("§cЭтот игрок не может получить новую профессию сейчас!");
                                             player1.sendMessage("§cВы не можете получить новую профессию сейчас!");

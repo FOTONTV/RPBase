@@ -60,6 +60,12 @@ commands:
   me:
     description: Me command
     usage: /<command>
+  upgrade:
+    description: Upgrade Level command
+    usage: /<command>
+  fupgrade:
+    description: Upgrade Level command op
+    usage: /<command>
 permissions:
   police.wanted.add:
     description: Доступ к команде /wanted [Ник]

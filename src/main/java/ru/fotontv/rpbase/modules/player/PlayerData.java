@@ -40,6 +40,8 @@ public class PlayerData {
     private List<String> pexs;
     private List<String> pexsTalent = new ArrayList<>();
     private String dateAddProf = "-";
+    private int level = 0;
+    private String dateFirst = "-";
 
     public PlayerData(Player player) {
         this.player = player;
@@ -278,6 +280,43 @@ public class PlayerData {
         return dateAddProf;
     }
 
+    public boolean isNotAccessUpgradeTime() {
+        Calendar instance = Calendar.getInstance();
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        Date date = new Date();
+        try {
+            instance.setTime(dateFormat.parse(this.dateFirst));
+        } catch (ParseException e) {
+            return false;
+        }
+        if (this.level == 0) {
+            instance.add(Calendar.MINUTE, 30);
+            Date newDate = instance.getTime();
+            return newDate.getTime() <= date.getTime();
+        }
+        if (this.level == 1) {
+            instance.add(Calendar.MINUTE, 120);
+            Date newDate = instance.getTime();
+            return newDate.getTime() <= date.getTime();
+        }
+        if (this.level == 2) {
+            instance.add(Calendar.MINUTE, 210);
+            Date newDate = instance.getTime();
+            return newDate.getTime() <= date.getTime();
+        }
+        if (this.level == 3) {
+            instance.add(Calendar.MINUTE, 360);
+            Date newDate = instance.getTime();
+            return newDate.getTime() <= date.getTime();
+        }
+        if (this.level == 4) {
+            instance.add(Calendar.MINUTE, 540);
+            Date newDate = instance.getTime();
+            return newDate.getTime() <= date.getTime();
+        }
+        return false;
+    }
+
     public boolean isNotAccessProf() {
         Calendar instance = Calendar.getInstance();
         DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
@@ -285,7 +324,7 @@ public class PlayerData {
         try {
             instance.setTime(dateFormat.parse(this.dateAddProf));
         } catch (ParseException e) {
-            return true;
+            return false;
         }
         if (isVip()) {
             instance.add(Calendar.DAY_OF_MONTH, GlobalConfig.VIP_ADDPROF);
@@ -400,5 +439,27 @@ public class PlayerData {
         DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         Date date = new Date();
         this.dateAddProf = dateFormat.format(date);
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
+    }
+
+    public String getDateFirst() {
+        return dateFirst;
+    }
+
+    public void setDateFirst(String dateFirst) {
+        this.dateFirst = dateFirst;
+    }
+
+    public void setCurrentDateFirst() {
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        Date date = new Date();
+        this.dateFirst = dateFormat.format(date);
     }
 }

@@ -22,6 +22,7 @@ public class GlobalConfig {
     public static List<String> COOK = new ArrayList<>();
     public static List<String> BREWER = new ArrayList<>();
     public static List<String> THIEF = new ArrayList<>();
+    public static List<String> TRADER = new ArrayList<>();
     public static int MAX_PLAYER_IN_CELL = 2;
     public static int VIP_ADDPROF = 2;
     public static int PREMIUM_ADDPROF = 2;
@@ -125,6 +126,7 @@ public class GlobalConfig {
         COOK = plugin.getConfig().getStringList("COOK");
         BREWER = plugin.getConfig().getStringList("BREWER");
         THIEF = plugin.getConfig().getStringList("THIEF");
+        TRADER = plugin.getConfig().getStringList("TRADER");
 
         MAX_PLAYER_IN_CELL = plugin.getConfig().getInt("maxplayerincell");
 

@@ -66,6 +66,11 @@ public class RPBaseExpansion extends PlaceholderExpansion {
             PlayerData data = PlayersManager.getPlayerData(player);
             return data != null ? data.getProfession().getNameProf() : "";
         }
+        if (identifier.equals("town")) {
+            PlayerData data = PlayersManager.getPlayerData(player);
+            return data != null ? data.getCityName() : "";
+        }
+
         return null;
     }
 }

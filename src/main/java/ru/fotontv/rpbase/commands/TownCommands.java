@@ -36,6 +36,10 @@ public class TownCommands implements CommandExecutor {
                 if (command.getName().equals("town")) {
                     if (args.length == 2) {
                         if (args[0].equals("create")) {
+                            if (data.getLevel() < 2) {
+                                player.sendMessage("§cУ игрока не достаточно уровня для создания города!");
+                                return true;
+                            }
                             if (CitiesManager.isCity(args[1])) {
                                 player.sendMessage(GlobalConfig.CITYNOWACCEPT);
                                 return true;
@@ -101,22 +105,26 @@ public class TownCommands implements CommandExecutor {
                                 if (player1 != null) {
                                     PlayerData playerData = PlayersManager.getPlayerData(player1);
                                     if (playerData != null) {
-                                        if (playerData.getCity() == null) {
-                                            playerData.setNickCityRequest(player.getName());
-                                            PlayersManager.savePlayerData(playerData);
-                                            player.sendMessage(GlobalConfig.MAYOR_INVITECITY.replace("{player}", player1.getName()));
-                                            TextComponent yes = new TextComponent(ChatColor.GREEN + "принять");
-                                            TextComponent no = new TextComponent(ChatColor.RED + "отказаться");
-                                            yes.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/town accept"));
-                                            yes.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Принять").create()));
-                                            no.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/town deny"));
-                                            no.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Отказаться").create()));
-                                            String formaterText = GlobalConfig.PLAYER_INVITECITY.replace("{mayor}", player.getName()).replace("{city}", data.getCityName());
-                                            player1.sendMessage(new ComponentBuilder(formaterText).create());
-                                            player1.sendMessage(new ComponentBuilder(yes).append(ChatColor.WHITE + " или ").append(no).create());
+                                        if (playerData.getLevel() >= 1) {
+                                            if (playerData.getCity() == null) {
+                                                playerData.setNickCityRequest(player.getName());
+                                                PlayersManager.savePlayerData(playerData);
+                                                player.sendMessage(GlobalConfig.MAYOR_INVITECITY.replace("{player}", player1.getName()));
+                                                TextComponent yes = new TextComponent(ChatColor.GREEN + "принять");
+                                                TextComponent no = new TextComponent(ChatColor.RED + "отказаться");
+                                                yes.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/town accept"));
+                                                yes.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Принять").create()));
+                                                no.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/town deny"));
+                                                no.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Отказаться").create()));
+                                                String formaterText = GlobalConfig.PLAYER_INVITECITY.replace("{mayor}", player.getName()).replace("{city}", data.getCityName());
+                                                player1.sendMessage(new ComponentBuilder(formaterText).create());
+                                                player1.sendMessage(new ComponentBuilder(yes).append(ChatColor.WHITE + " или ").append(no).create());
+                                                return true;
+                                            }
+                                            player.sendMessage(GlobalConfig.PLAYERNOWCITY);
                                             return true;
                                         }
-                                        player.sendMessage(GlobalConfig.PLAYERNOWCITY);
+                                        player.sendMessage("§cУ игрока не достаточно уровня для вступления в город!");
                                         return true;
                                     }
                                     player.sendMessage(GlobalConfig.NOTONLINEPLAYERREQUESTCITY);

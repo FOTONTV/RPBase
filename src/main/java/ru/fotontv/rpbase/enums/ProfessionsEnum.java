@@ -19,7 +19,8 @@ public enum ProfessionsEnum {
     WIZARD("Чародей", GlobalConfig.WIZARD),
     COOK("Повар", GlobalConfig.COOK),
     BREWER("Пивовар", GlobalConfig.BREWER),
-    THIEF("Вор", GlobalConfig.THIEF);
+    THIEF("Вор", GlobalConfig.THIEF),
+    TRADER("Торговец", GlobalConfig.TRADER);
 
     private final String nameProf;
     private final List<String> permissions;

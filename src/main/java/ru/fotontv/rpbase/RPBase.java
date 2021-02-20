@@ -275,6 +275,8 @@ public final class RPBase extends JavaPlugin {
         Objects.requireNonNull(getCommand("do")).setExecutor(new DoCommand());
         Objects.requireNonNull(getCommand("me")).setExecutor(new MeCommand());
         Objects.requireNonNull(getCommand("try")).setExecutor(new TryCommand());
+        Objects.requireNonNull(getCommand("upgrade")).setExecutor(new UpgradeCommands());
+        Objects.requireNonNull(getCommand("fupgrade")).setExecutor(new FupgradeCommands());
     }
 
     private void registerEvents() {
