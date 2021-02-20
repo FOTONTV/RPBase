@@ -677,7 +677,7 @@ public class PlayersManager implements Listener {
         return 0;
     }
 
-    private static void openSuccessTalentInv(Player player, Integer sum, ItemStack stack) {
+    private static void openSuccessTalentInv(Player player, ItemStack stack) {
         String name = "§8Покупка: " + stack.getItemMeta().getDisplayName();
         Inventory inventory = Bukkit.createInventory(player, 27, centerTitle(name));
 
@@ -738,7 +738,7 @@ public class PlayersManager implements Listener {
                                             String amountStr = String.valueOf(sum);
                                             BigDecimal amount = DataFormat.formatString(amountStr);
                                             Cache.change("ADMIN_COMMAND", targetUUID, realname, amount, false, "");
-                                            onRul(data);
+                                            addTalent(talent, player);
                                         } else {
                                             player.sendMessage("§cУ вас не хватает " + (sum - bal.intValue()) + " для покупки таланта!");
                                         }
@@ -782,7 +782,7 @@ public class PlayersManager implements Listener {
                         int sum = getSumTalent(itemClick);
                         if (sum != 0) {
                             event.setCancelled(true);
-                            openSuccessTalentInv(player, sum, itemClick);
+                            openSuccessTalentInv(player, itemClick);
                             return;
                         }
                     }
