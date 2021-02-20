@@ -288,5 +288,6 @@ public final class RPBase extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new CitizensListener(), this);
         getServer().getPluginManager().registerEvents(new PlayersManager(), this);
         getServer().getPluginManager().registerEvents(new CitiesManager(this), this);
+        getServer().getPluginManager().registerEvents(new InteractPlayerListener(), this);
     }
 }
