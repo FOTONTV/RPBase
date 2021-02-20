@@ -116,6 +116,7 @@ public class PlayersManager implements Listener {
             playersConfig.set(player.getName() + ".dateAddProf", data.getDateAddProf());
             playersConfig.set(player.getName() + ".level", data.getLevel());
             playersConfig.set(player.getName() + ".dateFirst", data.getDateFirst());
+            playersConfig.set(player.getName() + ".talent", data.getTalent());
         }
         try {
             playersConfig.save(playersFile);
@@ -155,6 +156,7 @@ public class PlayersManager implements Listener {
             playersConfig.set(player.getName() + ".dateAddProf", data.getDateAddProf());
             playersConfig.set(player.getName() + ".level", data.getLevel());
             playersConfig.set(player.getName() + ".dateFirst", data.getDateFirst());
+            playersConfig.set(player.getName() + ".talent", data.getTalent());
         }
         try {
             playersConfig.save(playersFile);
@@ -182,6 +184,7 @@ public class PlayersManager implements Listener {
             String dateAddProf = playersConfig.getString(nick + ".dateAddProf");
             int level = playersConfig.getInt(nick + ".level");
             String dateFirst = playersConfig.getString(nick + ".dateFirst");
+            String talent = playersConfig.getString(nick + ".talent");
             ProfessionsEnum prof = ProfessionsEnum.valueOf(professionsEnum);
             OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(nick);
             PlayerData data = new PlayerData(offlinePlayer);
@@ -191,6 +194,7 @@ public class PlayersManager implements Listener {
             data.setDateAddProf(dateAddProf);
             data.setLevel(level);
             data.setDateFirst(dateFirst);
+            data.setTalent(talent);
             Passport passport = new Passport();
             passport.setPickUpCity(pickUpCity);
             passport.setIsPickUpCity(isPickUpCity);
@@ -227,6 +231,7 @@ public class PlayersManager implements Listener {
             String dateAddProf = playersConfig.getString(player.getName() + ".dateAddProf");
             int level = playersConfig.getInt(player.getName() + ".level");
             String dateFirst = playersConfig.getString(player.getName() + ".dateFirst");
+            String talent = playersConfig.getString(player.getName() + ".talent");
             ProfessionsEnum prof = ProfessionsEnum.valueOf(professionsEnum);
             PlayerData data = new PlayerData(player);
             data.setProfession(prof);
@@ -235,6 +240,7 @@ public class PlayersManager implements Listener {
             data.setDateAddProf(dateAddProf);
             data.setLevel(level);
             data.setDateFirst(dateFirst);
+            data.setTalent(talent);
             addPexs(player, pexs);
             addPexsTalent(player, pexsTalent);
             Passport passport = new Passport();
@@ -562,49 +568,76 @@ public class PlayersManager implements Listener {
         switch (stack.getItemMeta().getDisplayName()) {
             case "§7Родство с магией":
                 pexsTalent.add("rp.open_enchanting_table");
+                data.clearPexsTalent();
                 data.addPexsTalent(pexsTalent);
+                data.setTalent("§7Родство с магией");
                 addPexsTalent(data.getPlayer(), pexsTalent);
                 pexsTalent.clear();
+                savePlayerData(player);
+                savesConfigs();
                 break;
             case "§7Рождённый в кузне":
                 pexsTalent.add("craftingapi.recipe.craftingapi.iron_helmet");
                 pexsTalent.add("craftingapi.recipe.craftingapi.iron_chestplate");
                 pexsTalent.add("craftingapi.recipe.craftingapi.iron_leggins");
                 pexsTalent.add("craftingapi.recipe.craftingapi.iron_boots");
+                data.clearPexsTalent();
                 data.addPexsTalent(pexsTalent);
+                data.setTalent("§7Рождённый в кузне");
                 addPexsTalent(data.getPlayer(), pexsTalent);
                 pexsTalent.clear();
+                savePlayerData(player);
+                savesConfigs();
                 break;
             case "§7Мастер мечей":
                 pexsTalent.add("craftingapi.recipe.craftingapi.diamond_sword");
                 pexsTalent.add("craftingapi.recipe.craftingapi.iron_sword");
+                data.clearPexsTalent();
                 data.addPexsTalent(pexsTalent);
+                data.setTalent("§7Мастер мечей");
                 addPexsTalent(data.getPlayer(), pexsTalent);
                 pexsTalent.clear();
+                savePlayerData(player);
+                savesConfigs();
                 break;
             case "§7Ловкие руки":
                 pexsTalent.add("keylock.talentVor");
+                data.clearPexsTalent();
                 data.addPexsTalent(pexsTalent);
+                data.setTalent("§7Ловкие руки");
                 addPexsTalent(data.getPlayer(), pexsTalent);
                 pexsTalent.clear();
+                savePlayerData(player);
+                savesConfigs();
                 break;
             case "§7Новая жизнь":
                 if (!data.getProfession().equals(ProfessionsEnum.MAYOR)) {
                     data.setProfession(ProfessionsEnum.PLAYER);
                     data.getPassport().setProfession("-");
                 }
+                data.setTalent("§7Новая жизнь");
+                savePlayerData(player);
+                savesConfigs();
                 break;
             case "§7Воин":
                 pexsTalent.add("rpbase.talentVoin");
+                data.clearPexsTalent();
                 data.addPexsTalent(pexsTalent);
+                data.setTalent("§7Воин");
                 addPexsTalent(data.getPlayer(), pexsTalent);
                 pexsTalent.clear();
+                savePlayerData(player);
+                savesConfigs();
                 break;
             case "§7Большой нос":
                 pexsTalent.add("rpbase.talentBigNos");
+                data.clearPexsTalent();
                 data.addPexsTalent(pexsTalent);
+                data.setTalent("§7Большой нос");
                 addPexsTalent(data.getPlayer(), pexsTalent);
                 pexsTalent.clear();
+                savePlayerData(player);
+                savesConfigs();
                 break;
         }
     }

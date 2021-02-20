@@ -42,6 +42,7 @@ public class PlayerData {
     private String dateAddProf = "-";
     private int level = 0;
     private String dateFirst = "-";
+    private String talent = "-";
 
     public PlayerData(Player player) {
         this.player = player;
@@ -276,6 +277,10 @@ public class PlayerData {
         this.pexsTalent.addAll(pexsTalent);
     }
 
+    public void clearPexsTalent() {
+        this.pexsTalent.clear();
+    }
+
     public String getDateAddProf() {
         return dateAddProf;
     }
@@ -461,5 +466,13 @@ public class PlayerData {
         DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         Date date = new Date();
         this.dateFirst = dateFormat.format(date);
+    }
+
+    public String getTalent() {
+        return talent;
+    }
+
+    public void setTalent(String talent) {
+        this.talent = talent;
     }
 }

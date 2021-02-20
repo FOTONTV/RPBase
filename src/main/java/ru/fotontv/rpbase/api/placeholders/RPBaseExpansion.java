@@ -70,7 +70,10 @@ public class RPBaseExpansion extends PlaceholderExpansion {
             PlayerData data = PlayersManager.getPlayerData(player);
             return data != null ? data.getCityName() : "";
         }
-
+        if (identifier.equals("talent")) {
+            PlayerData data = PlayersManager.getPlayerData(player);
+            return data != null ? data.getTalent() : "";
+        }
         return null;
     }
 }
