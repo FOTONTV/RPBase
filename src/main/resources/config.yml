@@ -99,6 +99,23 @@ extreme: 2
 aglem: 2
 glorious: 2
 
+#Таланты (стоимость в gl)
+
+#Родство с магией
+KinshipWithMagic: 10
+#Рождённый в кузне
+BornInTheForge: 10
+#Мастер мечей
+MasterOfSwords: 10
+#Ловкие руки
+CleverHands: 10
+#Новая жизнь
+NewLife: 10
+#Воин
+Warrior: 10
+#Большой нос
+BigNose: 10
+
 #RPChat
 chat:
   noRpLocalChatDistance: 300

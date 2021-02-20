@@ -24,11 +24,21 @@ public class GlobalConfig {
     public static List<String> THIEF = new ArrayList<>();
     public static List<String> TRADER = new ArrayList<>();
     public static int MAX_PLAYER_IN_CELL = 2;
+
     public static int VIP_ADDPROF = 2;
     public static int PREMIUM_ADDPROF = 2;
     public static int EXTREME_ADDPROF = 2;
     public static int AGLEM_ADDPROF = 2;
     public static int GLORIOUS_ADDPROF = 2;
+
+    public static int kinshipWithMagic = 10;
+    public static int bornInTheForge = 10;
+    public static int masterOfSwords = 10;
+    public static int cleverHands = 10;
+    public static int newLife = 10;
+    public static int warrior = 10;
+    public static int bigNose = 10;
+
     public static String NAMEPASSPORTGUI = "";
     public static String NAMEPASSPORT = "";
     public static List<String> LOREPASSPORT = new ArrayList<>();
@@ -135,6 +145,14 @@ public class GlobalConfig {
         EXTREME_ADDPROF = plugin.getConfig().getInt("extreme");
         AGLEM_ADDPROF = plugin.getConfig().getInt("aglem");
         GLORIOUS_ADDPROF = plugin.getConfig().getInt("glorious");
+
+        kinshipWithMagic = plugin.getConfig().getInt("KinshipWithMagic");
+        bornInTheForge = plugin.getConfig().getInt("BornInTheForge");
+        masterOfSwords = plugin.getConfig().getInt("MasterOfSwords");
+        cleverHands = plugin.getConfig().getInt("CleverHands");
+        newLife = plugin.getConfig().getInt("NewLife");
+        warrior = plugin.getConfig().getInt("Warrior");
+        bigNose = plugin.getConfig().getInt("BigNose");
 
         NAMEPASSPORTGUI = plugin.getConfig().getString("namePassportGUI");
         if (NAMEPASSPORTGUI != null) {

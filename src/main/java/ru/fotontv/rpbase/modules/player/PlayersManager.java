@@ -397,6 +397,7 @@ public class PlayersManager implements Listener {
         meta1.setDisplayName("§7Родство с магией");
         List<String> lore1 = new ArrayList<>();
         lore1.add("§fДаёт возможность открывать чародейский стол");
+        lore1.add("§fСтоимость: " + GlobalConfig.kinshipWithMagic);
         meta1.setLore(lore1);
         meta1.addEnchant(Enchantment.LURE, 0, true);
         meta1.addItemFlags(ItemFlag.HIDE_ENCHANTS);
@@ -410,6 +411,7 @@ public class PlayersManager implements Listener {
         meta2.setDisplayName("§7Рождённый в кузне");
         List<String> lore2 = new ArrayList<>();
         lore2.add("§fДаёт возможность крафтить железную броню");
+        lore2.add("§fСтоимость: " + GlobalConfig.bornInTheForge);
         meta2.setLore(lore2);
         item2.setItemMeta(meta2);
         talent.setItem(11, item2);
@@ -421,6 +423,7 @@ public class PlayersManager implements Listener {
         meta3.setDisplayName("§7Мастер мечей");
         List<String> lore3 = new ArrayList<>();
         lore3.add("§fДаёт возможность крафтить алмазный и железный мечи");
+        lore3.add("§fСтоимость: " + GlobalConfig.masterOfSwords);
         meta3.setLore(lore3);
         item3.setItemMeta(meta3);
         talent.setItem(12, item3);
@@ -432,6 +435,7 @@ public class PlayersManager implements Listener {
         meta4.setDisplayName("§7Ловкие руки");
         List<String> lore4 = new ArrayList<>();
         lore4.add("§fДаёт дополнительные 5% к удачному использованию отмычки");
+        lore4.add("§fСтоимость: " + GlobalConfig.cleverHands);
         meta4.setLore(lore4);
         item4.setItemMeta(meta4);
         talent.setItem(13, item4);
@@ -443,6 +447,7 @@ public class PlayersManager implements Listener {
         meta5.setDisplayName("§7Новая жизнь");
         List<String> lore5 = new ArrayList<>();
         lore5.add("§fСнимает с Вас все профессии кроме Мэра");
+        lore5.add("§fСтоимость: " + GlobalConfig.newLife);
         meta5.setLore(lore5);
         item5.setItemMeta(meta5);
         talent.setItem(14, item5);
@@ -456,6 +461,7 @@ public class PlayersManager implements Listener {
         lore6.add("§fАктивируется только при полной алмазной");
         lore6.add("§fэкипировке. Накладывает эффект силы и");
         lore6.add("§fзамедление при полной надетой алмазной экипировки.");
+        lore6.add("§fСтоимость: " + GlobalConfig.warrior);
         meta6.setLore(lore6);
         meta6.addEnchant(Enchantment.LURE, 0, true);
         meta6.addItemFlags(ItemFlag.HIDE_ENCHANTS);
@@ -469,6 +475,7 @@ public class PlayersManager implements Listener {
         meta7.setDisplayName("§7Большой нос");
         List<String> lore7 = new ArrayList<>();
         lore7.add("§fВы отлично ладите с жителями!");
+        lore7.add("§fСтоимость: " + GlobalConfig.bigNose);
         meta7.setLore(lore7);
         item7.setItemMeta(meta7);
         talent.setItem(16, item7);
@@ -650,6 +657,45 @@ public class PlayersManager implements Listener {
         }
     }
 
+    private static int getSumTalent(ItemStack stack) {
+        switch (stack.getItemMeta().getDisplayName()) {
+            case "§7Родство с магией":
+                return GlobalConfig.kinshipWithMagic;
+            case "§7Рождённый в кузне":
+                return GlobalConfig.bornInTheForge;
+            case "§7Мастер мечей":
+                return GlobalConfig.masterOfSwords;
+            case "§7Ловкие руки":
+                return GlobalConfig.cleverHands;
+            case "§7Новая жизнь":
+                return GlobalConfig.newLife;
+            case "§7Воин":
+                return GlobalConfig.warrior;
+            case "§7Большой нос":
+                return GlobalConfig.bigNose;
+        }
+        return 0;
+    }
+
+    private static void openSuccessTalentInv(Player player, Integer sum, ItemStack stack) {
+        String name = "§8Покупка: " + stack.getItemMeta().getDisplayName();
+        Inventory inventory = Bukkit.createInventory(player, 27, centerTitle(name));
+
+        ItemStack stack1 = new ItemStack(Material.GREEN_STAINED_GLASS_PANE);
+        ItemMeta meta = stack1.getItemMeta();
+        meta.setDisplayName("§aПодтвердить покупку");
+        stack1.setItemMeta(meta);
+        inventory.setItem(11, stack1);
+
+        ItemStack stack2 = new ItemStack(Material.RED_STAINED_GLASS_PANE);
+        ItemMeta meta1 = stack2.getItemMeta();
+        meta1.setDisplayName("§aОтменить покупку");
+        stack2.setItemMeta(meta1);
+        inventory.setItem(15, stack2);
+
+        player.openInventory(inventory);
+    }
+
     @EventHandler(priority = EventPriority.HIGHEST)
     public void pickupItemInventory(InventoryClickEvent event) {
         Player player = (Player) event.getWhoClicked();
@@ -663,6 +709,53 @@ public class PlayersManager implements Listener {
             ItemStack itemClick = event.getCurrentItem();
             if (inv != null) {
                 if (inv.contains(data.getPassportItem())) {
+                    event.setCancelled(true);
+                    return;
+                }
+
+                //Подтверждение покупки таланта
+                if (event.getView().getTitle().contains("Покупка:") && (inv.getSize() == 27)) {
+                    if (itemClick != null) {
+                        if (itemClick.getItemMeta().getDisplayName().equals("§aПодтвердить покупку")) {
+                            String nameGui = event.getView().getTitle();
+                            String[] splitgui = nameGui.split(":");
+                            String nameTalent = splitgui[1].substring(1);
+                            if (!itemsRul.isEmpty()) {
+                                ItemStack talent = null;
+                                for (ItemStack stack : itemsRul) {
+                                    if (stack.getItemMeta().getDisplayName().equals(nameTalent)) {
+                                        talent = stack;
+                                        break;
+                                    }
+                                }
+                                if (talent != null) {
+                                    int sum = getSumTalent(talent);
+                                    if (sum != 0) {
+                                        UUID targetUUID = Cache.translateUUID(player.getName(), null);
+                                        BigDecimal bal = Cache.getBalanceFromCacheOrDB(player.getUniqueId());
+                                        String realname = Cache.getrealname(player.getName());
+                                        if (bal.intValue() >= sum) {
+                                            String amountStr = String.valueOf(sum);
+                                            BigDecimal amount = DataFormat.formatString(amountStr);
+                                            Cache.change("ADMIN_COMMAND", targetUUID, realname, amount, false, "");
+                                            onRul(data);
+                                        } else {
+                                            player.sendMessage("§cУ вас не хватает " + (sum - bal.intValue()) + " для покупки таланта!");
+                                        }
+                                        event.setCancelled(true);
+                                        return;
+                                    }
+                                }
+                            }
+                            event.setCancelled(true);
+                            return;
+                        }
+                        if (itemClick.getItemMeta().getDisplayName().equals("§aОтменить покупку")) {
+                            event.setCancelled(true);
+                            openTalentGui(player);
+                            return;
+                        }
+                    }
                     event.setCancelled(true);
                     return;
                 }
@@ -684,6 +777,12 @@ public class PlayersManager implements Listener {
                             }
                             player.sendMessage("§cУ вас не хватает " + (100 - bal.intValue()) + " для прокрутки рулетки!");
                             event.setCancelled(true);
+                            return;
+                        }
+                        int sum = getSumTalent(itemClick);
+                        if (sum != 0) {
+                            event.setCancelled(true);
+                            openSuccessTalentInv(player, sum, itemClick);
                             return;
                         }
                     }
