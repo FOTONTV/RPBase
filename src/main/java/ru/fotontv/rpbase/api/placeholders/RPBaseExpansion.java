@@ -53,9 +53,9 @@ public class RPBaseExpansion extends PlaceholderExpansion {
             PlayerData data = PlayersManager.getPlayerData(player);
             if (data != null) {
                 if (data.getProfession().equals(ProfessionsEnum.PLAYER)) {
-                    return "§7[§2Житель§7] §f";
+                    return "§2Житель §f";
                 }
-                return "§7[§c" + data.getProfession().getNameProf() + "§7] §f";
+                return "§c" + data.getProfession().getNameProf() + " §f";
             }
         }
         if (identifier.equals("suffix")) {

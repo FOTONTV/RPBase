@@ -40,7 +40,7 @@ public class ProfCommands implements CommandExecutor {
                                         data1.setProfession(ProfessionsEnum.PLAYER);
                                         data1.passport.setProfession(ProfessionsEnum.PLAYER.getNameProf());
                                         PlayersManager.removePex(player1, data1);
-                                        PlayersManager.savesConfigs();
+                                        PlayersManager.savePlayerData(data1);
                                         player.sendMessage(GlobalConfig.MAYOR_REMPROF.replace("{player}", player1.getName()).replace("{prof}", professionsEnum1.getNameProf()));
                                         player1.sendMessage(GlobalConfig.PLAYER_REMPROF.replace("{city}", data.getCityName()).replace("{prof}", professionsEnum1.getNameProf()));
                                         return true;
@@ -87,7 +87,6 @@ public class ProfCommands implements CommandExecutor {
                                             PlayersManager.removePex(player1, data1);
                                             PlayersManager.addPex(professionsEnum, player1, data1);
                                             PlayersManager.savePlayerData(data1);
-                                            PlayersManager.savesConfigs();
                                             player.sendMessage(GlobalConfig.MAYOR_ADDPROF.replace("{player}", player1.getName()).replace("{prof}", professionsEnum.getNameProf()));
                                             player1.sendMessage(GlobalConfig.PLAYER_ADDPROF.replace("{city}", data.getCityName()).replace("{prof}", professionsEnum.getNameProf()));
                                             return true;

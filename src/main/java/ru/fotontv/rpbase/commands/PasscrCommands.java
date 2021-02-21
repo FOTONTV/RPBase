@@ -40,7 +40,6 @@ public class PasscrCommands implements CommandExecutor {
                                         data1.getPassport().setIsPickUpCity(true);
                                         data1.getPassport().setPickUpCity(args[1]);
                                         PlayersManager.savePlayerData(data1);
-                                        PlayersManager.savesConfigs();
                                         player.sendMessage(GlobalConfig.PASSPORTOFFICER_PICKUPCITY.replace("{player}", args[0]));
                                         passRec.sendMessage(GlobalConfig.PLAYER_PASSPORT_PICKUPCITY);
                                         return true;

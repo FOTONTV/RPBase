@@ -21,7 +21,6 @@ import ru.fotontv.rpbase.RPBase;
 import ru.fotontv.rpbase.config.GlobalConfig;
 import ru.fotontv.rpbase.enums.ProfessionsEnum;
 import ru.fotontv.rpbase.modules.city.CitiesManager;
-import ru.fotontv.rpbase.modules.jail.JailManager;
 import ru.fotontv.rpbase.utils.LinkedSet;
 
 import java.io.File;
@@ -64,27 +63,32 @@ public class PlayersManager implements Listener {
     }
 
     private static void setPlayerDataList(Player player) {
-        PlayerData data = new PlayerData(player);
-        data.setCurrentDateFirst();
-        playerDataList.add(data);
+        synchronized (playerDataList) {
+            PlayerData data = new PlayerData(player);
+            data.setCurrentDateFirst();
+            playerDataList.add(data);
+        }
     }
 
-    private static void removePlayerData(Player player) {
-        for (PlayerData playerData : playerDataList) {
-            if (playerData.getPlayer().getName().equals(player.getName())) {
-                playerDataList.remove(playerData);
-                JailManager.leavePlayer(player);
-            }
+    private static void addPlayerDataList(PlayerData data) {
+        synchronized (playerDataList) {
+            playerDataList.add(data);
         }
+    }
 
+    private static void removePlayerData(PlayerData data) {
+        synchronized (playerDataList) {
+            playerDataList.remove(data);
+        }
     }
 
     public static PlayerData getPlayerData(Player player) {
-        for (PlayerData playerData : playerDataList) {
-            if (playerData.getPlayer().getName().equals(player.getName()))
-                return playerData;
-        }
-        return null;
+       synchronized (playerDataList) {
+           Optional<PlayerData> data = playerDataList.stream().
+                   filter(playerData -> playerData.getNick().equals(player.getName())).
+                   findFirst();
+           return data.orElse(null);
+       }
     }
 
     public static void disbandCity(PlayerData data) {
@@ -97,66 +101,66 @@ public class PlayersManager implements Listener {
         }
     }
 
-    public static void savePlayerData(Player player) {
-        PlayerData data = getPlayerData(player);
-        if (playersConfig.contains(player.getName()) && data != null) {
-            playersConfig.set(player.getName() + ".professionsEnum", data.getProfession().name());
-            playersConfig.set(player.getName() + ".pickUpCity", data.getPassport().getPickUpCity());
-            playersConfig.set(player.getName() + ".isPickUpCity", data.getPassport().isPickUpCity());
-            playersConfig.set(player.getName() + ".cityName", data.getCityName());
-            playersConfig.set(player.getName() + ".cityDateInput", data.getDateInput());
-            playersConfig.set(player.getName() + ".dateOfReceipt", data.getPassport().getDateOfReceipt());
-            playersConfig.set(player.getName() + ".placeOfResidence", data.getPassport().getPlaceOfResidence());
-            playersConfig.set(player.getName() + ".criminalRecords", data.getPassport().getCriminalRecords());
-            playersConfig.set(player.getName() + ".profession", data.getPassport().getProfession());
-            playersConfig.set(player.getName() + ".isChatCity", data.isChatCity());
-            playersConfig.set(player.getName() + ".countUnlockSuccess", data.getCountUnlock());
-            playersConfig.set(player.getName() + ".pexs", data.getPexs());
-            playersConfig.set(player.getName() + ".pexsTalent", data.getPexsTalent());
-            playersConfig.set(player.getName() + ".dateAddProf", data.getDateAddProf());
-            playersConfig.set(player.getName() + ".level", data.getLevel());
-            playersConfig.set(player.getName() + ".dateFirst", data.getDateFirst());
-            playersConfig.set(player.getName() + ".talent", data.getTalent());
+    public static void savePlayerDataAndRemove(PlayerData data) {
+        if (playersConfig.contains(data.getNick())) {
+            playersConfig.set(data.getNick() + ".professionsEnum", data.getProfession().name());
+            playersConfig.set(data.getNick() + ".pickUpCity", data.getPassport().getPickUpCity());
+            playersConfig.set(data.getNick() + ".isPickUpCity", data.getPassport().isPickUpCity());
+            playersConfig.set(data.getNick() + ".cityName", data.getCityName());
+            playersConfig.set(data.getNick() + ".cityDateInput", data.getDateInput());
+            playersConfig.set(data.getNick() + ".dateOfReceipt", data.getPassport().getDateOfReceipt());
+            playersConfig.set(data.getNick() + ".placeOfResidence", data.getPassport().getPlaceOfResidence());
+            playersConfig.set(data.getNick() + ".criminalRecords", data.getPassport().getCriminalRecords());
+            playersConfig.set(data.getNick() + ".profession", data.getPassport().getProfession());
+            playersConfig.set(data.getNick() + ".isChatCity", data.isChatCity());
+            playersConfig.set(data.getNick() + ".countUnlockSuccess", data.getCountUnlock());
+            playersConfig.set(data.getNick() + ".pexs", data.getPexs());
+            playersConfig.set(data.getNick() + ".pexsTalent", data.getPexsTalent());
+            playersConfig.set(data.getNick() + ".dateAddProf", data.getDateAddProf());
+            playersConfig.set(data.getNick() + ".level", data.getLevel());
+            playersConfig.set(data.getNick() + ".dateFirst", data.getDateFirst());
+            playersConfig.set(data.getNick() + ".talent", data.getTalent());
         }
         try {
             playersConfig.save(playersFile);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        removePlayerData(player);
+        removePlayerData(data);
     }
 
     public static void savePlayerData(PlayerData data) {
-        playerDataList.removeIf(data1 -> data1.getNick().equals(data.getNick()));
-        playerDataList.add(data);
-    }
-
-    public static void savesConfigs() {
-        for (PlayerData data : PlayersManager.playerDataList) {
-            PlayersManager.savePlayerDataNotCFG(data.getPlayer());
+        synchronized (playerDataList) {
+            try {
+                playerDataList.stream().
+                        filter(playerData -> playerData.getNick().equals(data.getNick())).
+                        forEach(playerDataList::remove);
+            } finally {
+                playerDataList.add(data);
+                savePlayerDataNotCFG(data);
+            }
         }
     }
 
-    public static void savePlayerDataNotCFG(Player player) {
-        PlayerData data = getPlayerData(player);
-        if (playersConfig.contains(player.getName()) && data != null) {
-            playersConfig.set(player.getName() + ".professionsEnum", data.getProfession().name());
-            playersConfig.set(player.getName() + ".pickUpCity", data.getPassport().getPickUpCity());
-            playersConfig.set(player.getName() + ".isPickUpCity", data.getPassport().isPickUpCity());
-            playersConfig.set(player.getName() + ".cityName", data.getCityName());
-            playersConfig.set(player.getName() + ".cityDateInput", data.getDateInput());
-            playersConfig.set(player.getName() + ".dateOfReceipt", data.getPassport().getDateOfReceipt());
-            playersConfig.set(player.getName() + ".placeOfResidence", data.getPassport().getPlaceOfResidence());
-            playersConfig.set(player.getName() + ".criminalRecords", data.getPassport().getCriminalRecords());
-            playersConfig.set(player.getName() + ".profession", data.getPassport().getProfession());
-            playersConfig.set(player.getName() + ".isChatCity", data.isChatCity());
-            playersConfig.set(player.getName() + ".countUnlockSuccess", data.getCountUnlock());
-            playersConfig.set(player.getName() + ".pexs", data.getPexs());
-            playersConfig.set(player.getName() + ".pexsTalent", data.getPexsTalent());
-            playersConfig.set(player.getName() + ".dateAddProf", data.getDateAddProf());
-            playersConfig.set(player.getName() + ".level", data.getLevel());
-            playersConfig.set(player.getName() + ".dateFirst", data.getDateFirst());
-            playersConfig.set(player.getName() + ".talent", data.getTalent());
+    public static void savePlayerDataNotCFG(PlayerData data) {
+        if (playersConfig.contains(data.getNick())) {
+            playersConfig.set(data.getNick() + ".professionsEnum", data.getProfession().name());
+            playersConfig.set(data.getNick() + ".pickUpCity", data.getPassport().getPickUpCity());
+            playersConfig.set(data.getNick() + ".isPickUpCity", data.getPassport().isPickUpCity());
+            playersConfig.set(data.getNick() + ".cityName", data.getCityName());
+            playersConfig.set(data.getNick() + ".cityDateInput", data.getDateInput());
+            playersConfig.set(data.getNick() + ".dateOfReceipt", data.getPassport().getDateOfReceipt());
+            playersConfig.set(data.getNick() + ".placeOfResidence", data.getPassport().getPlaceOfResidence());
+            playersConfig.set(data.getNick() + ".criminalRecords", data.getPassport().getCriminalRecords());
+            playersConfig.set(data.getNick() + ".profession", data.getPassport().getProfession());
+            playersConfig.set(data.getNick() + ".isChatCity", data.isChatCity());
+            playersConfig.set(data.getNick() + ".countUnlockSuccess", data.getCountUnlock());
+            playersConfig.set(data.getNick() + ".pexs", data.getPexs());
+            playersConfig.set(data.getNick() + ".pexsTalent", data.getPexsTalent());
+            playersConfig.set(data.getNick() + ".dateAddProf", data.getDateAddProf());
+            playersConfig.set(data.getNick() + ".level", data.getLevel());
+            playersConfig.set(data.getNick() + ".dateFirst", data.getDateFirst());
+            playersConfig.set(data.getNick() + ".talent", data.getTalent());
         }
         try {
             playersConfig.save(playersFile);
@@ -256,7 +260,7 @@ public class PlayersManager implements Listener {
             passport.setProfession(profession);
             passport.setCriminalRecords(criminalRecords);
             data.setPassport(passport);
-            playerDataList.add(data);
+            addPlayerDataList(data);
         } else {
             playersConfig.createSection(player.getName());
             setPlayerDataList(player);
@@ -285,8 +289,7 @@ public class PlayersManager implements Listener {
             for (String pex : pexAll) {
                 permission.playerAdd(player, pex);
                 data.setPexs(pexAll);
-                savePlayerData(player);
-                savesConfigs();
+                savePlayerData(data);
             }
         }
     }
@@ -580,8 +583,7 @@ public class PlayersManager implements Listener {
                 data.setTalent("§7Родство с магией");
                 addPexsTalent(data.getPlayer(), pexsTalent);
                 pexsTalent.clear();
-                savePlayerData(player);
-                savesConfigs();
+                savePlayerData(data);
                 break;
             case "§7Рождённый в кузне":
                 pexsTalent.add("craftingapi.recipe.craftingapi.iron_helmet");
@@ -593,8 +595,7 @@ public class PlayersManager implements Listener {
                 data.setTalent("§7Рождённый в кузне");
                 addPexsTalent(data.getPlayer(), pexsTalent);
                 pexsTalent.clear();
-                savePlayerData(player);
-                savesConfigs();
+                savePlayerData(data);
                 break;
             case "§7Мастер мечей":
                 pexsTalent.add("craftingapi.recipe.craftingapi.diamond_sword");
@@ -604,8 +605,7 @@ public class PlayersManager implements Listener {
                 data.setTalent("§7Мастер мечей");
                 addPexsTalent(data.getPlayer(), pexsTalent);
                 pexsTalent.clear();
-                savePlayerData(player);
-                savesConfigs();
+                savePlayerData(data);
                 break;
             case "§7Ловкие руки":
                 pexsTalent.add("keylock.talentVor");
@@ -614,8 +614,7 @@ public class PlayersManager implements Listener {
                 data.setTalent("§7Ловкие руки");
                 addPexsTalent(data.getPlayer(), pexsTalent);
                 pexsTalent.clear();
-                savePlayerData(player);
-                savesConfigs();
+                savePlayerData(data);
                 break;
             case "§7Новая жизнь":
                 if (!data.getProfession().equals(ProfessionsEnum.MAYOR)) {
@@ -623,8 +622,7 @@ public class PlayersManager implements Listener {
                     data.getPassport().setProfession("-");
                 }
                 data.setTalent("§7Новая жизнь");
-                savePlayerData(player);
-                savesConfigs();
+                savePlayerData(data);
                 break;
             case "§7Воин":
                 pexsTalent.add("rpbase.talentVoin");
@@ -633,8 +631,7 @@ public class PlayersManager implements Listener {
                 data.setTalent("§7Воин");
                 addPexsTalent(data.getPlayer(), pexsTalent);
                 pexsTalent.clear();
-                savePlayerData(player);
-                savesConfigs();
+                savePlayerData(data);
                 break;
             case "§7Большой нос":
                 pexsTalent.add("rpbase.talentBigNos");
@@ -643,8 +640,7 @@ public class PlayersManager implements Listener {
                 data.setTalent("§7Большой нос");
                 addPexsTalent(data.getPlayer(), pexsTalent);
                 pexsTalent.clear();
-                savePlayerData(player);
-                savesConfigs();
+                savePlayerData(data);
                 break;
         }
     }
@@ -713,6 +709,37 @@ public class PlayersManager implements Listener {
                     return;
                 }
 
+                //Таланты
+                if (event.getView().getTitle().equals(centerTitle("§8Рулетка талантов")) && (inv.getSize() == 36)) {
+                    if (itemClick != null) {
+                        if (itemClick.getItemMeta().getDisplayName().equals("§cРулетка талантов")) {
+                            UUID targetUUID = Cache.translateUUID(player.getName(), null);
+                            BigDecimal bal = Cache.getBalanceFromCacheOrDB(player.getUniqueId());
+                            String realname = Cache.getrealname(player.getName());
+                            if (bal.intValue() >= 100) {
+                                String amountStr = String.valueOf(100);
+                                BigDecimal amount = DataFormat.formatString(amountStr);
+                                Cache.change("ADMIN_COMMAND", targetUUID, realname, amount, false, "");
+                                onRul(data);
+                                event.setCancelled(true);
+                                return;
+                            }
+                            player.sendMessage("§cУ вас не хватает " + (100 - bal.intValue()) + " для прокрутки рулетки!");
+                            event.setCancelled(true);
+                            return;
+                        }
+                        int sum = getSumTalent(itemClick);
+                        if (sum != 0) {
+                            event.setCancelled(true);
+                            openSuccessTalentInv(player, itemClick);
+                            event.setCancelled(true);
+                            return;
+                        }
+                    }
+                    event.setCancelled(true);
+                    return;
+                }
+
                 //Подтверждение покупки таланта
                 if (event.getView().getTitle().contains("Покупка:") && (inv.getSize() == 27)) {
                     if (itemClick != null) {
@@ -754,36 +781,6 @@ public class PlayersManager implements Listener {
                         if (itemClick.getItemMeta().getDisplayName().equals("§aОтменить покупку")) {
                             event.setCancelled(true);
                             openTalentGui(player);
-                            return;
-                        }
-                    }
-                    event.setCancelled(true);
-                    return;
-                }
-
-                //Таланты
-                if (event.getView().getTitle().equals(centerTitle("§8Рулетка талантов")) && (inv.getSize() == 36)) {
-                    if (itemClick != null) {
-                        if (itemClick.getItemMeta().getDisplayName().equals("§cРулетка талантов")) {
-                            UUID targetUUID = Cache.translateUUID(player.getName(), null);
-                            BigDecimal bal = Cache.getBalanceFromCacheOrDB(player.getUniqueId());
-                            String realname = Cache.getrealname(player.getName());
-                            if (bal.intValue() >= 100) {
-                                String amountStr = String.valueOf(100);
-                                BigDecimal amount = DataFormat.formatString(amountStr);
-                                Cache.change("ADMIN_COMMAND", targetUUID, realname, amount, false, "");
-                                onRul(data);
-                                event.setCancelled(true);
-                                return;
-                            }
-                            player.sendMessage("§cУ вас не хватает " + (100 - bal.intValue()) + " для прокрутки рулетки!");
-                            event.setCancelled(true);
-                            return;
-                        }
-                        int sum = getSumTalent(itemClick);
-                        if (sum != 0) {
-                            event.setCancelled(true);
-                            openSuccessTalentInv(player, itemClick);
                             return;
                         }
                     }

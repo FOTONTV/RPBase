@@ -78,7 +78,6 @@ public class TownCommands implements CommandExecutor {
                                         CitiesManager.addCity(city);
                                         data.setCity(city);
                                         PlayersManager.savePlayerData(data);
-                                        PlayersManager.savesConfigs();
                                         CitiesManager.saveCities();
                                         player.sendMessage(GlobalConfig.PLAYER_CREATECITY.replace("{city}", args[1]));
                                         for (Player player1 : Bukkit.getOnlinePlayers())
@@ -149,7 +148,6 @@ public class TownCommands implements CommandExecutor {
                                         data.getCity().kickCitizen(player1);
                                         PlayersManager.savePlayerData(playerData);
                                         PlayersManager.savePlayerData(data);
-                                        PlayersManager.savesConfigs();
                                         CitiesManager.saveCities();
                                         player.sendMessage(GlobalConfig.MAYOR_KICKCITY.replace("{player}", player1.getName()));
                                         player1.sendMessage(GlobalConfig.PLAYER_KICKCITY.replace("{city}", data.getCityName()));
@@ -179,7 +177,6 @@ public class TownCommands implements CommandExecutor {
                                             playerData.getPassport().setProfession(ProfessionsEnum.MAYOR.getNameProf());
                                             PlayersManager.savePlayerData(data);
                                             PlayersManager.savePlayerData(playerData);
-                                            PlayersManager.savesConfigs();
                                             CitiesManager.saveCities();
                                             player.sendMessage(GlobalConfig.MAYOR_TRANSFERMAYOR.replace("{player}", player1.getName()));
                                             player1.sendMessage(GlobalConfig.PLAYER_TRANSFERMAYOR.replace("{city}", playerData.getCityName()));
@@ -230,7 +227,6 @@ public class TownCommands implements CommandExecutor {
                                     playerData.getCity().addCitizen(player);
                                     PlayersManager.savePlayerData(data);
                                     PlayersManager.savePlayerData(playerData);
-                                    PlayersManager.savesConfigs();
                                     player.sendMessage(GlobalConfig.PLAYER_INVITECITYACCEPT.replace("{city}", playerData.getCityName()));
                                     player1.sendMessage(GlobalConfig.MAYOR_INVITECITYACCEPT.replace("{player}", player.getName()));
                                     return true;
@@ -270,7 +266,6 @@ public class TownCommands implements CommandExecutor {
                                     data.setCity(null);
                                     data.setCityName("-");
                                     PlayersManager.savePlayerData(data);
-                                    PlayersManager.savesConfigs();
                                     CitiesManager.saveCities();
                                     player.sendMessage(GlobalConfig.PLAYER_LEAVEINCITY.replace("{city}", cityName));
                                     return true;
@@ -287,7 +282,6 @@ public class TownCommands implements CommandExecutor {
                                     String cityName = data.getCityName();
                                     CitiesManager.disbandCity(data.getCity());
                                     PlayersManager.disbandCity(data);
-                                    PlayersManager.savesConfigs();
                                     CitiesManager.saveCities();
                                     player.sendMessage(GlobalConfig.MAYOR_DISBANDCITI);
                                     for (Player player1 : Bukkit.getOnlinePlayers())

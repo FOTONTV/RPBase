@@ -30,7 +30,6 @@ public class PassjCommands implements CommandExecutor {
                                 String criminal = args[1] + " - " + args[2];
                                 data1.getPassport().addCriminalRecords(criminal);
                                 PlayersManager.savePlayerData(data1);
-                                PlayersManager.savesConfigs();
                                 player.sendMessage(GlobalConfig.JUDGE_CRIMINALRECORDS.replace("{player}", args[0]));
                                 player1.sendMessage(GlobalConfig.PLAYER_PASSPORT_CRIMINALRECORDS);
                                 return true;

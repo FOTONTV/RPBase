@@ -24,6 +24,7 @@ public class FupgradeCommands implements CommandExecutor {
                             return true;
                         }
                         data1.setLevel(levelCurrent + 1);
+                        PlayersManager.savePlayerData(data1);
                         sender.sendMessage("§aУровень игрока повышен!");
                         return true;
                     }
@@ -42,6 +43,7 @@ public class FupgradeCommands implements CommandExecutor {
                         return true;
                     }
                     data.setLevel(levelCurrent + 1);
+                    PlayersManager.savePlayerData(data);
                     player.sendMessage("§aВаш уровень повышен.");
                     return true;
                 }
@@ -55,6 +57,7 @@ public class FupgradeCommands implements CommandExecutor {
                         return true;
                     }
                     data1.setLevel(levelCurrent + 1);
+                    PlayersManager.savePlayerData(data1);
                     player.sendMessage("§aУровень игрока повышен!");
                     return true;
                 }
