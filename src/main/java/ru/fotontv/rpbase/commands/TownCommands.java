@@ -175,6 +175,8 @@ public class TownCommands implements CommandExecutor {
                                             data.getPassport().setProfession(ProfessionsEnum.PLAYER.getNameProf());
                                             playerData.setProfession(ProfessionsEnum.MAYOR);
                                             playerData.getPassport().setProfession(ProfessionsEnum.MAYOR.getNameProf());
+                                            PlayersManager.addPrefix(playerData.getPlayer(), playerData);
+                                            PlayersManager.addPrefix(data.getPlayer(), data);
                                             PlayersManager.savePlayerData(data);
                                             PlayersManager.savePlayerData(playerData);
                                             CitiesManager.saveCities();

@@ -66,12 +66,22 @@ public class PlayersManager implements Listener {
         synchronized (playerDataList) {
             PlayerData data = new PlayerData(player);
             data.setCurrentDateFirst();
+            addPrefix(player, data);
             playerDataList.add(data);
+        }
+    }
+
+    public static void addPrefix(Player player, PlayerData data) {
+        if (data.getProfession().equals(ProfessionsEnum.PLAYER)) {
+            RPBase.getPlugin().getChat().setPlayerPrefix(player, "§2Житель §f");
+        } else {
+            RPBase.getPlugin().getChat().setPlayerPrefix(player, "§c" + data.getProfession().getNameProf() + " §f");
         }
     }
 
     private static void addPlayerDataList(PlayerData data) {
         synchronized (playerDataList) {
+            addPrefix(data.getPlayer(), data);
             playerDataList.add(data);
         }
     }
@@ -98,6 +108,7 @@ public class PlayersManager implements Listener {
             data.setProfession(ProfessionsEnum.PLAYER);
             data.getPassport().setProfession("-");
             data.setDateInput("-");
+            addPrefix(data.getPlayer(), data);
         }
     }
 

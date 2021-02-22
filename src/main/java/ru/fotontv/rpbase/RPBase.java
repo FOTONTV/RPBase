@@ -245,6 +245,10 @@ public final class RPBase extends JavaPlugin {
         return globalConfig;
     }
 
+    public Chat getChat() {
+        return chat;
+    }
+
     private void registerCommands() {
         Objects.requireNonNull(getCommand("wanted")).setExecutor(new WantedCommands());
         Objects.requireNonNull(getCommand("wanted")).setTabCompleter(new WantedTabCompleter());

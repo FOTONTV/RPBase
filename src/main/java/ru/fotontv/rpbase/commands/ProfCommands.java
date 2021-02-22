@@ -96,6 +96,7 @@ public class ProfCommands implements CommandExecutor {
                                             data1.setCurrentDateAddProf();
                                             PlayersManager.removePex(player1, data1);
                                             PlayersManager.addPex(professionsEnum, player1, data1);
+                                            PlayersManager.addPrefix(data1.getPlayer(), data1);
                                             PlayersManager.savePlayerData(data1);
                                             player.sendMessage(GlobalConfig.MAYOR_ADDPROF.replace("{player}", player1.getName()).replace("{prof}", professionsEnum.getNameProf()));
                                             player1.sendMessage(GlobalConfig.PLAYER_ADDPROF.replace("{city}", data.getCityName()).replace("{prof}", professionsEnum.getNameProf()));
