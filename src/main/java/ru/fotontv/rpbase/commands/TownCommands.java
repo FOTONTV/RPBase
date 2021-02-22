@@ -251,8 +251,11 @@ public class TownCommands implements CommandExecutor {
                         }
                         if (args[0].equals("info")) {
                             if (player.hasPermission("town.info") ||
-                                    data.getProfession().equals(ProfessionsEnum.MAYOR)) {
-                                CitiesManager.openCityGUI(data.getCity(), player);
+                                    ProfessionsEnum.isAll(data)) {
+                                if (data.getCity() != null) {
+                                    CitiesManager.openCityGUI(data.getCity(), player);
+                                    return true;
+                                }
                                 return true;
                             }
                             player.sendMessage(GlobalConfig.PLAYER_NOPERMISSION);

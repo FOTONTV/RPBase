@@ -60,6 +60,11 @@ public class ProfCommands implements CommandExecutor {
                                 if (player1 != null && data1 != null && !player.getName().equals(player1.getName())) {
                                     if (data.getCityName().equals(data1.getCityName())) {
                                         ProfessionsEnum professionsEnum = ProfessionsEnum.getProf(args[2]);
+                                        if (player.getLocation().distance(player1.getLocation()) < 7) {
+                                            player.sendMessage("§cВы должны находиться рядом с игроком на расстоянии 7 блоков");
+                                            player1.sendMessage("§cВы должны находиться рядом с мэром на расстоянии 7 блоков!");
+                                            return true;
+                                        }
                                         if (!(data1.isVip()) &&
                                                 !(data1.isPremium()) &&
                                                 !(data1.isExtreme()) &&
@@ -73,6 +78,11 @@ public class ProfCommands implements CommandExecutor {
                                         if (!PlayersManager.isValidLevel(professionsEnum, data1)) {
                                             player.sendMessage("§cУ этого игрока не достаточно уровня для профессии " + professionsEnum.getNameProf() + "!");
                                             player1.sendMessage("§cУ вас недостаточно уровня для профессии " + professionsEnum.getNameProf() + "!");
+                                            return true;
+                                        }
+                                        if (!data.getCity().isInventorAccess()) {
+                                            player.sendMessage("§cЭтот игрок не может получить профессию изобретатель сейчас!");
+                                            player1.sendMessage("§cВы не можете получить профессию изобретатель сейчас!");
                                             return true;
                                         }
                                         if (data1.isNotAccessProf()) {

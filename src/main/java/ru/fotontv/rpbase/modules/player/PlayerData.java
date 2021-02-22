@@ -287,7 +287,7 @@ public class PlayerData {
 
     public boolean isNotAccessUpgradeTime() {
         Calendar instance = Calendar.getInstance();
-        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        DateFormat dateFormat = new SimpleDateFormat("mm/HH/dd/MM/yyyy");
         Date date = new Date();
         try {
             instance.setTime(dateFormat.parse(this.dateFirst));
@@ -463,7 +463,7 @@ public class PlayerData {
     }
 
     public void setCurrentDateFirst() {
-        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        DateFormat dateFormat = new SimpleDateFormat("mm/HH/dd/MM/yyyy");
         Date date = new Date();
         this.dateFirst = dateFormat.format(date);
     }

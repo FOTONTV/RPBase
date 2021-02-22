@@ -13,8 +13,10 @@ import ru.fotontv.rpbase.modules.player.PlayerData;
 import ru.fotontv.rpbase.modules.player.PlayersManager;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -119,6 +121,20 @@ public class City {
 
     public void setDateOfFoundation(String date) {
         this.dateOfFoundation = date;
+    }
+
+    public boolean isInventorAccess() {
+        Calendar instance = Calendar.getInstance();
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        Date date = new Date();
+        try {
+            instance.setTime(dateFormat.parse(this.dateOfFoundation));
+        } catch (ParseException e) {
+            return false;
+        }
+        instance.add(Calendar.DAY_OF_MONTH, 30);
+        Date newDate = instance.getTime();
+        return newDate.getTime() <= date.getTime();
     }
 
     public CityStatusEnum getCityStatus() {

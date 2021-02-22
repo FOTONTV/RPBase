@@ -37,8 +37,10 @@ public class TownTabCompleter implements TabCompleter {
                             tab.add("leave");
                         }
                         if (player.hasPermission("town.info") ||
-                                data.getProfession().equals(ProfessionsEnum.MAYOR)) {
-                            tab.add("info");
+                                ProfessionsEnum.isAll(data)) {
+                            if (data.getCity() != null) {
+                                tab.add("info");
+                            }
                         }
                         if (player.hasPermission("town.add") ||
                                 data.getProfession().equals(ProfessionsEnum.MAYOR)) {
