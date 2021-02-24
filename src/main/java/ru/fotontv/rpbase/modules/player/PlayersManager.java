@@ -21,16 +21,16 @@ import ru.fotontv.rpbase.RPBase;
 import ru.fotontv.rpbase.config.GlobalConfig;
 import ru.fotontv.rpbase.enums.ProfessionsEnum;
 import ru.fotontv.rpbase.modules.city.CitiesManager;
-import ru.fotontv.rpbase.utils.LinkedSet;
 
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class PlayersManager implements Listener {
 
-    private static final Set<PlayerData> playerDataList = new LinkedSet<>();
+    private static final List<PlayerData> playerDataList = new CopyOnWriteArrayList<>();
     private static final List<ItemStack> itemsRul = new ArrayList<>();
     private static final HashMap<Player, Integer> taskID = new HashMap<>();
     private static final Permission permission = RPBase.getPlugin().getPermission();
@@ -62,16 +62,14 @@ public class PlayersManager implements Listener {
         }
     }
 
-    private static void setPlayerDataList(Player player) {
-        synchronized (playerDataList) {
-            PlayerData data = new PlayerData(player);
-            data.setCurrentDateFirst();
-            addPrefix(player, data);
-            playerDataList.add(data);
-        }
+    private static synchronized void setPlayerDataList(Player player) {
+        PlayerData data = new PlayerData(player);
+        data.setCurrentDateFirst();
+        addPrefix(player, data);
+        playerDataList.add(data);
     }
 
-    public static void addPrefix(Player player, PlayerData data) {
+    public static synchronized void addPrefix(Player player, PlayerData data) {
         if (data.getProfession().equals(ProfessionsEnum.PLAYER)) {
             RPBase.getPlugin().getChat().setPlayerPrefix(player, "§2Житель §f");
         } else {
@@ -79,17 +77,13 @@ public class PlayersManager implements Listener {
         }
     }
 
-    private static void addPlayerDataList(PlayerData data) {
-        synchronized (playerDataList) {
-            addPrefix(data.getPlayer(), data);
-            playerDataList.add(data);
-        }
+    private static synchronized void addPlayerDataList(PlayerData data) {
+        addPrefix(data.getPlayer(), data);
+        playerDataList.add(data);
     }
 
-    private static void removePlayerData(PlayerData data) {
-        synchronized (playerDataList) {
-            playerDataList.remove(data);
-        }
+    private static synchronized void removePlayerData(PlayerData data) {
+        playerDataList.remove(data);
     }
 
     public static PlayerData getPlayerData(Player player) {
@@ -101,7 +95,7 @@ public class PlayersManager implements Listener {
        }
     }
 
-    public static void disbandCity(PlayerData data) {
+    public static synchronized void disbandCity(PlayerData data) {
         if (data != null) {
             data.setCity(null);
             data.setCityName("-");
@@ -109,6 +103,7 @@ public class PlayersManager implements Listener {
             data.getPassport().setProfession("-");
             data.setDateInput("-");
             addPrefix(data.getPlayer(), data);
+            savePlayerData(data);
         }
     }
 
@@ -137,20 +132,14 @@ public class PlayersManager implements Listener {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        removePlayerData(data);
+        new Thread(() -> removePlayerData(data)).start();
     }
 
-    public static void savePlayerData(PlayerData data) {
-        synchronized (playerDataList) {
-            try {
-                playerDataList.stream().
-                        filter(playerData -> playerData.getNick().equals(data.getNick())).
-                        forEach(playerDataList::remove);
-            } finally {
-                playerDataList.add(data);
-                savePlayerDataNotCFG(data);
-            }
-        }
+    public static synchronized void savePlayerData(PlayerData data) {
+        playerDataList.stream().
+                filter(playerData -> playerData.getNick().equals(data.getNick())).
+                forEach(playerData -> playerDataList.set(playerDataList.indexOf(playerData), data));
+        savePlayerDataNotCFG(data);
     }
 
     public static void savePlayerDataNotCFG(PlayerData data) {
@@ -181,7 +170,7 @@ public class PlayersManager implements Listener {
     }
 
     @SuppressWarnings("deprecation")
-    public static PlayerData loadPlayerData(String nick) {
+    public static synchronized PlayerData loadPlayerData(String nick) {
         if (playersConfig.contains(nick)) {
             String professionsEnum = playersConfig.getString(nick + ".professionsEnum");
             String pickUpCity = playersConfig.getString(nick + ".pickUpCity");
@@ -274,7 +263,7 @@ public class PlayersManager implements Listener {
             addPlayerDataList(data);
         } else {
             playersConfig.createSection(player.getName());
-            setPlayerDataList(player);
+            new Thread(() -> setPlayerDataList(player)).start();
         }
     }
 
@@ -300,7 +289,7 @@ public class PlayersManager implements Listener {
             for (String pex : pexAll) {
                 permission.playerAdd(player, pex);
                 data.setPexs(pexAll);
-                savePlayerData(data);
+                new Thread(() -> savePlayerData(data)).start();
             }
         }
     }
@@ -594,7 +583,7 @@ public class PlayersManager implements Listener {
                 data.setTalent("§7Родство с магией");
                 addPexsTalent(data.getPlayer(), pexsTalent);
                 pexsTalent.clear();
-                savePlayerData(data);
+                new Thread(() -> savePlayerData(data)).start();
                 break;
             case "§7Рождённый в кузне":
                 pexsTalent.add("craftingapi.recipe.craftingapi.iron_helmet");
@@ -606,7 +595,7 @@ public class PlayersManager implements Listener {
                 data.setTalent("§7Рождённый в кузне");
                 addPexsTalent(data.getPlayer(), pexsTalent);
                 pexsTalent.clear();
-                savePlayerData(data);
+                new Thread(() -> savePlayerData(data)).start();
                 break;
             case "§7Мастер мечей":
                 pexsTalent.add("craftingapi.recipe.craftingapi.diamond_sword");
@@ -616,7 +605,7 @@ public class PlayersManager implements Listener {
                 data.setTalent("§7Мастер мечей");
                 addPexsTalent(data.getPlayer(), pexsTalent);
                 pexsTalent.clear();
-                savePlayerData(data);
+                new Thread(() -> savePlayerData(data)).start();
                 break;
             case "§7Ловкие руки":
                 pexsTalent.add("keylock.talentVor");
@@ -625,7 +614,7 @@ public class PlayersManager implements Listener {
                 data.setTalent("§7Ловкие руки");
                 addPexsTalent(data.getPlayer(), pexsTalent);
                 pexsTalent.clear();
-                savePlayerData(data);
+                new Thread(() -> savePlayerData(data)).start();
                 break;
             case "§7Новая жизнь":
                 if (!data.getProfession().equals(ProfessionsEnum.MAYOR)) {
@@ -633,7 +622,7 @@ public class PlayersManager implements Listener {
                     data.getPassport().setProfession("-");
                 }
                 data.setTalent("§7Новая жизнь");
-                savePlayerData(data);
+                new Thread(() -> savePlayerData(data)).start();
                 break;
             case "§7Воин":
                 pexsTalent.add("rpbase.talentVoin");
@@ -642,7 +631,7 @@ public class PlayersManager implements Listener {
                 data.setTalent("§7Воин");
                 addPexsTalent(data.getPlayer(), pexsTalent);
                 pexsTalent.clear();
-                savePlayerData(data);
+                new Thread(() -> savePlayerData(data)).start();
                 break;
             case "§7Большой нос":
                 pexsTalent.add("rpbase.talentBigNos");
@@ -651,7 +640,7 @@ public class PlayersManager implements Listener {
                 data.setTalent("§7Большой нос");
                 addPexsTalent(data.getPlayer(), pexsTalent);
                 pexsTalent.clear();
-                savePlayerData(data);
+                new Thread(() -> savePlayerData(data)).start();
                 break;
         }
     }

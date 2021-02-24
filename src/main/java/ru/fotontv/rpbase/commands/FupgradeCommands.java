@@ -16,18 +16,20 @@ public class FupgradeCommands implements CommandExecutor {
         if (!(sender instanceof Player)) {
             if (sender.isOp()) {
                 if (args.length == 1) {
-                    PlayerData data1 = PlayersManager.loadPlayerData(args[0]);
-                    if (data1 != null) {
-                        int levelCurrent = data1.getLevel();
-                        if (levelCurrent == 5) {
-                            sender.sendMessage("§fИгрок уже достиг §aмаксимального §fуровня!");
-                            return true;
+                    new Thread(() -> {
+                        PlayerData data1 = PlayersManager.loadPlayerData(args[0]);
+                        if (data1 != null) {
+                            int levelCurrent = data1.getLevel();
+                            if (levelCurrent == 5) {
+                                sender.sendMessage("§fИгрок уже достиг §aмаксимального §fуровня!");
+                                return;
+                            }
+                            data1.setLevel(levelCurrent + 1);
+                            new Thread(() -> PlayersManager.savePlayerData(data1)).start();
+                            sender.sendMessage("§aУровень игрока повышен!");
                         }
-                        data1.setLevel(levelCurrent + 1);
-                        PlayersManager.savePlayerData(data1);
-                        sender.sendMessage("§aУровень игрока повышен!");
-                        return true;
-                    }
+                    }).start();
+                    return true;
                 }
             }
             return true;
@@ -43,24 +45,26 @@ public class FupgradeCommands implements CommandExecutor {
                         return true;
                     }
                     data.setLevel(levelCurrent + 1);
-                    PlayersManager.savePlayerData(data);
+                    new Thread(() -> PlayersManager.savePlayerData(data)).start();
                     player.sendMessage("§aВаш уровень повышен.");
                     return true;
                 }
             }
             if (args.length == 1) {
-                PlayerData data1 = PlayersManager.loadPlayerData(args[0]);
-                if (data1 != null) {
-                    int levelCurrent = data1.getLevel();
-                    if (levelCurrent == 5) {
-                        player.sendMessage("§fИгрок уже достиг §aмаксимального §fуровня!");
-                        return true;
+                new Thread(() -> {
+                    PlayerData data1 = PlayersManager.loadPlayerData(args[0]);
+                    if (data1 != null) {
+                        int levelCurrent = data1.getLevel();
+                        if (levelCurrent == 5) {
+                            player.sendMessage("§fИгрок уже достиг §aмаксимального §fуровня!");
+                            return;
+                        }
+                        data1.setLevel(levelCurrent + 1);
+                        new Thread(() -> PlayersManager.savePlayerData(data1)).start();
+                        player.sendMessage("§aУровень игрока повышен!");
                     }
-                    data1.setLevel(levelCurrent + 1);
-                    PlayersManager.savePlayerData(data1);
-                    player.sendMessage("§aУровень игрока повышен!");
-                    return true;
-                }
+                }).start();
+                return true;
             }
         }
         return true;

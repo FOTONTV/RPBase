@@ -35,35 +35,35 @@ public class UpgradeCommands implements CommandExecutor {
                     }
                     if (level == 0 && goldOreAmount >= 0) {
                         data.setLevel(level + 1);
-                        PlayersManager.savePlayerData(data);
+                        new Thread(() -> PlayersManager.savePlayerData(data)).start();
                         player.sendMessage("§aВаш уровень повышен.");
                         return true;
                     }
                     if (level == 1 && goldOreAmount >= 30) {
                         data.setLevel(level + 1);
                         removeOre(player, 30);
-                        PlayersManager.savePlayerData(data);
+                        new Thread(() -> PlayersManager.savePlayerData(data)).start();
                         player.sendMessage("§aВаш уровень повышен.");
                         return true;
                     }
                     if (level == 2 && goldOreAmount >= 60) {
                         data.setLevel(level + 1);
                         removeOre(player, 60);
-                        PlayersManager.savePlayerData(data);
+                        new Thread(() -> PlayersManager.savePlayerData(data)).start();
                         player.sendMessage("§aВаш уровень повышен.");
                         return true;
                     }
                     if (level == 3 && goldOreAmount >= 120) {
                         data.setLevel(level + 1);
                         removeOre(player, 120);
-                        PlayersManager.savePlayerData(data);
+                        new Thread(() -> PlayersManager.savePlayerData(data)).start();
                         player.sendMessage("§aВаш уровень повышен.");
                         return true;
                     }
                     if (level == 4 && goldOreAmount >= 240) {
                         data.setLevel(level + 1);
                         removeOre(player, 240);
-                        PlayersManager.savePlayerData(data);
+                        new Thread(() -> PlayersManager.savePlayerData(data)).start();
                         player.sendMessage("§aВаш уровень повышен.");
                         return true;
                     }

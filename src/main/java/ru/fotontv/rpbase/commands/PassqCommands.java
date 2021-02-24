@@ -31,25 +31,29 @@ public class PassqCommands implements CommandExecutor {
                                 Player player1 = Bukkit.getPlayer(data.getNickPassportRequest());
                                 PlayerData playerData = PlayersManager.getPlayerData(player1);
                                 if (player1 != null && playerData != null) {
+                                    if (player.getLocation().distance(player1.getLocation()) > 7) {
+                                        player.sendMessage("§cВы должны находиться рядом с игроком на расстоянии 7 блоков");
+                                        return true;
+                                    }
                                     PlayersManager.openPassOther(player, player1);
                                     playerData.setNickPassportRequest("");
-                                    PlayersManager.savePlayerData(playerData);
+                                    new Thread(() -> PlayersManager.savePlayerData(playerData)).start();
                                     return true;
                                 }
                                 data.setNickPassportRequest("");
-                                PlayersManager.savePlayerData(data);
+                                new Thread(() -> PlayersManager.savePlayerData(data)).start();
                                 return true;
                             }
                             if (args[0].equals("false")) {
                                 data.setNickPassportRequest("");
-                                PlayersManager.savePlayerData(data);
+                                new Thread(() -> PlayersManager.savePlayerData(data)).start();
                                 return true;
                             }
                             Player player1 = Bukkit.getPlayer(args[0]);
                             PlayerData playerData = PlayersManager.getPlayerData(player1);
                             if (player1 != null && playerData != null) {
                                 playerData.setNickPassportRequest(player.getName());
-                                PlayersManager.savePlayerData(playerData);
+                                new Thread(() -> PlayersManager.savePlayerData(playerData)).start();
                                 TextComponent yes = new TextComponent("✔");
                                 TextComponent no = new TextComponent("✖");
                                 yes.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "passq true"));

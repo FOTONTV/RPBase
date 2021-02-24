@@ -32,7 +32,7 @@ public class PassprCommands implements CommandExecutor {
                                     PlayerData data1 = PlayersManager.getPlayerData(passRec);
                                     if (data1 != null) {
                                         data1.getPassport().setPlaceOfResidence(args[1]);
-                                        PlayersManager.savePlayerData(data1);
+                                        new Thread(() -> PlayersManager.savePlayerData(data1)).start();
                                         player.sendMessage(GlobalConfig.PASSPORTOFFICER_PLACEEDIT.replace("{player}", args[0]));
                                         passRec.sendMessage(GlobalConfig.PLAYER_PASSPORT_PLACEEDIT);
                                         return true;

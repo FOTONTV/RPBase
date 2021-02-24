@@ -40,7 +40,10 @@ public class ProfCommands implements CommandExecutor {
                                         data1.setProfession(ProfessionsEnum.PLAYER);
                                         data1.passport.setProfession(ProfessionsEnum.PLAYER.getNameProf());
                                         PlayersManager.removePex(player1, data1);
-                                        PlayersManager.savePlayerData(data1);
+                                        new Thread(() -> {
+                                            PlayersManager.addPrefix(data1.getPlayer(), data1);
+                                            PlayersManager.savePlayerData(data1);
+                                        }).start();
                                         player.sendMessage(GlobalConfig.MAYOR_REMPROF.replace("{player}", player1.getName()).replace("{prof}", professionsEnum1.getNameProf()));
                                         player1.sendMessage(GlobalConfig.PLAYER_REMPROF.replace("{city}", data.getCityName()).replace("{prof}", professionsEnum1.getNameProf()));
                                         return true;
@@ -60,7 +63,7 @@ public class ProfCommands implements CommandExecutor {
                                 if (player1 != null && data1 != null && !player.getName().equals(player1.getName())) {
                                     if (data.getCityName().equals(data1.getCityName())) {
                                         ProfessionsEnum professionsEnum = ProfessionsEnum.getProf(args[2]);
-                                        if (player.getLocation().distance(player1.getLocation()) < 7) {
+                                        if (player.getLocation().distance(player1.getLocation()) > 7) {
                                             player.sendMessage("§cВы должны находиться рядом с игроком на расстоянии 7 блоков");
                                             player1.sendMessage("§cВы должны находиться рядом с мэром на расстоянии 7 блоков!");
                                             return true;
@@ -80,10 +83,12 @@ public class ProfCommands implements CommandExecutor {
                                             player1.sendMessage("§cУ вас недостаточно уровня для профессии " + professionsEnum.getNameProf() + "!");
                                             return true;
                                         }
-                                        if (!data.getCity().isInventorAccess()) {
-                                            player.sendMessage("§cЭтот игрок не может получить профессию изобретатель сейчас!");
-                                            player1.sendMessage("§cВы не можете получить профессию изобретатель сейчас!");
-                                            return true;
+                                        if (professionsEnum.equals(ProfessionsEnum.INVENTOR)) {
+                                            if (!data.getCity().isInventorAccess()) {
+                                                player.sendMessage("§cЭтот игрок не может получить профессию изобретатель сейчас!");
+                                                player1.sendMessage("§cВы не можете получить профессию изобретатель сейчас!");
+                                                return true;
+                                            }
                                         }
                                         if (data1.isNotAccessProf()) {
                                             player.sendMessage("§cЭтот игрок не может получить новую профессию сейчас!");
@@ -94,10 +99,12 @@ public class ProfCommands implements CommandExecutor {
                                             data1.setProfession(professionsEnum);
                                             data1.passport.setProfession(professionsEnum.getNameProf());
                                             data1.setCurrentDateAddProf();
-                                            PlayersManager.removePex(player1, data1);
-                                            PlayersManager.addPex(professionsEnum, player1, data1);
-                                            PlayersManager.addPrefix(data1.getPlayer(), data1);
-                                            PlayersManager.savePlayerData(data1);
+                                            new Thread(() -> {
+                                                PlayersManager.removePex(player1, data1);
+                                                PlayersManager.addPex(professionsEnum, player1, data1);
+                                                PlayersManager.addPrefix(data1.getPlayer(), data1);
+                                                PlayersManager.savePlayerData(data1);
+                                            }).start();
                                             player.sendMessage(GlobalConfig.MAYOR_ADDPROF.replace("{player}", player1.getName()).replace("{prof}", professionsEnum.getNameProf()));
                                             player1.sendMessage(GlobalConfig.PLAYER_ADDPROF.replace("{city}", data.getCityName()).replace("{prof}", professionsEnum.getNameProf()));
                                             return true;

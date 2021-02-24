@@ -17,7 +17,7 @@ public class PlayersApi {
                 data.setProfession(ProfessionsEnum.THIEF);
                 data.passport.setProfession(ProfessionsEnum.THIEF.getNameProf());
             }
-            PlayersManager.savePlayerData(data);
+            new Thread(() -> PlayersManager.savePlayerData(data)).start();
         }
     }
 

@@ -94,7 +94,7 @@ public class CitiesManager implements Listener {
             PlayerData data = PlayersManager.getPlayerData(player);
             if (data != null) {
                 data.setDateInput(city.getDateOfFoundation());
-                PlayersManager.savePlayerData(data);
+                new Thread(() -> PlayersManager.savePlayerData(data)).start();
             }
         }
     }

@@ -31,6 +31,10 @@ public class PasscrCommands implements CommandExecutor {
                             Player passRec = Bukkit.getPlayer(args[0]);
                             PlayerData data1 = PlayersManager.getPlayerData(passRec);
                             if (passRec != null && data1 != null) {
+                                if (player.getLocation().distance(passRec.getLocation()) > 7) {
+                                    player.sendMessage("§cВы должны находиться рядом с игроком на расстоянии 7 блоков");
+                                    return true;
+                                }
                                 if (CitiesManager.getCity(args[1]) != null) {
                                     if (!data.getPassport().isPickUpCity()) {
                                         DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
@@ -39,7 +43,7 @@ public class PasscrCommands implements CommandExecutor {
                                         data1.getPassport().setDateOfReceipt(dateOfReceipt);
                                         data1.getPassport().setIsPickUpCity(true);
                                         data1.getPassport().setPickUpCity(args[1]);
-                                        PlayersManager.savePlayerData(data1);
+                                        new Thread(() -> PlayersManager.savePlayerData(data1)).start();
                                         player.sendMessage(GlobalConfig.PASSPORTOFFICER_PICKUPCITY.replace("{player}", args[0]));
                                         passRec.sendMessage(GlobalConfig.PLAYER_PASSPORT_PICKUPCITY);
                                         return true;

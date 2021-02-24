@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class City {
     private final String nameCity;
@@ -62,23 +63,25 @@ public class City {
                 }
             } else {
                 OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(nick);
-                PlayerData data = PlayersManager.loadPlayerData(nick);
-                meta.setOwningPlayer(offlinePlayer);
-                meta.setDisplayName(nick);
-                for (String lor : GlobalConfig.LORESKULLCITIZEN) {
-                    if (lor.contains("{player}")) {
-                        lor = lor.replace("{player}", nick);
-                    }
-                    if (data != null) {
-                        if (lor.contains("{profession}")) {
-                            lor = lor.replace("{profession}", data.getPassport().getProfession());
+                new Thread(() -> {
+                    PlayerData data = PlayersManager.loadPlayerData(nick);
+                    meta.setOwningPlayer(offlinePlayer);
+                    meta.setDisplayName(nick);
+                    for (String lor : GlobalConfig.LORESKULLCITIZEN) {
+                        if (lor.contains("{player}")) {
+                            lor = lor.replace("{player}", nick);
                         }
-                        if (lor.contains("{dateOfEntryCity}")) {
-                            lor = lor.replace("{dateOfEntryCity}", data.getDateInput());
+                        if (data != null) {
+                            if (lor.contains("{profession}")) {
+                                lor = lor.replace("{profession}", data.getPassport().getProfession());
+                            }
+                            if (lor.contains("{dateOfEntryCity}")) {
+                                lor = lor.replace("{dateOfEntryCity}", data.getDateInput());
+                            }
                         }
+                        lore.add(lor);
                     }
-                    lore.add(lor);
-                }
+                }).start();
             }
             meta.setLore(lore);
             skull.setItemMeta(meta);
@@ -146,119 +149,121 @@ public class City {
     }
 
     public boolean isValidProf(ProfessionsEnum professionsEnum) {
-        int JUDGE = 0;
-        int PASSPORTOFFICER = 0;
-        int POLICEMAN = 0;
-        int OFFICER = 0;
-        int CARETAKER = 0;
-        int DETECTIVE = 0;
-        int INVENTOR = 0;
-        int BLACKSMITH = 0;
-        int WIZARD = 0;
-        int COOK = 0;
-        int BREWER = 0;
+        AtomicInteger JUDGE = new AtomicInteger();
+        AtomicInteger PASSPORTOFFICER = new AtomicInteger();
+        AtomicInteger POLICEMAN = new AtomicInteger();
+        AtomicInteger OFFICER = new AtomicInteger();
+        AtomicInteger CARETAKER = new AtomicInteger();
+        AtomicInteger DETECTIVE = new AtomicInteger();
+        AtomicInteger INVENTOR = new AtomicInteger();
+        AtomicInteger BLACKSMITH = new AtomicInteger();
+        AtomicInteger WIZARD = new AtomicInteger();
+        AtomicInteger COOK = new AtomicInteger();
+        AtomicInteger BREWER = new AtomicInteger();
         for (String nick : citizen) {
-            PlayerData data = PlayersManager.loadPlayerData(nick);
-            if (data != null) {
-                if (data.getProfession().equals(ProfessionsEnum.JUDGE)) {
-                    JUDGE += 1;
+            new Thread(() -> {
+                PlayerData data = PlayersManager.loadPlayerData(nick);
+                if (data != null) {
+                    if (data.getProfession().equals(ProfessionsEnum.JUDGE)) {
+                        JUDGE.addAndGet(1);
+                    }
+                    if (data.getProfession().equals(ProfessionsEnum.PASSPORTOFFICER)) {
+                        PASSPORTOFFICER.addAndGet(1);
+                    }
+                    if (data.getProfession().equals(ProfessionsEnum.POLICEMAN)) {
+                        POLICEMAN.addAndGet(1);
+                    }
+                    if (data.getProfession().equals(ProfessionsEnum.OFFICER)) {
+                        OFFICER.addAndGet(1);
+                    }
+                    if (data.getProfession().equals(ProfessionsEnum.CARETAKER)) {
+                        CARETAKER.addAndGet(1);
+                    }
+                    if (data.getProfession().equals(ProfessionsEnum.DETECTIVE)) {
+                        DETECTIVE.addAndGet(1);
+                    }
+                    if (data.getProfession().equals(ProfessionsEnum.INVENTOR)) {
+                        INVENTOR.addAndGet(1);
+                    }
+                    if (data.getProfession().equals(ProfessionsEnum.BLACKSMITH)) {
+                        BLACKSMITH.addAndGet(1);
+                    }
+                    if (data.getProfession().equals(ProfessionsEnum.WIZARD)) {
+                        WIZARD.addAndGet(1);
+                    }
+                    if (data.getProfession().equals(ProfessionsEnum.COOK)) {
+                        COOK.addAndGet(1);
+                    }
+                    if (data.getProfession().equals(ProfessionsEnum.BREWER)) {
+                        BREWER.addAndGet(1);
+                    }
                 }
-                if (data.getProfession().equals(ProfessionsEnum.PASSPORTOFFICER)) {
-                    PASSPORTOFFICER += 1;
-                }
-                if (data.getProfession().equals(ProfessionsEnum.POLICEMAN)) {
-                    POLICEMAN += 1;
-                }
-                if (data.getProfession().equals(ProfessionsEnum.OFFICER)) {
-                    OFFICER += 1;
-                }
-                if (data.getProfession().equals(ProfessionsEnum.CARETAKER)) {
-                    CARETAKER += 1;
-                }
-                if (data.getProfession().equals(ProfessionsEnum.DETECTIVE)) {
-                    DETECTIVE += 1;
-                }
-                if (data.getProfession().equals(ProfessionsEnum.INVENTOR)) {
-                    INVENTOR += 1;
-                }
-                if (data.getProfession().equals(ProfessionsEnum.BLACKSMITH)) {
-                    BLACKSMITH += 1;
-                }
-                if (data.getProfession().equals(ProfessionsEnum.WIZARD)) {
-                    WIZARD += 1;
-                }
-                if (data.getProfession().equals(ProfessionsEnum.COOK)) {
-                    COOK += 1;
-                }
-                if (data.getProfession().equals(ProfessionsEnum.BREWER)) {
-                    BREWER += 1;
-                }
-            }
+            }).start();
         }
         if (professionsEnum.equals(ProfessionsEnum.JUDGE)) {
             if (cityStatus.getJUDGE() == 0)
                 return false;
-            if (JUDGE < cityStatus.getJUDGE())
+            if (JUDGE.get() < cityStatus.getJUDGE())
                 return true;
         }
         if (professionsEnum.equals(ProfessionsEnum.PASSPORTOFFICER)) {
             if (cityStatus.getPASSPORTOFFICER() == 0)
                 return false;
-            if (PASSPORTOFFICER < cityStatus.getPASSPORTOFFICER())
+            if (PASSPORTOFFICER.get() < cityStatus.getPASSPORTOFFICER())
                 return true;
         }
         if (professionsEnum.equals(ProfessionsEnum.POLICEMAN)) {
             if (cityStatus.getPOLICEMAN() == 0)
                 return false;
-            if (POLICEMAN < cityStatus.getPOLICEMAN())
+            if (POLICEMAN.get() < cityStatus.getPOLICEMAN())
                 return true;
         }
         if (professionsEnum.equals(ProfessionsEnum.OFFICER)) {
             if (cityStatus.getOFFICER() == 0)
                 return false;
-            if (OFFICER < cityStatus.getOFFICER())
+            if (OFFICER.get() < cityStatus.getOFFICER())
                 return true;
         }
         if (professionsEnum.equals(ProfessionsEnum.CARETAKER)) {
             if (cityStatus.getCARETAKER() == 0)
                 return false;
-            if (CARETAKER < cityStatus.getCARETAKER())
+            if (CARETAKER.get() < cityStatus.getCARETAKER())
                 return true;
         }
         if (professionsEnum.equals(ProfessionsEnum.DETECTIVE)) {
             if (cityStatus.getDETECTIVE() == 0)
                 return false;
-            if (DETECTIVE < cityStatus.getDETECTIVE())
+            if (DETECTIVE.get() < cityStatus.getDETECTIVE())
                 return true;
         }
         if (professionsEnum.equals(ProfessionsEnum.INVENTOR)) {
             if (cityStatus.getINVENTOR() == 0)
                 return false;
-            if (INVENTOR < cityStatus.getINVENTOR())
+            if (INVENTOR.get() < cityStatus.getINVENTOR())
                 return true;
         }
         if (professionsEnum.equals(ProfessionsEnum.BLACKSMITH)) {
             if (cityStatus.getBLACKSMITH() == 0)
                 return false;
-            if (BLACKSMITH < cityStatus.getBLACKSMITH())
+            if (BLACKSMITH.get() < cityStatus.getBLACKSMITH())
                 return true;
         }
         if (professionsEnum.equals(ProfessionsEnum.WIZARD)) {
             if (cityStatus.getWIZARD() == 0)
                 return false;
-            if (WIZARD < cityStatus.getWIZARD())
+            if (WIZARD.get() < cityStatus.getWIZARD())
                 return true;
         }
         if (professionsEnum.equals(ProfessionsEnum.COOK)) {
             if (cityStatus.getCOOK() == 0)
                 return false;
-            if (COOK < cityStatus.getCOOK())
+            if (COOK.get() < cityStatus.getCOOK())
                 return true;
         }
         if (professionsEnum.equals(ProfessionsEnum.BREWER)) {
             if (cityStatus.getBREWER() == 0)
                 return false;
-            return BREWER < cityStatus.getBREWER();
+            return BREWER.get() < cityStatus.getBREWER();
         }
         return false;
     }

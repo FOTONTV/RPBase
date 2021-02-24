@@ -77,7 +77,10 @@ public class TownCommands implements CommandExecutor {
                                         city.addCitizen(player);
                                         CitiesManager.addCity(city);
                                         data.setCity(city);
-                                        PlayersManager.savePlayerData(data);
+                                        new Thread(() -> {
+                                            PlayersManager.addPrefix(data.getPlayer(), data);
+                                            PlayersManager.savePlayerData(data);
+                                        }).start();
                                         CitiesManager.saveCities();
                                         player.sendMessage(GlobalConfig.PLAYER_CREATECITY.replace("{city}", args[1]));
                                         for (Player player1 : Bukkit.getOnlinePlayers())
@@ -102,12 +105,16 @@ public class TownCommands implements CommandExecutor {
                                 }
                                 Player player1 = Bukkit.getPlayer(args[1]);
                                 if (player1 != null) {
+                                    if (player.getLocation().distance(player1.getLocation()) > 7) {
+                                        player.sendMessage("§cВы должны находиться рядом с игроком на расстоянии 7 блоков");
+                                        return true;
+                                    }
                                     PlayerData playerData = PlayersManager.getPlayerData(player1);
                                     if (playerData != null) {
                                         if (playerData.getLevel() >= 1) {
                                             if (playerData.getCity() == null) {
                                                 playerData.setNickCityRequest(player.getName());
-                                                PlayersManager.savePlayerData(playerData);
+                                                new Thread(() -> PlayersManager.savePlayerData(playerData)).start();
                                                 player.sendMessage(GlobalConfig.MAYOR_INVITECITY.replace("{player}", player1.getName()));
                                                 TextComponent yes = new TextComponent(ChatColor.GREEN + "принять");
                                                 TextComponent no = new TextComponent(ChatColor.RED + "отказаться");
@@ -142,12 +149,16 @@ public class TownCommands implements CommandExecutor {
                                 PlayerData playerData = PlayersManager.getPlayerData(player1);
                                 if (player1 != null && playerData != null) {
                                     if (playerData.getCityName().equals(data.getCityName())) {
+                                        if (player.getLocation().distance(player1.getLocation()) > 7) {
+                                            player.sendMessage("§cВы должны находиться рядом с игроком на расстоянии 7 блоков");
+                                            return true;
+                                        }
                                         playerData.setCity(null);
                                         playerData.setCityName("-");
                                         playerData.setDateInput("-");
                                         data.getCity().kickCitizen(player1);
-                                        PlayersManager.savePlayerData(playerData);
-                                        PlayersManager.savePlayerData(data);
+                                        new Thread(() -> PlayersManager.savePlayerData(playerData)).start();
+                                        new Thread(() -> PlayersManager.savePlayerData(data)).start();
                                         CitiesManager.saveCities();
                                         player.sendMessage(GlobalConfig.MAYOR_KICKCITY.replace("{player}", player1.getName()));
                                         player1.sendMessage(GlobalConfig.PLAYER_KICKCITY.replace("{city}", data.getCityName()));
@@ -175,10 +186,12 @@ public class TownCommands implements CommandExecutor {
                                             data.getPassport().setProfession(ProfessionsEnum.PLAYER.getNameProf());
                                             playerData.setProfession(ProfessionsEnum.MAYOR);
                                             playerData.getPassport().setProfession(ProfessionsEnum.MAYOR.getNameProf());
-                                            PlayersManager.addPrefix(playerData.getPlayer(), playerData);
-                                            PlayersManager.addPrefix(data.getPlayer(), data);
-                                            PlayersManager.savePlayerData(data);
-                                            PlayersManager.savePlayerData(playerData);
+                                            new Thread(() -> {
+                                                PlayersManager.addPrefix(playerData.getPlayer(), playerData);
+                                                PlayersManager.addPrefix(data.getPlayer(), data);
+                                                PlayersManager.savePlayerData(data);
+                                                PlayersManager.savePlayerData(playerData);
+                                            }).start();
                                             CitiesManager.saveCities();
                                             player.sendMessage(GlobalConfig.MAYOR_TRANSFERMAYOR.replace("{player}", player1.getName()));
                                             player1.sendMessage(GlobalConfig.PLAYER_TRANSFERMAYOR.replace("{city}", playerData.getCityName()));
@@ -227,8 +240,10 @@ public class TownCommands implements CommandExecutor {
                                     data.setDateInput(dateFormat.format(date));
                                     data.setNickCityRequest("");
                                     playerData.getCity().addCitizen(player);
-                                    PlayersManager.savePlayerData(data);
-                                    PlayersManager.savePlayerData(playerData);
+                                    new Thread(() -> {
+                                        PlayersManager.savePlayerData(data);
+                                        PlayersManager.savePlayerData(playerData);
+                                    }).start();
                                     player.sendMessage(GlobalConfig.PLAYER_INVITECITYACCEPT.replace("{city}", playerData.getCityName()));
                                     player1.sendMessage(GlobalConfig.MAYOR_INVITECITYACCEPT.replace("{player}", player.getName()));
                                     return true;
@@ -246,7 +261,7 @@ public class TownCommands implements CommandExecutor {
                                     player.sendMessage(GlobalConfig.PLAYER_INVITECITYDENY.replace("{city}", playerData.getCityName()));
                                 }
                                 data.setNickCityRequest("");
-                                PlayersManager.savePlayerData(data);
+                                new Thread(() -> PlayersManager.savePlayerData(data)).start();
                                 return true;
                             }
                             return true;
@@ -270,7 +285,7 @@ public class TownCommands implements CommandExecutor {
                                     data.getCity().kickCitizen(player);
                                     data.setCity(null);
                                     data.setCityName("-");
-                                    PlayersManager.savePlayerData(data);
+                                    new Thread(() -> PlayersManager.savePlayerData(data)).start();
                                     CitiesManager.saveCities();
                                     player.sendMessage(GlobalConfig.PLAYER_LEAVEINCITY.replace("{city}", cityName));
                                     return true;
